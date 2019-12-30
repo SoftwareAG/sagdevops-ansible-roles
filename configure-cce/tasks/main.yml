@@ -1,0 +1,131 @@
+---
+
+  - name: Forcing the re-configuration of config {{ config_item }}
+    file:
+      path: "{{ status_success_filepath }}"
+      state: absent
+    when: configure_cce_force == true
+
+  - name: Check if CCE config was already done for config {{ config_item }}
+    stat: 
+      path: "{{ status_success_filepath }}"
+    register: stat_cceConfigAlreadyDone
+
+  - name: Prepare and configure CCE only if {{ status_success_filepath }} does not exist.
+    block:
+      - name: Only for Creds config item
+        block:
+          - name: copy private key to user home
+            copy: 
+              src: "{{ item }}"
+              dest: "/home/{{ cce_owner }}/.ssh/id_rsa" 
+              mode: 0600
+            with_fileglob:
+              - "{{ cce_provisioning_internal_sshkey }}"
+
+          - name: Copy secrets file to target
+            copy:
+              src: "{{ item }}"
+              dest: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
+              mode: '0600'
+              remote_src: no
+            with_fileglob:
+              - "{{ cce_provisioning_secrets_path }}"
+
+          - name: Check if expected secrets file is there
+            stat: 
+              path: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
+            register: stat_cceSecrets
+
+          - name: Check if expected files are there
+            stat: 
+              path: "/home/{{ cce_owner }}/.ssh/id_rsa"
+            register: stat_ccePrivateKey
+          
+          - name: fail if CCE PrivateKey not specified
+            fail: 
+              msg: "PrivateKey not specified...cannot do anything."
+            when: stat_ccePrivateKey.stat.exists == false
+
+          - name: fail if CCE Secrets not specified
+            fail: 
+              msg: "Secrets not specified...cannot do anything."
+            when: stat_cceSecrets.stat.exists == false
+        when: config_item == "creds"
+
+      - name: Only for licenses config item
+        block:
+          - name: Copy license file to target
+            copy:
+              src: "{{ item }}"
+              dest: "/home/{{ cce_owner }}/sag_licenses.zip"
+              mode: '0600'
+              remote_src: no
+            with_fileglob:
+              - "{{ cce_provisioning_license_path }}"
+          
+          - name: Check if expected files are there
+            stat: 
+              path: "/home/{{ cce_owner }}/sag_licenses.zip"
+            register: stat_cceLicense
+          
+          - name: fail if CCE Licenses package not there
+            fail: 
+              msg: "Product License package not there...cannot do anything."
+            when: stat_cceLicense.stat.exists == false
+                  
+        when: config_item == "licenses"
+
+      - name: Clear the command params facts
+        set_fact:
+          cmd_params: []
+      
+      - name: append params to the cmd_params if specified
+        set_fact:
+          cmd_params: "{{ cmd_params }} + [ '{{ item.name }}={{ item.value }}' ]"
+        with_items: "{{ cce_configure_params }}"
+        when: cce_configure_params is defined
+
+      - name: append secure params to the cmd_params if specified
+        set_fact:
+          cmd_params: "{{ cmd_params }} + [ '{{ item.name }}={{ item.value }}' ]"
+        no_log: no
+        with_items: "{{ cce_configure_params_secure }}"
+        when: cce_configure_params_secure is defined
+
+      - name: Run configure command for config item {{ config_item }}
+        shell: ./scripts/configure_ccserver.sh '{{ cce_owner }}' '{{ config_item }}' {{ cmd_params|wrap|join(' ') }}
+        async: 1000
+        poll: 0
+        no_log: yes
+        args:
+          chdir: "{{ cce_provisioning_path }}"
+          creates: "{{ status_success_filepath }}"
+        register: configure_ccserver_sleeper
+        
+      - name: Check status of configure command for config item {{ config_item }}
+        async_status:
+          jid: "{{ configure_ccserver_sleeper.ansible_job_id }}"
+        register: job_result
+        until: job_result.finished
+        retries: 100
+        delay: 10
+
+      - name: Copy command result to file {{ status_stdout_filepath }}
+        copy:
+          content: "{{ job_result.stdout }}"
+          dest: "{{ status_stdout_filepath }}"
+  
+      - name: clear the sensitive file post configure
+        file:
+          path: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
+          state: absent
+        when: config_item == "creds"
+
+      - name: clear the sensitive file post configure
+        file:
+          path: "/home/{{ cce_owner }}/sag_licenses.zip" 
+          state: absent
+        when: config_item == "licenses"
+
+    when: stat_cceConfigAlreadyDone.stat.exists == false

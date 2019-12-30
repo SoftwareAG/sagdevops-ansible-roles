@@ -1,0 +1,9 @@
+---
+
+  - import_role: 
+      name: get-inventory-hosts
+
+  - include_tasks: checkport.yml
+    loop: "{{ get_inventory_hosts }}"
+    loop_control:
+      loop_var: outer_item

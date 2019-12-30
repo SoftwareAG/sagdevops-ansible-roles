@@ -1,0 +1,8 @@
+---
+
+- name: disable requiretty in sudo, so that synchronise works
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: '^(Defaults\s+requiretty)$'
+    line: '# \1'
+    backrefs: yes

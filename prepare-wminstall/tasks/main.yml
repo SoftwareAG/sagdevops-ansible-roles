@@ -1,0 +1,35 @@
+---
+
+- name: Create wM folder
+  file: 
+    path: "{{ webmethods_install_dir }}"
+    state: directory
+
+- name: Create a new primary partition
+  parted:
+    device: "{{ webmethods_disk_device }}"
+    number: "{{ webmethods_disk_part_number }}"
+    state: present
+
+- name: Create a ext4 filesystem on webmethods_disk and check disk blocks
+  filesystem:
+    fstype: ext4
+    dev: "{{ webmethods_disk_part_device }}"
+    force: no
+    opts: -L webmethods
+
+- name: Mount up device by label
+  mount:
+    path: "{{ webmethods_install_dir }}"
+    src: LABEL=webmethods
+    fstype: ext4
+    state: mounted
+
+- name: Fix permission on newly mounted dir
+  file: 
+    path: "{{ webmethods_install_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ webmethods_user }}"
+    group: "{{ webmethods_user_group }}"
+    mode: 0775

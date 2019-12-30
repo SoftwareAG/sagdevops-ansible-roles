@@ -1,0 +1,6 @@
+---
+
+- import_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/UniversalMessaging/server/{{ product_instance_name }}/bin/nserverdaemon"
+    service_name: "sag1um{{ webmethods_install_major_version }}"

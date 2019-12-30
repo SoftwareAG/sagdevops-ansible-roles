@@ -1,0 +1,7 @@
+---
+
+webmethods_install_dir:
+postinstall_force: true
+do_reboot: false
+
+postinstall_file_marker: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.done"

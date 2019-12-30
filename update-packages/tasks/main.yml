@@ -1,0 +1,17 @@
+---
+
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+    async: 1000
+    poll: 0
+    register: upgrade_sleeper
+
+  - name: 'check on upgrade_sleeper async task'
+    async_status:
+      jid: "{{ upgrade_sleeper.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 100
+    delay: 10

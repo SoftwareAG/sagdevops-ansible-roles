@@ -1,0 +1,8 @@
+---
+
+config_item: ""
+status_success_filepath: "/home/{{ cce_owner }}/configure_{{ config_item }}.status.success"
+status_stdout_filepath: "/home/{{ cce_owner }}/configure_{{ config_item }}_{{ inventory_hostname }}.out"
+configure_cce_force: false
+cce_configure_params: []
+cce_configure_params_secure: []

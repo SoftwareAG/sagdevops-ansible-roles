@@ -1,0 +1,23 @@
+---
+
+- name: Install necessary packages (RHEL)
+  yum:
+    name: "{{mandatory_packages}}"
+    state: present
+
+- name: Install extra packages if any (RHEL)
+  yum:
+    name:  "{{extra_packages}}"
+    state: present
+
+# - name: Install necessary packages (RHEL)
+#   package: 
+#     name: '{{ item }}'
+#     state: present
+#   with_items: "{{mandatory_packages}}"
+
+# - name: Install extra packages if any (RHEL)
+#   package: 
+#     name: '{{ item }}'
+#     state: present
+#   with_items: "{{extra_packages}}"

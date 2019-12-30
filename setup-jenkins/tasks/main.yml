@@ -1,0 +1,51 @@
+---
+
+- name: Ensure dependencies are installed.
+  package:
+    name:
+      - curl
+      - libselinux-python
+      - initscripts
+    state: present
+
+- name: Ensure Jenkins repo is installed.
+  get_url:
+    url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Add Jenkins repo GPG key.
+  rpm_key:
+    state: present
+    key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+    
+- name: Install Jenkins
+  yum:
+    name: jenkins
+    state: present
+
+# Configure Jenkins init settings.
+- include_tasks: settings.yml
+
+- name: Start & Enable Jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: true
+
+- name: Sleep for 30 seconds and continue with play
+  wait_for: timeout=30
+
+- name: Ensure Jenkins is installed / started.
+  package:
+    name: jenkins
+    state: started
+  notify: configure default users
+
+- name: Get init password Jenkins
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  changed_when: false
+  register: result
+
+- name: Print init password Jenkins
+  debug:
+  var: result.stdout

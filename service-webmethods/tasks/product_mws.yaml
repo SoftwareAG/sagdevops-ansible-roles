@@ -1,0 +1,9 @@
+---
+
+## example service script : sagmws103_default_1
+- import_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/profiles/MWS_{{ product_instance_name }}/bin/sagmws{{ webmethods_install_major_version }}_{{ product_instance_name }}_1"
+    service_name: "sagmws{{ webmethods_install_major_version }}_{{ product_instance_name }}_1"
+
+    

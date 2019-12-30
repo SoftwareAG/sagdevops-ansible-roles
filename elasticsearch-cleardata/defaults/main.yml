@@ -1,0 +1,4 @@
+---
+
+elasticsearch_servicename: "sag1cel{{ webmethods_install_major_version }}"
+elasticsearch_basepath: "{{ webmethods_install_dir }}/InternalDataStore"

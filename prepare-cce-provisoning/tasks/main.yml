@@ -1,0 +1,63 @@
+---
+
+- name: Create dir first
+  file: 
+    path: "{{ cce_provisioning_path }}"
+    state: directory
+
+- name: Create dir first
+  file: 
+    path: "{{ cce_provisioning_path_images }}"
+    state: directory
+
+- name: Synchronize and delete code in dest
+  synchronize:
+    src: "{{ cce_provisioning_src }}"
+    dest: "{{ cce_provisioning_path }}"
+    delete: yes
+    recursive: yes
+    owner: yes
+    group: yes
+
+- name: Synchronize and delete content in dest
+  synchronize:
+    src: "{{ cce_provisioning_src_content }}"
+    dest: "{{ cce_provisioning_path_images }}"
+    delete: yes
+    recursive: yes
+    owner: yes
+    group: yes
+
+- name: Fix permission on newly synced dir
+  file: 
+    path: "{{ cce_provisioning_path }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cce_owner }}"
+    group: "{{ cce_group }}"
+    mode: 0775
+
+- name: Fix permission on newly synced dir
+  file: 
+    path: "{{ cce_provisioning_path_images }}"
+    state: directory
+    recurse: yes
+    owner: "{{ cce_owner }}"
+    group: "{{ cce_group }}"
+    mode: 0775
+
+- name: Write params to global
+  blockinfile:
+    path: "/home/{{ cce_owner }}/.setenv_cce_globals.sh"
+    create: yes
+    mode: 0644
+    owner: "{{ cce_owner }}"
+    group: "{{ cce_group }}"
+    block: |
+      export RUN_AS_USER={{ cce_owner }}
+      export INSTALL_DIR={{ cce_install_dir }}
+      export CC_BOOTSTRAPPER_VERSION={{ cce_version }}
+      export CC_BOOTSTRAPPER_VERSION_FIX={{ cce_version_fix }}
+      export CC_BOOTSTRAPPER_PLATFORM={{ cce_platform }}
+      export CC_REPO_NAME_PRODUCTS={{ cce_product_repo_name }}
+      export CC_REPO_NAME_FIXES={{ cce_fix_repo_name }}

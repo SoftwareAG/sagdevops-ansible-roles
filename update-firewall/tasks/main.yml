@@ -1,0 +1,11 @@
+---
+
+  - name: Add ports to firewalld on target
+    firewalld:
+      port: "{{ item }}"
+      permanent: yes
+      state: enabled
+    with_items: "{{ sys_open_ports }}"
+    notify: restart firewalld
+
+##TOTO: add the concept of zone and clearing a zone completely to clean the state...

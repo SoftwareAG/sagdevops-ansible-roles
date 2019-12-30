@@ -1,0 +1,55 @@
+---
+
+  - name: Print the target ansible host aliases to the console.
+    debug: var=elasticsearch_host_aliases
+  
+  - name: Print the target ansible hosts to the console.
+    debug: var=elasticsearch_hosts
+
+  - name: Clear the all_hosts_computed fact
+    set_fact:
+      all_hosts_computed: []
+
+  - name: Build a list of all the hosts based on ansible aliases
+    set_fact:
+      all_hosts_computed: "{{ all_hosts_computed }} + [ '{{ hostvars[item].ansible_host }}' ]"
+    with_items: "{{ elasticsearch_host_aliases }}"
+    when: elasticsearch_host_aliases is defined and (elasticsearch_host_aliases|length>0)
+
+  - name: Build a list of all the hosts based on ansible hosts
+    set_fact:
+      all_hosts_computed: "{{ all_hosts_computed }} + [ '{{ item }}' ]"
+    with_items: "{{ elasticsearch_hosts }}"
+    when: elasticsearch_hosts is defined and (elasticsearch_hosts|length>0)
+
+  - name: Print the final target hosts
+    debug: var=all_hosts_computed
+
+  - name: Get content of elastic search config
+    shell: "cat {{ elasticsearch_basepath }}/config/elasticsearch.yml"
+    register: result_config
+  
+  - name: Print the raw elasticsearch config
+    debug:
+      var: result_config.stdout_lines
+
+  - set_fact:
+      elasticsearch_config: "{{ result_config.stdout | from_yaml }}"
+
+  - name: Print elasticsearch_config seeds
+    debug:
+      msg: "Looking at item: {{ elasticsearch_config['discovery.seed_hosts'] }}"
+
+  - name: Change elasticsearch discovery.seed_hosts value to the list of hosts
+    set_fact:
+      elasticsearch_config_updated: "{{ elasticsearch_config|combine({'discovery.seed_hosts': all_hosts_computed}, recursive=True) }}"
+
+  - name: Echo the updated var to the screen.
+    debug: 
+      var: elasticsearch_config_updated
+ 
+  - name: Write the updated content back to a YAML file.
+    template:
+      src: elasticsearch.yml.j2
+      dest: "{{ elasticsearch_basepath }}/config/elasticsearch.yml"
+      backup: yes

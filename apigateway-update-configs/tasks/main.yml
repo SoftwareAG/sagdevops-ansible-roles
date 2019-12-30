@@ -1,0 +1,14 @@
+---
+
+  - name: Print the configs to update
+    debug:
+      var: "apigateway_elasticsearch_configs_toupdate"
+
+  - name: "Update config file {{ apigateway_elasticsearch_config_file }}"
+    lineinfile:
+      path: "{{ apigateway_elasticsearch_config_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: '{{ apigateway_elasticsearch_configs_toupdate }}'
+    when: apigateway_elasticsearch_configs_toupdate is defined
