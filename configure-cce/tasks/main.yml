@@ -15,14 +15,6 @@
     block:
       - name: Only for Creds config item
         block:
-          - name: copy private key to user home
-            copy: 
-              src: "{{ item }}"
-              dest: "/home/{{ cce_owner }}/.ssh/id_rsa" 
-              mode: 0600
-            with_fileglob:
-              - "{{ cce_provisioning_internal_sshkey }}"
-
           - name: Copy secrets file to target
             copy:
               src: "{{ item }}"
@@ -37,19 +29,19 @@
               path: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
             register: stat_cceSecrets
 
-          - name: Check if expected files are there
+          - name: Check if private ssh key is there
             stat: 
               path: "/home/{{ cce_owner }}/.ssh/id_rsa"
             register: stat_ccePrivateKey
           
-          - name: fail if CCE PrivateKey not specified
+          - name: fail if CCE PrivateKey not present
             fail: 
-              msg: "PrivateKey not specified...cannot do anything."
+              msg: "PrivateKey not present...cannot do anything."
             when: stat_ccePrivateKey.stat.exists == false
 
-          - name: fail if CCE Secrets not specified
+          - name: fail if CCE Secrets not present
             fail: 
-              msg: "Secrets not specified...cannot do anything."
+              msg: "Secrets not present...cannot do anything."
             when: stat_cceSecrets.stat.exists == false
         when: config_item == "creds"
 

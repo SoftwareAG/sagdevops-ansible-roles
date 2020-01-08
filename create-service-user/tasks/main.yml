@@ -16,7 +16,10 @@
     home: "/home/{{ username }}"
     createhome: yes
     append: yes
-    generate_ssh_key: no
+    generate_ssh_key: "{{ generate_ssh_key }}"
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+  register: created_user
 
 - name: Set authorized key taken from file
   authorized_key:
@@ -24,4 +27,4 @@
     state: present
     key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
-    - "{{ authorized_sshkey_path }}"
+    - "{{ authorized_sshkey_path | default('/nonexistant') }}"
