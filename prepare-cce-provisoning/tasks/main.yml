@@ -2,18 +2,18 @@
 
 - name: Create dir first
   file: 
-    path: "{{ cce_provisioning_path }}"
+    path: "{{ cce_provisioning_code_path }}"
     state: directory
 
 - name: Create dir first
   file: 
-    path: "{{ cce_provisioning_path_images }}"
+    path: "{{ cce_provisioning_content_path }}"
     state: directory
 
 - name: Synchronize and delete code in dest
   synchronize:
-    src: "{{ cce_provisioning_src }}"
-    dest: "{{ cce_provisioning_path }}"
+    src: "{{ cce_provisioning_code_localpath }}"
+    dest: "{{ cce_provisioning_code_path }}"
     delete: yes
     recursive: yes
     owner: yes
@@ -21,8 +21,8 @@
 
 - name: Synchronize and delete content in dest
   synchronize:
-    src: "{{ cce_provisioning_src_content }}"
-    dest: "{{ cce_provisioning_path_images }}"
+    src: "{{ cce_provisioning_content_localpath }}"
+    dest: "{{ cce_provisioning_content_path }}"
     delete: yes
     recursive: yes
     owner: yes
@@ -30,7 +30,7 @@
 
 - name: Fix permission on newly synced dir
   file: 
-    path: "{{ cce_provisioning_path }}"
+    path: "{{ cce_provisioning_code_path }}"
     state: directory
     recurse: yes
     owner: "{{ cce_owner }}"
@@ -39,7 +39,7 @@
 
 - name: Fix permission on newly synced dir
   file: 
-    path: "{{ cce_provisioning_path_images }}"
+    path: "{{ cce_provisioning_content_path }}"
     state: directory
     recurse: yes
     owner: "{{ cce_owner }}"

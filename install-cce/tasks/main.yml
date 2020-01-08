@@ -31,7 +31,7 @@
         async: 1000
         poll: 0
         args:
-          chdir: "{{ cce_provisioning_path }}"
+          chdir: "{{ cce_provisioning_code_path }}"
           creates: "/home/{{ cce_owner }}/provision_ccserver.status.success"
         register: provision_ccserver_sleeper
         when: stat_cceInstallAlreadyDone.stat.exists == false

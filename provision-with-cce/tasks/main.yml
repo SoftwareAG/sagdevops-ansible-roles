@@ -57,7 +57,7 @@
     poll: 0
     no_log: yes
     args:
-      chdir: "{{ cce_provisioning_path }}"
+      chdir: "{{ cce_provisioning_code_path }}"
     register: provision_stack_sleeper
 
   ## let's match the retries/delay timeouts with the CCE job timeout set in the tuning template

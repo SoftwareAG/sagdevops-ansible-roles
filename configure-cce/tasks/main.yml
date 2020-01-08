@@ -47,26 +47,31 @@
 
       - name: Only for licenses config item
         block:
-          - name: Copy license file to target
-            copy:
-              src: "{{ item }}"
-              dest: "/home/{{ cce_owner }}/sag_licenses.zip"
-              mode: '0600'
-              remote_src: no
-            with_fileglob:
-              - "{{ cce_provisioning_license_path }}"
-          
-          - name: Check if expected files are there
+          - name: Check if expected licenses directory exists
             stat: 
-              path: "/home/{{ cce_owner }}/sag_licenses.zip"
-            register: stat_cceLicense
-          
-          - name: fail if CCE Licenses package not there
+              path: "{{ cce_provisioning_licenses_path }}"
+            register: stat_ccelicensepath
+
+          - name: fail if CCE Licenses path not there
             fail: 
-              msg: "Product License package not there...cannot do anything."
-            when: stat_cceLicense.stat.exists == false
+              msg: "Product License path not there...cannot do anything."
+            when: stat_ccelicensepath.stat.isdir is not defined or stat_ccelicensepath.stat.isdir == false
                   
         when: config_item == "licenses"
+
+      - name: Only for repo_images config item
+        block:
+          - name: Check if expected image directory exists
+            stat: 
+              path: "{{ cce_provisioning_images_path }}"
+            register: stat_cceimagepath
+
+          - name: fail if expected image directory not there
+            fail: 
+              msg: "Product image directory not there...cannot do anything."
+            when: stat_cceimagepath.stat.isdir is not defined or stat_cceimagepath.stat.isdir == false
+                  
+        when: config_item == "repo_images"
 
       - name: Clear the command params facts
         set_fact:
@@ -91,7 +96,7 @@
         poll: 0
         no_log: yes
         args:
-          chdir: "{{ cce_provisioning_path }}"
+          chdir: "{{ cce_provisioning_code_path }}"
           creates: "{{ status_success_filepath }}"
         register: configure_ccserver_sleeper
         
