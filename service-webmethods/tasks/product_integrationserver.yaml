@@ -4,5 +4,3 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/bin/sagis{{ webmethods_install_major_version }}"
     service_name: "sag1is{{ webmethods_install_major_version }}"
-
-

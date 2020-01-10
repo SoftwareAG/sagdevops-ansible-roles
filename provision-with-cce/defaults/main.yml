@@ -1,6 +1,8 @@
 ---
 
-cce_provisioning_target_host_aliases: []
-cce_provisioning_install_stackname: ""
-cce_provisioning_install_params: []
-cce_provisioning_install_params_secure: []
+target_host_aliases: []
+run_dir: ""
+template: ""
+properties: ""
+template_params: {}
+template_params_secure: {}
