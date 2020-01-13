@@ -59,5 +59,3 @@
       export CC_BOOTSTRAPPER_VERSION={{ cce_version }}
       export CC_BOOTSTRAPPER_VERSION_FIX={{ cce_version_fix }}
       export CC_BOOTSTRAPPER_PLATFORM={{ cce_platform }}
-      export CC_REPO_NAME_PRODUCTS={{ cce_product_repo_name }}
-      export CC_REPO_NAME_FIXES={{ cce_fix_repo_name }}
