@@ -2,5 +2,5 @@
 
 - import_tasks: "command_{{ product_command }}.yaml"
   vars:
-    service_exec_filepath: "{{ webmethods_install_dir }}/profiles/SPM/bin/sagspm{{ webmethods_install_major_version }}"
-    service_name: "sag1spm{{ webmethods_install_major_version }}"
+    service_exec_filepath: "{{ webmethods_install_dir }}/profiles/SPM/bin/sagspm{{ webmethods_install_full_version_simple }}"
+    service_name: "sag1spm{{ webmethods_install_full_version_simple }}"
