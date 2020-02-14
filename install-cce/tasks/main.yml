@@ -41,8 +41,8 @@
           jid: "{{ provision_ccserver_sleeper.ansible_job_id }}"
         register: job_result
         until: job_result.finished
-        retries: 100
-        delay: 10
+        retries: 200
+        delay: 20
 
       - name: Copy command result to the server
         copy:
