@@ -3,7 +3,7 @@
 restart_services: []
 force_restart_services: false
 
-sysctl_config:
-limits_configs:
+sysctl_config: {}
+limits_configs: {}
 
 allow_reboot: false
