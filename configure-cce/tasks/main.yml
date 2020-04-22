@@ -22,7 +22,7 @@
               mode: '0600'
               remote_src: no
             with_fileglob:
-              - "{{ cce_provisioning_secrets_path }}"
+              - "{{ cce_provisioning_secrets_localpath }}"
 
           - name: Check if expected secrets file is there
             stat: 

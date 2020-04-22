@@ -24,7 +24,7 @@
           mode: '0600'
           remote_src: no
         with_fileglob:
-          - "{{ cce_provisioning_secrets_path }}"
+          - "{{ cce_provisioning_secrets_localpath }}"
 
       - name: Run CCE installation with user {{ cce_owner }}
         command: "/bin/bash scripts/provision_ccserver.sh {{ cce_owner }}"
