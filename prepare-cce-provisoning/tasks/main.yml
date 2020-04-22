@@ -45,17 +45,3 @@
     owner: "{{ cce_owner }}"
     group: "{{ cce_group }}"
     mode: 0775
-
-- name: Write params to global
-  blockinfile:
-    path: "/home/{{ cce_owner }}/.setenv_cce_globals.sh"
-    create: yes
-    mode: 0644
-    owner: "{{ cce_owner }}"
-    group: "{{ cce_group }}"
-    block: |
-      export RUN_AS_USER={{ cce_owner }}
-      export INSTALL_DIR={{ cce_install_dir }}
-      export CC_BOOTSTRAPPER_VERSION={{ cce_version }}
-      export CC_BOOTSTRAPPER_VERSION_FIX={{ cce_version_fix }}
-      export CC_BOOTSTRAPPER_PLATFORM={{ cce_platform }}

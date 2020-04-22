@@ -17,6 +17,20 @@
 
   - name: Install CCE only if /home/{{ cce_owner }}/provision_ccserver.status.success does not exist.
     block:
+      - name: Write global params
+        blockinfile:
+          path: "/home/{{ cce_owner }}/.setenv_cce_globals.sh"
+          create: yes
+          mode: 0600
+          owner: "{{ cce_owner }}"
+          group: "{{ cce_group }}"
+          block: |
+            export RUN_AS_USER={{ cce_owner }}
+            export INSTALL_DIR={{ cce_install_dir }}
+            export CC_BOOTSTRAPPER_VERSION={{ cce_version }}
+            export CC_BOOTSTRAPPER_VERSION_FIX={{ cce_version_fix }}
+            export CC_BOOTSTRAPPER_PLATFORM={{ cce_platform }}
+
       - name: Copy secrets file to target
         copy:
           src: "{{ item }}"
