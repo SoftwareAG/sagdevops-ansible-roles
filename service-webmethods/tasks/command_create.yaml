@@ -18,65 +18,54 @@
     set_fact:
       service_name_index: "{{ service_name }}.service"
 
-  - name: Perform service creation if service does not exist
-    block:
-      - name: Print debug message
-        debug:
-          msg: "Service {{ service_name }} not found. Will create."
-        when: force_create is not defined or force_create == false
+  - name: Print debug message
+    debug:
+      msg: "Service {{ service_name }} will be created or recreated"
 
-      - name: Print debug message
-        debug:
-          msg: "Service {{ service_name }} is getting re-created because force_create = true"
-        when: force_create is defined and force_create
+  - name: Check for wM daemon script
+    stat: 
+      path: "{{ webmethods_install_dir }}/common/bin/daemon.sh"
+    register: stat_wmdDaemonFile
 
-      - name: Check for wM daemon script
-        stat: 
-          path: "{{ webmethods_install_dir }}/common/bin/daemon.sh"
-        register: stat_wmdDaemonFile
+  - name: fail if service_exec_filepath not specified
+    fail: 
+      msg: "service_exec_filepath not specified...cannot create."
+    when: service_exec_filepath is not defined or service_exec_filepath == ""
 
-      - name: fail if service_exec_filepath not specified
-        fail: 
-          msg: "service_exec_filepath not specified...cannot create."
-        when: service_exec_filepath is not defined or service_exec_filepath == ""
+  - name: Create service using daemon script + specific PID file
+    command:
+      argv:
+        - "{{ webmethods_install_dir }}/common/bin/daemon.sh"
+        - "-f"
+        - "{{ service_exec_filepath }}"
+        - "-u"
+        - "{{ service_user }}"
+        - "-n"
+        - "{{ service_name }}"
+        - "-T"
+        - "{{ service_type }}"
+        - "-P"
+        - "{{ service_pidfile }}"
+    when: stat_wmdDaemonFile.stat.exists and service_pidfile is defined and service_pidfile != ""
+  
+  - name: Create service using daemon script with general defaults
+    command:
+      argv:
+        - "{{ webmethods_install_dir }}/common/bin/daemon.sh"
+        - "-f"
+        - "{{ service_exec_filepath }}"
+        - "-u"
+        - "{{ service_user }}"
+        - "-n"
+        - "{{ service_name }}"
+        - "-T"
+        - "{{ service_type }}"
+    when: stat_wmdDaemonFile.stat.exists and (service_pidfile is not defined or service_pidfile == "")
 
-      - name: Create service using daemon script + specific PID file
-        command:
-          argv:
-            - "{{ webmethods_install_dir }}/common/bin/daemon.sh"
-            - "-f"
-            - "{{ service_exec_filepath }}"
-            - "-u"
-            - "{{ service_user }}"
-            - "-n"
-            - "{{ service_name }}"
-            - "-T"
-            - "{{ service_type }}"
-            - "-P"
-            - "{{ service_pidfile }}"
-        when: stat_wmdDaemonFile.stat.exists and service_pidfile is defined and service_pidfile != ""
-      
-      - name: Create service using daemon script with general defaults
-        command:
-          argv:
-            - "{{ webmethods_install_dir }}/common/bin/daemon.sh"
-            - "-f"
-            - "{{ service_exec_filepath }}"
-            - "-u"
-            - "{{ service_user }}"
-            - "-n"
-            - "{{ service_name }}"
-            - "-T"
-            - "{{ service_type }}"
-        when: stat_wmdDaemonFile.stat.exists and (service_pidfile is not defined or service_pidfile == "")
+  - name: get service facts
+    service_facts:
 
-    when: (force_create is defined and force_create|bool) or ansible_facts.services[service_name_index] is not defined
-
-  - name: Do nothing if service exists
-    block:
-      - name: Print debug message
-        debug:
-          msg: "Service {{ service_name }} is already there. do nothing."
-    when: (force_create is not defined or force_create == false) and ansible_facts.services[service_name_index] is defined
-
-    
+  - name: fail if service is not found
+    fail: 
+      msg: "service {{ service_name }} is still not found even though we just created it - operation must have failed."
+    when: ansible_facts.services[service_name_index] is not defined

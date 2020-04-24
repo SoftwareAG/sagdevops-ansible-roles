@@ -21,23 +21,22 @@
       msg: "service {{ service_name }} not found..."
     when: ansible_facts.services[service_name_index] is not defined
 
-  - name: Perform service overrides if it exists
+  - name: Perform service overrides if service exists
     block:
       - name: create systemd override directory
         file:
           path: /etc/systemd/system/{{ service_name }}.service.d
           state: directory
 
-      - name: Check if override file already exists
-        stat: 
-          path: "/etc/systemd/system/{{ service_name }}.service.d/override.conf"
-        register: stat_overrideFile
+      - name: delete override file first if it exists
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override.conf
+          state: absent
 
-      - name: create override file first if it does not exist
+      - name: create override file
         file:
           path: /etc/systemd/system/{{ service_name }}.service.d/override.conf
           state: touch
-        when: stat_overrideFile.stat.exists == false
 
       - name: Populate systemd override if the service_env are defined
         template:
@@ -47,4 +46,5 @@
 
       - name: force systemd to reread configs after modification
         systemd: daemon_reload=yes
+        
     when: ansible_facts.services[service_name_index] is defined and ansible_facts.services[service_name_index].source == "systemd"

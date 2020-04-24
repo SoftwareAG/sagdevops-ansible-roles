@@ -1,47 +1,13 @@
 ---
 
-- name: Create dir first
-  file: 
-    path: "{{ cce_provisioning_code_path }}"
-    state: directory
+- name: Print the params
+  debug:
+    msg: "Running service command {{ cce_prep_type | default('undefined') }}"
 
-- name: Create dir first
-  file: 
-    path: "{{ cce_provisioning_content_path }}"
-    state: directory
+- name: fail if cce_prep_type not specified
+  fail: 
+    msg: "cce_prep_type not specified...cannot do anything."
+  when: cce_prep_type is not defined or cce_prep_type == ""
 
-- name: Synchronize and delete code in dest
-  synchronize:
-    src: "{{ cce_provisioning_code_localpath }}"
-    dest: "{{ cce_provisioning_code_path }}"
-    delete: yes
-    recursive: yes
-    owner: yes
-    group: yes
-
-- name: Synchronize and delete content in dest
-  synchronize:
-    src: "{{ cce_provisioning_content_localpath }}"
-    dest: "{{ cce_provisioning_content_path }}"
-    delete: yes
-    recursive: yes
-    owner: yes
-    group: yes
-
-- name: Fix permission on newly synced dir
-  file: 
-    path: "{{ cce_provisioning_code_path }}"
-    state: directory
-    recurse: yes
-    owner: "{{ cce_owner }}"
-    group: "{{ cce_group }}"
-    mode: 0775
-
-- name: Fix permission on newly synced dir
-  file: 
-    path: "{{ cce_provisioning_content_path }}"
-    state: directory
-    recurse: yes
-    owner: "{{ cce_owner }}"
-    group: "{{ cce_group }}"
-    mode: 0775
+- name: Include tasks
+  include_tasks: "prep_{{ cce_prep_type }}.yml"

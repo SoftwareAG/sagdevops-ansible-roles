@@ -8,5 +8,6 @@ service_type: forking
 force_create: false
 
 product_name: "undefined"
+product_version_full: "undefined"
 product_command: "undefined"
 product_instance_name: default

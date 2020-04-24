@@ -1,6 +1,5 @@
 ---
 
-
 - name: get service facts
   service_facts:
 
@@ -13,43 +12,12 @@
     msg: "Service {{ elasticsearch_servicename }} does not exist...investigate."
   when: ansible_facts.services[service_name_index] is not defined
 
-- name: Update service {{ elasticsearch_servicename }} state to STOPPED
-  service: 
-    name: "{{ elasticsearch_servicename }}"
-    state: "stopped"
-    enabled: true
-
-- name: get service facts after stop to make sure it is
-  service_facts:
-
-- name: Print the status of the service
-  debug: var=ansible_facts.services[service_name_index]
-  when: ansible_facts.services[service_name_index] is defined
-
 - name: fail if service not stopped
   fail: 
     msg: "Service {{ elasticsearch_servicename }} was not stopped as expected...investigate."
-  when: ansible_facts.services[service_name_index] is not defined or ansible_facts.services[service_name_index].state != "stopped"
+  when: ansible_facts.services[service_name_index].state != "stopped"
 
 - name: Clear the elastic search data folder
   file:
     state: absent
     path: "{{ elasticsearch_basepath }}/data/nodes"
-
-- name: Update service {{ elasticsearch_servicename }} state to STARTED
-  service: 
-    name: "{{ elasticsearch_servicename }}"
-    state: "started"
-    enabled: true
-
-- name: get service facts after start to make sure it is started
-  service_facts:
-
-- name: Print the status of the service
-  debug: var=ansible_facts.services[service_name_index]
-  when: ansible_facts.services[service_name_index] is defined
-
-- name: fail if service not started
-  fail: 
-    msg: "Service {{ elasticsearch_servicename }} was not started as expected...investigate."
-  when: ansible_facts.services[service_name_index] is not defined or ansible_facts.services[service_name_index].state != "running"
