@@ -1,0 +1,10 @@
+---
+
+  - name: Fix permission on postgres data dir
+    file: 
+      path: "{{ webmethods_apiportal_postgresdata_dir }}"
+      state: directory
+      recurse: yes
+      owner: "{{ webmethods_user }}"
+      group: "{{ webmethods_group }}"
+      mode: 0750

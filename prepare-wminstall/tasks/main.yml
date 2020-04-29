@@ -29,7 +29,7 @@
   file: 
     path: "{{ webmethods_install_dir }}"
     state: directory
-    recurse: yes
+    recurse: no
     owner: "{{ webmethods_user }}"
-    group: "{{ webmethods_user_group }}"
+    group: "{{ webmethods_group }}"
     mode: 0775
