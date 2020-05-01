@@ -1,34 +1,21 @@
 ---
 
-  - name: Forcing the post install if requested
-    file:
-      path: "{{ postinstall_file_marker }}"
-      state: absent
-    when: postinstall_force|bool
+- name: Check for wM afterInstallAsRoot
+  stat: 
+    path: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.sh"
+  register: stat_afterInstallAsRootExecFile
 
-  - name: Check if the post install was already done for this
-    stat: 
-      path: "{{ postinstall_file_marker }}"
-    register: stat_ccePostInstallAlreadyDone
+- name: Run afterInstallAsRoot command
+  command: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.sh"
+  when: stat_afterInstallAsRootExecFile.stat.exists
 
-  - name: Post Install only if it was not done before
-    block:
-      - name: Check for wM afterInstallAsRoot
-        stat: 
-          path: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.sh"
-        register: stat_afterInstallAsRootExecFile
+- name: touch afterInstallAsRoot.success file to mark that it's been run before
+  file:
+    path: "{{ postinstall_file_marker }}"
+    state: touch
 
-      - name: Run afterInstallAsRoot command
-        command: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.sh"
-        when: stat_afterInstallAsRootExecFile.stat.exists
-    
-      - name: touch afterInstallAsRoot.success file to mark that it's been run before
-        file:
-          path: "{{ postinstall_file_marker }}"
-          state: touch
-
-      - name: Reboot the machine ONLY IF do_reboot set to true ({{do_reboot}})
-        reboot:
-          reboot_timeout: 1000
-        when: do_reboot|bool
-    when: stat_ccePostInstallAlreadyDone.stat.exists == false
+- import_role: 
+    name: server-reboot
+  vars:
+    server_reboot_timeout: 1000
+  when: postinstall_do_reboot|bool

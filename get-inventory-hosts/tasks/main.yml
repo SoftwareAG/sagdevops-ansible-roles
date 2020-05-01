@@ -1,5 +1,7 @@
 ---
   
+  - setup:
+  
   - name: Print the params
     debug:
       msg: 

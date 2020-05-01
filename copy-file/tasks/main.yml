@@ -1,0 +1,53 @@
+---
+
+- name: fail if file_local_path not specified
+  fail: 
+    msg: "file_local_path not specified..."
+  when: file_local_path is not defined or file_local_path == ""
+
+- name: "check if file_local_path={{ file_local_path }} exists on local"
+  local_action: stat path={{ file_local_path }} get_checksum=false
+  register: file_local
+
+- name: fail if file_local file does not exists on local
+  fail: 
+    msg: "File at {{ file_local_path }} does not exist on local..."
+  when: file_local.stat.exists == false
+
+- name: set remote file path
+  set_fact:
+    file_remote_name: "{{ file_local_path | basename }}"
+  when: file_remote_name is not defined or file_remote_name == ""
+
+- name: set remote file path
+  set_fact:
+    file_remote_path: "{{ file_remote_dir | regex_replace('\\/$', '') }}/{{ file_remote_name }}"
+
+## important: clear file_remote_name to make sure it's not reused on multiple calls
+- set_fact:
+    file_remote_name: ""
+
+- name: "Check if file_remote_path already exists in target"
+  stat:
+    path: "{{ file_remote_path }}"
+    get_checksum: false
+  register: file_remote
+
+- name: Print file exists on remote
+  debug:
+    msg: "File exists on remote? {{ file_remote.stat.exists }}"
+
+- name: Copy file to target
+  copy:
+    src: "{{ file_local_path }}"
+    dest: "{{ file_remote_path }}"
+    mode: "{{ file_remote_permission }}"
+    owner: "{{ file_remote_owner }}"
+    group: "{{ file_remote_group }}"
+    remote_src: no
+  register: file_copied
+  when: file_local.stat.exists and file_remote.stat.exists == false
+
+- name: assign file_remote_path to file_remote_path_output_var
+  set_fact: {"{{ file_remote_path_output_var }}":"{{ file_remote_path }}"}
+  when: file_remote_path_output_var is defined and file_remote_path_output_var != ""

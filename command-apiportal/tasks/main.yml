@@ -34,3 +34,6 @@
   args:
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
     executable: /bin/sh
+  register: webmethods_apiportal_acc_result
+
+- debug: msg="{{ webmethods_apiportal_acc_result.stdout }}"
