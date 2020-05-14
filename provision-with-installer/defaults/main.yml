@@ -1,6 +1,5 @@
 ---
 
-# "{{ ansible.HOME }}"
 provision_installer_exec_filepath_local:
 provision_installer_dir:
 provision_installer_exec_filename: ""

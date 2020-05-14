@@ -1,29 +1,13 @@
 ---
 
-  - name: Print the target ansible host aliases to the console.
-    debug: var=elasticsearch_host_aliases
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_hosts_clear_first: true
   
-  - name: Print the target ansible hosts to the console.
-    debug: var=elasticsearch_hosts
-
-  - name: Clear the all_hosts_computed fact
+  - name: Set all_hostnames facts
     set_fact:
-      all_hosts_computed: []
-
-  - name: Build a list of all the hosts based on ansible aliases
-    set_fact:
-      all_hosts_computed: "{{ all_hosts_computed }} + [ '{{ hostvars[item].ansible_host }}' ]"
-    with_items: "{{ elasticsearch_host_aliases }}"
-    when: elasticsearch_host_aliases is defined and (elasticsearch_host_aliases|length>0)
-
-  - name: Build a list of all the hosts based on ansible hosts
-    set_fact:
-      all_hosts_computed: "{{ all_hosts_computed }} + [ '{{ item }}' ]"
-    with_items: "{{ elasticsearch_hosts }}"
-    when: elasticsearch_hosts is defined and (elasticsearch_hosts|length>0)
-
-  - name: Print the final target hosts
-    debug: var=all_hosts_computed
+      all_hosts_computed: "{{ get_inventory_hosts }}"
 
   - name: Get content of elastic search config
     shell: "cat {{ elasticsearch_basepath }}/config/elasticsearch.yml"

@@ -7,6 +7,8 @@
       - "inventory_pattern = {{ inventory_pattern | default('undefined') }}"
       - "hosts_property = {{ hosts_property | default('undefined') }}"
       - "aliases_property = {{ aliases_property | default('undefined') }}"
+      - "aliasmapping_prefix = {{ aliasmapping_prefix | default('undefined') }}"
+      - "aliasmapping_delimiter = {{ aliasmapping_delimiter | default('undefined') }}"
       - "run_dir = {{ run_dir | default('undefined') }}"
       - "template = {{ template | default('undefined') }}"
       - "properties = {{ properties | default('undefined') }}"
@@ -43,21 +45,29 @@
 
   - name: append hostnames to the all_params list
     set_fact:
-      all_params: "{{ all_params }} + [ 'target.nodes=[{{ all_hostnames | join(',') }}]' ]"
+      all_params: "{{ all_params }} + [ 'target.hosts=[{{ all_hostnames | join(',') }}]' ]"
     when: all_hostnames is defined and (all_hostnames|length>0)
 
   - name: append aliases to the all_params list
     set_fact:
-      all_params: "{{ all_params }} + [ 'target.aliases=[{{ all_aliases | join(',') }}]' ]"
+      all_params: "{{ all_params }} + [ 'target.nodes=[{{ all_aliases | join(',') }}]' ]"
     when: all_aliases is defined and (all_aliases|length>0)
-
-  - name: append template file to all_params list
-    set_fact:
-      all_params: "{{ all_params }} + [ 'template.path={{ template }}' ]"
 
   - name: append template properties file to all_params list
     set_fact:
-      all_params: "{{ all_params }} + [ 'template.props={{ properties }}' ]"
+      all_params: "{{ all_params }} + [ 'aliasmapping.prefix={{ aliasmapping_prefix | default('undefined') }}' ]"
+
+  - name: append template properties file to all_params list
+    set_fact:
+      all_params: "{{ all_params }} + [ 'aliasmapping.delimiter={{ aliasmapping_delimiter | default('undefined') }}' ]"
+
+  - name: append template file to all_params list
+    set_fact:
+      all_params: "{{ all_params }} + [ 'template.path={{ template | default('undefined') }}' ]"
+
+  - name: append template properties file to all_params list
+    set_fact:
+      all_params: "{{ all_params }} + [ 'template.props={{ properties | default('undefined') }}' ]"
 
   - name: append non-secure params to the all_params list
     set_fact:
