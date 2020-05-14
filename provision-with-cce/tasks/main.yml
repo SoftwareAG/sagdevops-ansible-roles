@@ -4,6 +4,9 @@
     debug:
       msg: 
       - "Running webmethods product provisoning with:"
+      - "inventory_pattern = {{ inventory_pattern | default('undefined') }}"
+      - "hosts_property = {{ hosts_property | default('undefined') }}"
+      - "aliases_property = {{ aliases_property | default('undefined') }}"
       - "run_dir = {{ run_dir | default('undefined') }}"
       - "template = {{ template | default('undefined') }}"
       - "properties = {{ properties | default('undefined') }}"
@@ -14,15 +17,24 @@
       name: get-inventory-hosts
     vars:
       inventory_hosts_clear_first: true
+      inventory_hosts_property: "{{ hosts_property }}"
+  
+  - name: Set all_hostnames facts
+    set_fact:
+      all_hostnames: "{{ get_inventory_hosts }}"
 
-  - name: fail if no hosts was found
-    fail: 
-      msg: "no hosts was found for inventory_pattern [{{ inventory_pattern }}] provided...cannot do anything."
-    when: get_inventory_hosts is not defined or (get_inventory_hosts|length==0)
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_hosts_clear_first: true
+      inventory_hosts_property: "{{ aliases_property }}"
+
+  - name: Set all_aliases facts
+    set_fact:
+      all_aliases: "{{ get_inventory_hosts }}"
 
   - name: Clear the all_host facts
     set_fact:
-      all_hostnames: "{{ get_inventory_hosts }}"
       all_params: []
       all_params_secure: []
 
@@ -33,6 +45,11 @@
     set_fact:
       all_params: "{{ all_params }} + [ 'target.nodes=[{{ all_hostnames | join(',') }}]' ]"
     when: all_hostnames is defined and (all_hostnames|length>0)
+
+  - name: append aliases to the all_params list
+    set_fact:
+      all_params: "{{ all_params }} + [ 'target.aliases=[{{ all_aliases | join(',') }}]' ]"
+    when: all_aliases is defined and (all_aliases|length>0)
 
   - name: append template file to all_params list
     set_fact:
