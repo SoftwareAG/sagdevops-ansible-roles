@@ -1,13 +1,13 @@
 ---
 
-webmethods_install_dir: "undefined"
-service_exec_filepath: "undefined"
-service_user: "undefined"
-service_name: "undefined"
+webmethods_install_dir:
+service_exec_filepath:
+service_user:
+service_name:
 service_type: forking
 force_create: false
 
-product_name: "undefined"
-product_version_full: "undefined"
-product_command: "undefined"
-product_instance_name: default
+product_name:
+product_version_full:
+product_command:
+product_instance_name:
