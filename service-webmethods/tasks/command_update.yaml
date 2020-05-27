@@ -28,21 +28,34 @@
           path: /etc/systemd/system/{{ service_name }}.service.d
           state: directory
 
-      - name: delete override file first if it exists
+      - name: delete override file first if it exists (for compatibility with older concept)
         file:
           path: /etc/systemd/system/{{ service_name }}.service.d/override.conf
           state: absent
 
-      - name: create override file
-        file:
-          path: /etc/systemd/system/{{ service_name }}.service.d/override.conf
-          state: touch
-
-      - name: Populate systemd override if the service_env are defined
+      - name: Populate systemd override_service if the service_env is defined and non empty
         template:
-          src: override.j2
-          dest: /etc/systemd/system/{{ service_name }}.service.d/override.conf
+          src: override_service.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
         when: service_env is defined and service_env.keys()|length > 0
+      
+      - name: delete override_service file if service_env is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
+          state: absent
+        when: service_env is not defined or service_env.keys()|length == 0
+
+      - name: Populate systemd override_unit if the unit_env is defined and non empty
+        template:
+          src: override_unit.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
+        when: unit_env is defined and unit_env.keys()|length > 0
+
+      - name: delete override_unit file if unit_env is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
+          state: absent
+        when: unit_env is not defined or unit_env.keys()|length == 0
 
       - name: force systemd to reread configs after modification
         systemd: daemon_reload=yes

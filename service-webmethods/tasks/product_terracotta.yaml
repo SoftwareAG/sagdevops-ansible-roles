@@ -7,3 +7,8 @@
     service_pidfile: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/TSA.pid"
     service_env:
       LimitMEMLOCK: "infinity"
+      Restart: "always"
+      RestartSec: "30"
+    unit_env:
+      After: "network-online.target"
+      Requires: "network-online.target"

@@ -4,4 +4,14 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/InternalDataStore/bin/el_initd"
     service_name: "sag1cel{{ product_version_full }}"
-    # service_env: "{{ service_env_internaldatastore_defaults }}"
+    service_env:
+      Restart: "always"
+      RestartSec: "30"
+      LimitAS: "infinity"
+      LimitFSIZE: "infinity"
+      LimitMEMLOCK: "infinity"
+      LimitNOFILE: "{{ limits_openfiles }}"
+      LimitNPROC: "{{ limits_processes }}"
+    unit_env:
+      After: "network-online.target"
+      Requires: "network-online.target"

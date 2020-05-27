@@ -4,3 +4,9 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/bin/sagis{{ product_version_full }}"
     service_name: "sag1is{{ product_version_full }}"
+    service_env:
+      Restart: "always"
+      RestartSec: "30"
+    unit_env:
+      After: "network-online.target"
+      Requires: "network-online.target"

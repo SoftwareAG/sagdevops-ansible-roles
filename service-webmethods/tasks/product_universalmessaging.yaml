@@ -4,3 +4,9 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/UniversalMessaging/server/{{ product_instance_name }}/bin/nserverdaemon"
     service_name: "sag1um{{ product_version_full }}"
+    service_env:
+      Restart: "always"
+      RestartSec: "30"
+    unit_env:
+      After: "network-online.target"
+      Requires: "network-online.target"

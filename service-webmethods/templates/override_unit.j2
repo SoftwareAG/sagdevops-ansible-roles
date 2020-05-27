@@ -1,0 +1,4 @@
+[Unit]
+{% for k,v in unit_env.iteritems() %}
+{{ k }}={{ v }}
+{% endfor %}

@@ -4,3 +4,9 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/profiles/CTP/bin/sagctp105"
     service_name: "sag1ctp{{ product_version_full }}"
+    service_env:
+      Restart: "always"
+      RestartSec: "30"
+    unit_env:
+      After: "network-online.target"
+      Requires: "network-online.target"
