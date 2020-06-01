@@ -69,3 +69,6 @@
     fail: 
       msg: "service {{ service_name }} is still not found even though we just created it - operation must have failed."
     when: ansible_facts.services[service_name_index] is not defined
+
+  ## call update by default
+  - import_tasks: "command_update.yaml"

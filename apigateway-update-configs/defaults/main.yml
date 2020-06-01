@@ -1,6 +1,0 @@
----
-
-apigateway_instance_basepath: "{{ webmethods_install_dir }}/IntegrationServer/instances/apigateway"
-
-apigateway_elasticsearch_config_file: "{{ apigateway_instance_basepath }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
-apigateway_elasticsearch_configs_toupdate: {}
