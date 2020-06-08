@@ -1,0 +1,12 @@
+---
+
+  - name: deploy resolv-options template
+    template:
+      src: resolv-options.j2
+      dest: /etc/NetworkManager/dispatcher.d/999-resolv-options
+      owner: root
+      group: root
+      mode: 0755
+      backup: yes
+    notify:
+      - reload network

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+IFACE="$1"
+ACTION="$2"
+
+# Don't bother doing anything if action isn't "up"
+if [ "$ACTION" != "up" ]; then
+  exit
+fi
+
+OPTS="options rotate timeout:2 attempts:5 single-request"
+
+case "$IFACE" in
+  eth*|wlan*|en*)
+    grep -q "$OPTS" /run/NetworkManager/resolv.conf &> /dev/null || echo "$OPTS" >> /run/NetworkManager/resolv.conf
+    grep -q "$OPTS" /etc/resolv.conf &> /dev/null || echo "$OPTS" >> /etc/resolv.conf
+    ;;
+esac

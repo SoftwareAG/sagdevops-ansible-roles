@@ -13,6 +13,7 @@
     delete: yes
     recursive: yes
     compress: no
+    checksum: no
     rsync_opts: "--no-motd,--exclude=.gitignore"
     owner: yes
     group: yes
