@@ -5,7 +5,7 @@
     path: "{{ cce_provisioning_content_path }}"
     state: directory
 
-- name: Synchronize and delete content in dest
+- name: Synchronize content in dest
   synchronize:
     src: "{{ cce_provisioning_content_localpath }}"
     dest: "{{ cce_provisioning_content_path }}"

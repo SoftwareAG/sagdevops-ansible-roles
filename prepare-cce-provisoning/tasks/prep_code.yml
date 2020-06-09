@@ -5,10 +5,11 @@
     path: "{{ cce_provisioning_code_path }}"
     state: directory
 
-- name: Synchronize and delete code in dest
+- name: Synchronize code in dest
   synchronize:
     src: "{{ cce_provisioning_code_localpath }}"
     dest: "{{ cce_provisioning_code_path }}"
+    mode: "push"
     delete: yes
     recursive: yes
     compress: no
