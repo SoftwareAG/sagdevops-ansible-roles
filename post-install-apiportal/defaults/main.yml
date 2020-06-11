@@ -10,5 +10,5 @@ webmethods_apiportal_acc_password: g3h31m
 webmethods_apiportal_acc_command:
 
 ### large, medium, small
-webmethods_apiportal_acc_install_size: 
-webmethods_apiportal_loadbalancer_fqdn: 
+webmethods_apiportal_acc_install_size: ""
+webmethods_apiportal_loadbalancer_fqdn: ""
