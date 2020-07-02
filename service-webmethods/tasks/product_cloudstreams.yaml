@@ -5,6 +5,7 @@
     service_exec_filepath: "{{ webmethods_install_dir }}/profiles/CTP/bin/sagctp105"
     service_name: "sag1ctp{{ product_version_full }}"
     service_env:
+      RemainAfterExit: "no"
       Restart: "always"
       RestartSec: "30"
     unit_env:

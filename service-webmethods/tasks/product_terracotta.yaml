@@ -7,6 +7,7 @@
     service_pidfile: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/TSA.pid"
     service_env:
       LimitMEMLOCK: "infinity"
+      RemainAfterExit: "no"
       Restart: "always"
       RestartSec: "30"
     unit_env:

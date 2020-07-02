@@ -5,6 +5,7 @@
     service_exec_filepath: "{{ webmethods_install_dir }}/API_Portal/server/bin/CloudAgentApp.sh"
     service_name: "sag1apiportal{{ product_version_full }}"
     service_env:
+      RemainAfterExit: "no"
       Restart: "always"
       RestartSec: "30"
     unit_env:

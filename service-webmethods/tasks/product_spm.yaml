@@ -4,3 +4,7 @@
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/profiles/SPM/bin/sagspm{{ product_version_full }}"
     service_name: "sag1spm{{ product_version_full }}"
+    service_env:
+      RemainAfterExit: "no"
+      Restart: "always"
+      RestartSec: "30"
