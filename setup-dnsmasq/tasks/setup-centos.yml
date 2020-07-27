@@ -1,0 +1,8 @@
+---
+
+  - name: Install dnsmasq
+    yum:
+      name: "dnsmasq"
+      state: present
+
+### research how to configure...
