@@ -4,3 +4,13 @@
   service:
     name: NetworkManager
     state: restarted
+
+- name: restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+
+- name: restart firewalld
+  service:
+    name: dnsmasq
+    state: restarted

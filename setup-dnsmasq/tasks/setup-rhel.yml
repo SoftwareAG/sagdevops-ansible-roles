@@ -15,6 +15,7 @@
       backup: yes
     notify:
       - reload network manager
+      - restart dnsmasq
 
   - name: deploy networkmanager dnscache plugin
     template:
@@ -26,3 +27,11 @@
       backup: yes
     notify:
       - reload network manager
+      - restart dnsmasq
+  
+  - name: Make sure Dnsmasq is running
+    service:
+      name: dnsmasq
+      state: started
+      enabled: yes
+    tags: dnsmasq

@@ -1,0 +1,73 @@
+# Dnsmasq configuration
+# {{ ansible_managed }}
+
+{% if dnsmasq_listen_address is defined %}
+listen-address={{ dnsmasq_listen_address }}
+{% endif %}
+{% if dnsmasq_interface is defined %}
+interface={{ dnsmasq_interface }}
+{% endif %}
+{% if dnsmasq_port is defined %}
+port={{ dnsmasq_port }}
+
+{% endif %}
+{% if dnsmasq_domain_needed %}
+domain-needed
+{% endif %}
+{% if dnsmasq_bogus_priv %}
+bogus-priv
+{% endif %}
+
+{% if dnsmasq_resolv_file is defined %}
+resolv-file={{ dnsmasq_resolv_file }}
+
+{% endif %}
+{% if dnsmasq_addn_hosts is defined %}
+addn-hosts={{ dnsmasq_addn_hosts }}
+
+{% endif %}
+{% if dnsmasq_expand_hosts %}
+expand-hosts
+{% endif %}
+{% if dnsmasq_domain is defined %}
+domain={{ dnsmasq_domain }}
+{% endif %}
+{% if dnsmasq_dhcp_ranges is defined %}
+{% for range in dnsmasq_dhcp_ranges %}
+dhcp-range={{ range.start_addr }},{{ range.end_addr }},{{ range.lease_time }}
+{% endfor%}
+
+{% endif %}
+{% if dnsmasq_dhcp_hosts is defined %}
+{% for host in dnsmasq_dhcp_hosts %}
+dhcp-host={{ host.mac }},{{ host.ip  }}{% if host.name is defined %},{{ host.name }}{% endif %}
+
+{% endfor %}
+
+{% endif %}
+{% if dnsmasq_option_router is defined %}
+dhcp-option=option:router,{{ dnsmasq_option_router }}
+{% endif %}
+
+{% if dnsmasq_upstream_servers is defined %}
+{% if dnsmasq_upstream_servers is iterable %}
+{% for host in dnsmasq_upstream_servers %}
+server={{ host }}
+{% endfor %}
+{% else %}
+server={{ dnsmasq_upstream_servers }}
+{% endif %}
+{% endif %}
+
+{% if dnsmasq_authoritative %}
+dhcp-authoritative
+{% endif %}
+
+{% if dnsmasq_srv_hosts is defined %}
+{% for host in dnsmasq_srv_hosts %}
+srv-host={{ host.name }}{% if host.target is defined %},{{ host.target }}{% endif %}{% if host.port is defined %},{{ host.port }}{% endif %}{% if host.priority is defined %},{{ host.priority }}{% endif %}{% if host.weight is defined %},{{ host.weight }}{% endif %}
+
+{% endfor %}
+{% endif %}
+
+conf-dir=/etc/dnsmasq.d
