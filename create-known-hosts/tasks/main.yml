@@ -26,7 +26,7 @@
       state: touch
 
   - name: For each host, scan for its ssh public key
-    shell: "{{ ssh_known_hosts_command }} -H {{ hostvars[item].ansible_host }},{{ hostvars[item].fqdn }},`dig +short {{ hostvars[item].ansible_host }}` >> {{ ssh_known_hosts_file_full }}"
+    shell: "{{ ssh_known_hosts_command }} -H {{ hostvars[item].ansible_host }},`dig +short {{ hostvars[item].ansible_host }}` >> {{ ssh_known_hosts_file_full }}"
     with_items: "{{ ssh_known_hosts }}"
     register: ssh_known_host_results
     ignore_errors: yes
