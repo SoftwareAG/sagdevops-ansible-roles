@@ -1,6 +1,7 @@
 ---
 
 install_dir: ""
+install_sum_dir: ""
 install_user: ""
 install_group: ""
 
