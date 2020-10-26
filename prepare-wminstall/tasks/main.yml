@@ -2,34 +2,38 @@
 
 - name: Create wM folder
   file: 
-    path: "{{ webmethods_install_dir }}"
+    path: "{{ install_dir }}"
     state: directory
 
 - name: Create a new primary partition
   parted:
-    device: "{{ webmethods_disk_device }}"
-    number: "{{ webmethods_disk_part_number }}"
+    device: "{{ disk_device }}"
+    number: "{{ disk_part_number }}"
     state: present
+  when: disk_device is defined and disk_device != ""
 
-- name: Create a ext4 filesystem on webmethods_disk and check disk blocks
+- name: Create a ext4 filesystem on disk_device and check disk blocks
   filesystem:
     fstype: ext4
-    dev: "{{ webmethods_disk_part_device }}"
+    dev: "{{ disk_part_device }}"
     force: no
-    opts: -L webmethods
+    opts: 
+      - -L webmethods
+  when: disk_device is defined and disk_device != ""
 
 - name: Mount up device by label
   mount:
-    path: "{{ webmethods_install_dir }}"
+    path: "{{ install_dir }}"
     src: LABEL=webmethods
     fstype: ext4
     state: mounted
+  when: disk_device is defined and disk_device != ""
 
-- name: Fix permission on newly mounted dir
+- name: Fix permission on install dir
   file: 
-    path: "{{ webmethods_install_dir }}"
+    path: "{{ install_dir }}"
     state: directory
     recurse: no
-    owner: "{{ webmethods_user }}"
-    group: "{{ webmethods_group }}"
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
     mode: 0775

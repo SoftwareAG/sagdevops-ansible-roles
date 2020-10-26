@@ -1,1 +1,9 @@
 ---
+
+install_dir: ""
+install_user: ""
+install_group: ""
+
+disk_device: ""
+disk_part_number: ""
+disk_part_device: ""
