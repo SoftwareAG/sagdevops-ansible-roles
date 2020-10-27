@@ -1,0 +1,26 @@
+---
+
+- name: fail if webmethods_localrepo_target_dir not specified
+  fail: 
+    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+- name: run get_artifacts_from_s3 command
+  command: "/bin/bash get_artifacts_from_s3.sh"
+  args:
+    chdir: "{{ webmethods_localrepo_target_dir }}"
+  async: 4800
+  poll: 0
+  register: get_artifacts_from_s3_sleeper
+
+- name: Check status for artifacts download
+  async_status:
+    jid: "{{ get_artifacts_from_s3_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 200
+  delay: 24
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"

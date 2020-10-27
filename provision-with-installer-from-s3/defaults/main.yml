@@ -1,7 +1,5 @@
 ---
 
-provision_action:
-
 ## global settings
 webmethods_localrepo_target_dir: ""
 webmethods_localrepo_target_dir_owner_user: ""

@@ -1,8 +1,5 @@
 ---
 
-## this is to make sure we gather the facts again as the user {{ cce_owner }} in order to get a valid {{ ansible_env.HOME }}
-- setup:
-
 - name: fail if webmethods_localrepo_target_dir not specified
   fail: 
     msg: "webmethods_localrepo_target_dir not specified...can't do anything"
