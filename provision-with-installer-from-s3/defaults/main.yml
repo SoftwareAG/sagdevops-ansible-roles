@@ -1,0 +1,36 @@
+---
+
+provision_action:
+
+## global settings
+webmethods_localrepo_target_dir: ""
+webmethods_localrepo_target_dir_owner_user: ""
+webmethods_localrepo_target_dir_owner_group: ""
+
+webmethods_s3repo_bucket_name: ""
+webmethods_s3repo_bucket_prefix: ""
+webmethods_s3repo_scripts_dir: ""
+
+## installers
+webmethods_s3repo_installer_filename: ""
+webmethods_localrepo_installer_filename: ""
+webmethods_s3repo_sum_filename: ""
+webmethods_localrepo_sum_filename: ""
+
+## licenses
+webmethods_s3repo_license_zip_filename: ""
+webmethods_localrepo_license_zip_filename: ""
+webmethods_s3repo_inzip_license_filepath: ""
+webmethods_localrepo_license_filepath: ""
+
+## products
+webmethods_s3repo_products_image_filename: ""
+webmethods_localrepo_products_image_filename: ""
+webmethods_s3repo_products_autoscript_filename: ""
+webmethods_localrepo_products_autoscript_filename: ""
+
+## fixes
+webmethods_s3repo_fixes_image_filename: ""
+webmethods_localrepo_fixes_image_filename: ""
+webmethods_s3repo_fixes_autoscript_filename: ""
+webmethods_localrepo_fixes_autoscript_filename: ""

@@ -1,0 +1,54 @@
+---
+  
+## this is to make sure we gather the facts again as the user {{ cce_owner }} in order to get a valid {{ ansible_env.HOME }}
+- setup:
+
+- name: fail if provision_installer_dir not specified
+  fail: 
+    msg: "provision_installer_dir not specified...can't do anything"
+  when: provision_installer_dir is not defined or provision_installer_dir == ""
+
+- name: fail if provision_installer_exec_filename not specified
+  fail: 
+    msg: "provision_installer_exec_filename not specified...can't create the installer script!"
+  when: provision_installer_exec_filename is not defined or provision_installer_exec_filename == ""
+
+- name: fail if provision_installer_script_filename not specified
+  fail: 
+    msg: "provision_installer_script_filename not specified...can't create the installer script!"
+  when: provision_installer_script_filename is not defined or provision_installer_script_filename == ""
+
+- name: set the full path for the installer script file
+  set_fact:
+    provision_installer_script_filepath: "{{ provision_installer_dir }}/{{ provision_installer_script_filename }}"
+
+- name: Clear the all_hosts_computed fact
+  set_fact:
+    provision_installer_command: "./{{ provision_installer_exec_filename }} -scriptErrorInteract no -readScript {{ provision_installer_script_filepath }}"
+
+- debug: msg="Running command from directory {{ provision_installer_dir }} - {{ provision_installer_command }}"
+
+- name: run install command
+  command: "{{ provision_installer_command }}"
+  args:
+    chdir: "{{ provision_installer_dir }}"
+  async: 4800
+  poll: 0
+  register: provision_sleeper
+
+- name: Check status for install
+  async_status:
+    jid: "{{ provision_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 200
+  delay: 24
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"
+
+- name: Copy job result to the server
+  copy:
+    content: "{{ job_result.stdout_lines | join('\n') }}"
+    dest: "{{ ansible_env.HOME }}/provision_with_installer.{{ansible_date_time.iso8601_basic_short}}.out"

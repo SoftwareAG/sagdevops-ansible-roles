@@ -1,0 +1,40 @@
+---
+
+## this is to make sure we gather the facts again as the user {{ cce_owner }} in order to get a valid {{ ansible_env.HOME }}
+- setup:
+
+- name: fail if webmethods_localrepo_target_dir not specified
+  fail: 
+    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+- name: Create local dir folder for artifacts
+  file: 
+    path: "{{ webmethods_localrepo_target_dir }}"
+    state: directory
+    owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
+    group: "{{ webmethods_localrepo_target_dir_owner_group }}"
+    mode: 0700
+
+- name: Copy resource files to target
+  copy:
+    src: "{{ item }}"
+    dest: "{{ webmethods_localrepo_target_dir }}"
+    owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
+    group: "{{ webmethods_localrepo_target_dir_owner_group }}"
+    mode: '0600'
+    remote_src: no
+  with_fileglob:
+    - "./resources/download_helper.sh"
+    - "./resources/install_sum.sh"
+    - "./resources/install_product.sh"
+    - "./resources/install_fixes.sh"
+
+- name: Write download content with all the params into the target
+  template:
+    src: get_artifacts_from_s3.sh.j2
+    dest: "{{ webmethods_localrepo_target_dir }}/get_artifacts_from_s3.sh"
+    backup: no
+    owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
+    group: "{{ webmethods_localrepo_target_dir_owner_group }}"
+    mode: 0600
