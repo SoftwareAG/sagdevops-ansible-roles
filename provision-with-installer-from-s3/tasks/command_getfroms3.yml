@@ -9,7 +9,7 @@
   command: "/bin/bash get_artifacts_from_s3.sh"
   args:
     chdir: "{{ webmethods_localrepo_target_dir }}"
-  async: 4800
+  async: 1000
   poll: 0
   register: get_artifacts_from_s3_sleeper
 
@@ -18,8 +18,8 @@
     jid: "{{ get_artifacts_from_s3_sleeper.ansible_job_id }}"
   register: job_result
   until: job_result.finished
-  retries: 200
-  delay: 24
+  retries: 100
+  delay: 10
 
 - name: Print the job_result to the console.
   debug:
