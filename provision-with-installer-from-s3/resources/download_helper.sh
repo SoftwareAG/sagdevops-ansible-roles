@@ -14,13 +14,9 @@ function download_artifacts {
     if [ "x$REMOTE_S3_BUCKET_PREFIX" == "x" ]; then
         S3_BASE_URL="s3://${REMOTE_S3_BUCKET}"
     else
-        S3_BASE_URL="${S3_BASE_URL}"
+        S3_BASE_URL="s3://${REMOTE_S3_BUCKET}/${REMOTE_S3_BUCKET_PREFIX}"
     fi
-
-    ## scripts
-    aws s3 cp ${S3_BASE_URL}/scripts/_common/install_product.sh $LOCAL_TARGET_DIR/install_product.sh
-    aws s3 cp ${S3_BASE_URL}/scripts/_common/install_fixes.sh $LOCAL_TARGET_DIR/install_fixes.sh
-    aws s3 cp ${S3_BASE_URL}/scripts/_common/install_sum.sh $LOCAL_TARGET_DIR/install_sum.sh
+    echo "Download artifacts from S3 with S3_BASE_URL=$S3_BASE_URL"
 
     ## installers
     if [ ! -f $LOCAL_PRODUCT_INSTALLER ]; then
