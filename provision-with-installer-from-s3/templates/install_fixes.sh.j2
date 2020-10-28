@@ -18,24 +18,26 @@ function replace_global {
 
 ## set params to default if not defined already (ie. env variables)
 if [ "x$__work_dir" == "x" ]; then
-    __work_dir="/opt/softwareag/sag_install_artifacts"
+    __work_dir="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
 fi
 
 if [ "x$__sum_install_path" == "x" ]; then
-    __sum_install_path="/opt/sum"
+    __sum_install_path="{{ webmethods_install_sum_target_dir | default('/opt/sum', true) }}"
 fi
 
 if [ "x$__sum_fix_target_path" == "x" ]; then
-    __sum_fix_target_path="/opt/softwareag"
+    __sum_fix_target_path="{{ webmethods_install_target_dir | default('/opt/softwareag', true) }}"
 fi
 
 if [ "x$__sum_fix_image" == "x" ]; then
-    __sum_fix_image="sum_image.zip"
+    __sum_fix_image="{{ webmethods_localrepo_fixes_image_filename | default('sum_image.zip', true) }}"
 fi
 
 if [ "x$__sum_fix_script" == "x" ]; then
-    __sum_fix_script="sum.script"
+    __sum_fix_script="{{ webmethods_localrepo_fixes_autoscript_filename | default('sum.script', true) }}"
 fi
+
+{% raw %}
 
 __sum_fix_image_path="${__work_dir}/${__sum_fix_image}"
 __sum_fix_script_path="${__work_dir}/${__sum_fix_script}"
@@ -55,4 +57,7 @@ echo "DONE!!"
 ## run update manager cleanup
 echo "Running update manager cleanup"
 /bin/sh ${__sum_install_path}/bin/UpdateManagerCMD.sh -readScript "$__sum_fix_script_path" -clearCache true
+
 echo "DONE!!"
+
+{% endraw %}

@@ -4,25 +4,27 @@ echo "Begin $0"
 
 THIS=`basename $0`
 THISDIR=`dirname $0`; THISDIR=`cd $THISDIR;pwd`
-
 echo "current folder: $THISDIR"
 
 ## set params to default if not defined already (ie. env variables)
 if [ "x$__work_dir" == "x" ]; then
-    __work_dir="/opt/softwareag/sag_install_artifacts"
+    __work_dir="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
 fi
 
 if [ "x$__sum_install_target_path" == "x" ]; then
-    __sum_install_target_path="/opt/sum"
+    __sum_install_target_path="{{ webmethods_install_sum_target_dir | default('/opt/sum', true) }}"
 fi
 
 if [ "x$__sum_install_executable" == "x" ]; then
-    __sum_install_executable="softwareagupdatemanager-linux.bin"
+    __sum_install_executable="{{ webmethods_localrepo_sum_filename | default('softwareagupdatemanager-linux.bin', true) }}"
 fi
 
 if [ "x$__sum_fix_image" == "x" ]; then
-    __sum_fix_image="sum_image.zip"
+    __sum_fix_image="{{ webmethods_localrepo_fixes_image_filename | default('sum_image.zip', true) }}"
 fi
+
+{% raw %}
+
 __sum_fix_image_path="${__work_dir}/${__sum_fix_image}"
 
 echo "target install dir: $__sum_install_target_path"
@@ -35,3 +37,5 @@ echo "target install dir: $__sum_install_target_path"
 ls -al $__sum_install_target_path
 
 echo DONE!!
+
+{% endraw %}

@@ -20,28 +20,30 @@ function replace_global {
 
 ## set params to default if not defined already (ie. env variables)
 if [ "x$__work_dir" == "x" ]; then
-    __work_dir="/opt/softwareag/sag_install_artifacts"
+    __work_dir="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
 fi
 
 if [ "x$__installer_target_path" == "x" ]; then
-    __installer_target_path="/opt/softwareag"
+    __installer_target_path="{{ webmethods_install_target_dir | default('/opt/softwareag', true) }}"
 fi
 
 if [ "x$__installer_executable" == "x" ]; then
-    __installer_executable="softwareaginstaller-linux.bin"
+    __installer_executable="{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
 fi
 
 if [ "x$__installer_script" == "x" ]; then
-    __installer_script="installer.script"
+    __installer_script="{{ webmethods_localrepo_products_autoscript_filename | default('installer.script', true) }}"
 fi
 
 if [ "x$__installer_product_image" == "x" ]; then
-    __installer_product_image="installer_image.zip"
+    __installer_product_image="{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
 fi
 
 if [ "x$__installer_product_license" == "x" ]; then
-    __installer_product_license="installer_license.xml"
+    __installer_product_license="{{ webmethods_localrepo_license_filepath | default('installer_license.xml', true) }}"
 fi
+
+{% raw %}
 
 ## replace values in the webMethods Installer script
 replace_global "{{ __installer_target_path }}" "${__installer_target_path}" "$__installer_script"
@@ -59,3 +61,5 @@ echo "After install - target install dir: $__installer_target_path"
 ls -al $__installer_target_path
 
 echo DONE!!
+
+{% endraw %}
