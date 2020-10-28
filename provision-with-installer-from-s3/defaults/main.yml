@@ -8,6 +8,7 @@ webmethods_localrepo_target_dir_owner_group: ""
 webmethods_s3repo_bucket_name: ""
 webmethods_s3repo_bucket_prefix: ""
 webmethods_s3repo_scripts_dir: ""
+webmethods_s3repo_force_redownload: ""
 
 ## installers
 webmethods_s3repo_installer_filename: ""

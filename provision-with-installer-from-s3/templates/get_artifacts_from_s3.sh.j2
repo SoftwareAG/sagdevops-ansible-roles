@@ -8,6 +8,7 @@ REMOTE_S3_BUCKET="{{ webmethods_s3repo_bucket_name }}"
 REMOTE_S3_BUCKET_PREFIX="{{ webmethods_s3repo_bucket_prefix }}"
 REMOTE_S3_BUCKET_SCRIPT_FOLDER="{{ webmethods_s3repo_scripts_dir }}"
 LOCAL_TARGET_DIR="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
+FORCE_REDOWNLOAD="{{ webmethods_s3repo_force_redownload | default('false', true) }}"
 
 ## installers
 REMOTE_S3_BUCKET_PRODUCT_INSTALLER="{{ webmethods_s3repo_installer_filename }}"
