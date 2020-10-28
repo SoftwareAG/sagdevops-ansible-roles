@@ -11,7 +11,7 @@
     state: directory
     owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
     group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: 0700
+    mode: 0755
 
 - name: Copy resource files to target
   copy:
@@ -19,7 +19,7 @@
     dest: "{{ webmethods_localrepo_target_dir }}"
     owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
     group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: '0600'
+    mode: 0644
     remote_src: no
   with_fileglob:
     - "./resources/download_helper.sh"
@@ -34,4 +34,4 @@
     backup: no
     owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
     group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: 0600
+    mode: 0644

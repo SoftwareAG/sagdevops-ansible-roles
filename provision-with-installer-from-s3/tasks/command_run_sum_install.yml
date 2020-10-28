@@ -1,0 +1,26 @@
+---
+  
+- name: fail if webmethods_localrepo_target_dir not specified
+  fail: 
+    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+- name: run install_sum command
+  command: "/bin/bash install_sum.sh"
+  args:
+    chdir: "{{ webmethods_localrepo_target_dir }}"
+  async: 1000
+  poll: 0
+  register: install_sum_sleeper
+
+- name: Check status for install_sum task
+  async_status:
+    jid: "{{ install_sum_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 100
+  delay: 10
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"
