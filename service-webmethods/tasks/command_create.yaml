@@ -71,4 +71,4 @@
     when: ansible_facts.services[service_name_index] is not defined
 
   ## call update by default
-  - import_tasks: "command_update.yaml"
+  - include_tasks: "command_update.yaml"
