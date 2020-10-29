@@ -1,5 +1,3 @@
 ---
 
-- import_tasks: product_integrationserver.yaml
-  vars:
-    product_instance_name: "apigateway"
+- include_tasks: product_integrationserver.yaml

@@ -20,7 +20,7 @@
     msg: "acc params webmethods_apiportal_acc_password missing...cannot do anything."
   when: webmethods_apiportal_acc_password is not defined or webmethods_apiportal_acc_password == ""
 
-- import_tasks: command_native.yaml
+- include_tasks: command_native.yaml
   vars:
     webmethods_script_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc/"
     webmethods_script_start: "./acc.sh -h {{webmethods_apiportal_acc_host}} -u {{webmethods_apiportal_acc_user}} -pwd {{webmethods_apiportal_acc_password}} -p {{webmethods_apiportal_acc_port}} startall"
