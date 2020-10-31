@@ -29,7 +29,7 @@
     msg: "acc params webmethods_apiportal_acc_password missing...cannot do anything."
   when: webmethods_apiportal_acc_password is not defined or webmethods_apiportal_acc_password == ""
 
-- name: run command
+- name: "Running command \"{{ webmethods_apiportal_acc_command }}\""
   shell: "./acc.sh -h {{webmethods_apiportal_acc_host}} -u {{webmethods_apiportal_acc_user}} -pwd {{webmethods_apiportal_acc_password}} -p {{webmethods_apiportal_acc_port}} {{webmethods_apiportal_acc_command}}"
   args:
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
@@ -39,7 +39,7 @@
   no_log: yes
   register: webmethods_apiportal_acc_command_sleeper
   
-- name: Check status for template {{ template }}
+- name: "Check status for command \"{{ webmethods_apiportal_acc_command }}\""
   async_status:
     jid: "{{ webmethods_apiportal_acc_command_sleeper.ansible_job_id }}"
   register: job_result
