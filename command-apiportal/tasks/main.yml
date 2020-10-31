@@ -34,6 +34,19 @@
   args:
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
     executable: /bin/sh
-  register: webmethods_apiportal_acc_result
+  async: 4800
+  poll: 0
+  no_log: yes
+  register: webmethods_apiportal_acc_command_sleeper
+  
+- name: Check status for template {{ template }}
+  async_status:
+    jid: "{{ webmethods_apiportal_acc_command_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 200
+  delay: 24
 
-- debug: msg="{{ webmethods_apiportal_acc_result.stdout }}"
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"
