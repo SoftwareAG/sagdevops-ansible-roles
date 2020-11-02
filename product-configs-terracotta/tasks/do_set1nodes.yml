@@ -1,0 +1,10 @@
+---
+
+  - name: Write the config for a single node terracotta
+    template:
+      src: "tc-config.template.xml.j2" 
+      dest: "{{ tc_config_path }}/tc-config.xml"
+      backup: yes
+      owner: "{{ webmethods_user }}"
+      group: "{{ webmethods_group }}"
+      mode: 0644

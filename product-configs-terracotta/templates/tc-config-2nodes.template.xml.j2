@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tc:tc-config xmlns:tc="http://www.terracotta.org/config"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.terracotta.org/schema/terracotta-9.xsd">
+    <tc-properties>
+        <property name="l2.nha.dirtydb.backup.enabled" value="false"/>
+        <property name="l2.nha.dirtydb.autoDelete" value="true"/>
+        <property name="logging.maxBackups" value="20"/>
+        <property name="logging.maxLogFileSize" value="50"/>
+    </tc-properties>
+    <servers>
+        <mirror-group group-name="hagroup1">
+            <server host="{{ tc_host1 }}" name="{{ tc_name1 }}">
+                <data>{{ tc_data }}</data>
+                <logs>{{ tc_logs }}</logs>
+                <index>{{ tc_index }}</index>
+                <data-backup>{{ tc_data_backup }}</data-backup>
+                <tsa-port>{{ tc_tsa_port }}</tsa-port>
+                <jmx-port>{{ tc_jmx_port }}</jmx-port>
+                <tsa-group-port>{{ tc_tsa_group_port }}</tsa-group-port>
+                <management-port>{{ tc_management_port }}</management-port>
+                <dataStorage size="{{ tc_datastorage_size }}">
+                    <offheap size="{{ tc_offheap_size }}" />
+                    {% if tc_host1_hybrid_enabled %}
+                    <hybrid />
+                    {% endif %}
+                </dataStorage>
+            </server>
+            <server host="{{ tc_host2 }}" name="{{ tc_name2 }}">
+                <data>{{ data }}</data>
+                <logs>{{ logs }}</logs>
+                <index>{{ index }}</index>
+                <data-backup>{{ data-backup }}</data-backup>
+                <tsa-port>{{ tsa-port }}</tsa-port>
+                <jmx-port>{{ jmx-port }}</jmx-port>
+                <tsa-group-port>{{ tsa-group-port }}</tsa-group-port>
+                <management-port>{{ management-port }}</management-port>
+                <dataStorage size="{{ datastorage-size }}">
+                    <offheap size="{{ offheap-size }}" />
+                    {% if tc_host1_hybrid_enabled %}
+                    <hybrid />
+                    {% endif %}
+                </dataStorage>
+            </server>
+        </mirror-group>
+        <update-check>
+            <enabled>false</enabled>
+        </update-check>
+        <garbage-collection>
+            <enabled>true</enabled>
+            <verbose>false</verbose>
+            <interval>900</interval>
+        </garbage-collection>
+        <restartable enabled="{{ restartable-enabled }}"/>
+        <client-reconnect-window>120</client-reconnect-window>
+    </servers>
+    <clients>
+        <logs>stdout:</logs>
+    </clients>
+</tc:tc-config>
