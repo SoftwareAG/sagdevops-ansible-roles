@@ -9,34 +9,34 @@
     </tc-properties>
     <servers>
         <mirror-group group-name="hagroup1">
-            <server host="{{ tc_host1 }}" name="{{ tc_name1 }}">
-                <data>{{ tc_data }}</data>
-                <logs>{{ tc_logs }}</logs>
-                <index>{{ tc_index }}</index>
-                <data-backup>{{ tc_data_backup }}</data-backup>
-                <tsa-port>{{ tc_tsa_port }}</tsa-port>
-                <jmx-port>{{ tc_jmx_port }}</jmx-port>
-                <tsa-group-port>{{ tc_tsa_group_port }}</tsa-group-port>
-                <management-port>{{ tc_management_port }}</management-port>
-                <dataStorage size="{{ tc_datastorage_size }}">
-                    <offheap size="{{ tc_offheap_size }}" />
+            <server host="{{ tc_host1 }}" name="{{ tc_host1_name }}">
+                <data>{{ tc_host1_data_path }}</data>
+                <logs>{{ tc_host1_logs_path }}</logs>
+                <index>{{ tc_host1_index_path }}</index>
+                <data-backup>{{ tc_host1_data_backup_path }}</data-backup>
+                <tsa-port>{{ tc_host1_tsa_port }}</tsa-port>
+                <jmx-port>{{ tc_host1_jmx_port }}</jmx-port>
+                <tsa-group-port>{{ tc_host1_tsa_group_port }}</tsa-group-port>
+                <management-port>{{ tc_host1_management_port }}</management-port>
+                <dataStorage size="{{ tc_host1_datastorage_size }}">
+                    <offheap size="{{ tc_host1_offheap_size }}" />
                     {% if tc_host1_hybrid_enabled %}
                     <hybrid />
                     {% endif %}
                 </dataStorage>
             </server>
-            <server host="{{ tc_host2 }}" name="{{ tc_name2 }}">
-                <data>{{ data }}</data>
-                <logs>{{ logs }}</logs>
-                <index>{{ index }}</index>
-                <data-backup>{{ data-backup }}</data-backup>
-                <tsa-port>{{ tsa-port }}</tsa-port>
-                <jmx-port>{{ jmx-port }}</jmx-port>
-                <tsa-group-port>{{ tsa-group-port }}</tsa-group-port>
-                <management-port>{{ management-port }}</management-port>
-                <dataStorage size="{{ datastorage-size }}">
-                    <offheap size="{{ offheap-size }}" />
-                    {% if tc_host1_hybrid_enabled %}
+            <server host="{{ tc_host2 }}" name="{{ tc_host2_name }}">
+                <data>{{ tc_host2_data_path }}</data>
+                <logs>{{ tc_host2_logs_path }}</logs>
+                <index>{{ tc_host2_index_path }}</index>
+                <data-backup>{{ tc_host2_data_backup_path }}</data-backup>
+                <tsa-port>{{ tc_host2_tsa_port }}</tsa-port>
+                <jmx-port>{{ tc_host2_jmx_port }}</jmx-port>
+                <tsa-group-port>{{ tc_host2_tsa_group_port }}</tsa-group-port>
+                <management-port>{{ tc_host2_management_port }}</management-port>
+                <dataStorage size="{{ tc_host2_datastorage_size }}">
+                    <offheap size="{{ tc_host2_offheap_size }}" />
+                    {% if tc_host2_hybrid_enabled %}
                     <hybrid />
                     {% endif %}
                 </dataStorage>
@@ -48,9 +48,9 @@
         <garbage-collection>
             <enabled>true</enabled>
             <verbose>false</verbose>
-            <interval>900</interval>
+            <interval>{{ tc_garbage_collection }}</interval>
         </garbage-collection>
-        <restartable enabled="{{ restartable-enabled }}"/>
+        <restartable enabled="{{ tc_restartable_enabled }}"/>
         <client-reconnect-window>120</client-reconnect-window>
     </servers>
     <clients>

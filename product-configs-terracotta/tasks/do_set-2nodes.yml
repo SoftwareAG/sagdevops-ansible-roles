@@ -3,7 +3,7 @@
   - name: Write the config for a 2-node terracotta
     template:
       src: "tc-config-2nodes.template.xml.j2" 
-      dest: "{{ tc_config_path }}/tc-config.xml"
+      dest: "{{ tc_config_file }}"
       backup: yes
       owner: "{{ webmethods_user }}"
       group: "{{ webmethods_group }}"

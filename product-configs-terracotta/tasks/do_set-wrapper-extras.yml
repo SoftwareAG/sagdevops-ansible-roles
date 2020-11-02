@@ -1,0 +1,10 @@
+---
+
+  - name: "Update config file {{ tc_custom_wrapper_file }} with tc_jvm_wrapper_configs params if defined"
+    lineinfile:
+      path: "{{ tc_custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: "{{ tc_jvm_wrapper_configs }}"
+    when: tc_jvm_wrapper_configs is defined and (get_inventory_hosts|length > 0)

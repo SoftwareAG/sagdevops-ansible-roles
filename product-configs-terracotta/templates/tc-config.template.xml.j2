@@ -44,7 +44,7 @@ tc_host1_offheap_size: ""
         <garbage-collection>
             <enabled>true</enabled>
             <verbose>false</verbose>
-            <interval>900</interval>
+            <interval>{{ tc_restartable_enabled }}</interval>
         </garbage-collection>
         <restartable enabled="{{ restartable-enabled }}"/>
         <client-reconnect-window>120</client-reconnect-window>
