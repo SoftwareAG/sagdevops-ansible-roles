@@ -6,8 +6,8 @@ tc_custom_wrapper_file: "{{ tc_config_path }}/custom_wrapper.conf"
 
 tc_restartable_enabled: true
 tc_garbage_collection: 900
-tc_jvm_heap_min: "1024"
-tc_jvm_heap_max: "2048"
+tc_jvm_heap_min: 1024
+tc_jvm_heap_max: 2048
 tc_jvm_wrapper_configs: {}
 
 tc_host1: "localhost"
