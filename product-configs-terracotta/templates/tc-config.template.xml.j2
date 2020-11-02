@@ -19,9 +19,7 @@
             <management-port>{{ tc_host1_management_port }}</management-port>
             <dataStorage size="{{ tc_host1_datastorage_size }}">
                 <offheap size="{{ tc_host1_offheap_size }}" />
-                {% if tc_host1_hybrid_enabled %}
-                <hybrid />
-                {% endif %}
+                {% if tc_host1_hybrid_enabled %}<hybrid />{% endif %}
             </dataStorage>
         </server>
         <update-check>
@@ -32,10 +30,10 @@
             <verbose>false</verbose>
             <interval>{{ tc_garbage_collection }}</interval>
         </garbage-collection>
-        <restartable enabled="{{ tc_restartable_enabled }}"/>
+        <restartable enabled="{{ tc_restartable_enabled | bool | lower }}"/>
         <client-reconnect-window>120</client-reconnect-window>
     </servers>
     <clients>
-        <logs>stdout:</logs>
+        <logs>%(com.softwareag.tc.client.logs.directory)</logs>
     </clients>
 </tc:tc-config>
