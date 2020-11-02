@@ -1,17 +1,3 @@
-tc_host1:
-tc_host1_name:
-tc_host1_data_path: ""
-tc_host1_logs_path: ""
-tc_host1_index_path: ""
-tc_host1_data_backup_path: ""
-tc_host1_tsa_port: ""
-tc_host1_jmx_port: ""
-tc_host1_tsa_group_port: ""
-tc_host1_management_port: ""
-tc_host1_datastorage_size: ""
-tc_host1_offheap_size: ""
-
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <tc:tc-config xmlns:tc="http://www.terracotta.org/config"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.terracotta.org/schema/terracotta-9.xsd">
@@ -44,14 +30,12 @@ tc_host1_offheap_size: ""
         <garbage-collection>
             <enabled>true</enabled>
             <verbose>false</verbose>
-            <interval>{{ tc_restartable_enabled }}</interval>
+            <interval>{{ tc_garbage_collection }}</interval>
         </garbage-collection>
-        <restartable enabled="{{ restartable-enabled }}"/>
+        <restartable enabled="{{ tc_restartable_enabled }}"/>
         <client-reconnect-window>120</client-reconnect-window>
     </servers>
     <clients>
         <logs>stdout:</logs>
     </clients>
 </tc:tc-config>
-
-
