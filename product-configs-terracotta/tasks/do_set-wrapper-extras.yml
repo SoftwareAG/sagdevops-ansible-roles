@@ -7,4 +7,4 @@
       insertafter: '^#{{ item.key }}'
       line: "{{ item.key }}={{ item.value }}"
     with_dict: "{{ tc_jvm_wrapper_configs }}"
-    when: tc_jvm_wrapper_configs is defined and (get_inventory_hosts|length > 0)
+    when: tc_jvm_wrapper_configs is defined and (tc_jvm_wrapper_configs|length > 0)
