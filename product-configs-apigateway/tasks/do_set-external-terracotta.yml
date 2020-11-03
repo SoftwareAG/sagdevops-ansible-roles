@@ -31,6 +31,22 @@
           watt.server.cachemanager.connectTimeout: 30000
           watt.server.cluster.SessTimeout: 90
 
+      - name: "Update config file {{ custom_wrapper_file }} with jvm_wrapper_configs params if defined"
+        lineinfile:
+          path: "{{ custom_wrapper_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          wrapper.java.additional.500: "-Dtest.cluster.withDerby=true"
+          wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
+          wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
+          wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"
+          wrapper.java.additional.504: "-Dl1.max.connect.retries=180"
+          wrapper.java.additional.505: "-Dl1.connect.versionMatchCheck.enabled=true"
+          wrapper.java.additional.506: "-Dl1.socket.connect.timeout=10000"
+          wrapper.java.additional.507: "-Dl1.socket.reconnect.waitInterval=10000"
+
       - name: Check if terracotta license file is there
         stat: 
           path: "{{ webmethods_terracotta_license_path }}"
