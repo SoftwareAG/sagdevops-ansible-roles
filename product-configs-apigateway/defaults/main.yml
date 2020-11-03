@@ -1,6 +1,7 @@
 ---
 
 ## Config files
+product_instance_name: "default"
 runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}"
 runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
 custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
