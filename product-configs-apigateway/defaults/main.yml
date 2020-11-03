@@ -1,30 +1,21 @@
 ---
 
-tc_config_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/conf/"
+## Config files
+runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}"
+runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
+custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
+runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
+apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
+apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
+apigateway_uiconfiguration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
 
-tc_host1:
-tc_host1_name:
-tc_host1_data_path: "../work/terracotta/server-data"
-tc_host1_logs_path: "../work/terracotta/server-data"
-tc_host1_index_path: "../work/terracotta/server-data"
-tc_host1_data_backup_path: "../work/terracotta/server-data"
-tc_host1_tsa_port: ""
-tc_host1_jmx_port: ""
-tc_host1_tsa_group_port: ""
-tc_host1_management_port: ""
-tc_host1_datastorage_size: ""
-tc_host1_offheap_size: ""
-tc_host1_hybrid_enabled: true
+## global JVM settings
+jvm_heap_min: 1024
+jvm_heap_max: 2048
+jvm_wrapper_configs: {}
 
-tc_host2:
-tc_host2_name:
-tc_host2_data_path: ""
-tc_host2_logs_path: ""
-tc_host2_index_path: ""
-tc_host2_data_backup_path: ""
-tc_host2_tsa_port: ""
-tc_host2_jmx_port: ""
-tc_host2_tsa_group_port: ""
-tc_host2_management_port: ""
-tc_host2_datastorage_size: ""
-tc_host2_offheap_size: ""
+## format: host1={host="somehost",port:XXXX,protocol: "http"}
+external_elasticsearch_hosts:
+  - protocol: http
+    host: localhost
+    port: 9240

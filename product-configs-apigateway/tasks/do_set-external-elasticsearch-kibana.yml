@@ -1,0 +1,73 @@
+---
+
+
+  - name: Set external elastic search in the right file 
+    block:
+
+      #### update: uiconfiguration_config_file
+
+      ## first: prepare the elastic search format that's expected
+      ## from host1={host="somehost",port:XXXX,protocol: "http"}
+      ## to "protocol://host1:port1,protocol://host2:port2"
+
+      - name: Clear the elasticsearch_hosts_formatted list
+        set_fact:
+          elasticsearch_hosts_list: []
+      
+      - name: Build a list of all the host items as defined by the ansible inventory
+        set_fact:
+          elasticsearch_hosts_list: "{{ elasticsearch_hosts_list }} + [ '{{ item.protocol }}://{{ item.host }}:{{ item.port }}' ]"
+        with_items: "{{ external_elasticsearch_hosts }}"
+
+      - name: "Update config file {{ apigateway_uiconfiguration_config_file }}"
+        lineinfile:
+          path: "{{ apigateway_uiconfiguration_config_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          apigw.kibana.autostart: "false"
+          apigw.es.url: "{{ elasticsearch_hosts_list }}"
+
+      #### second update: kibana yml file
+      - name: Get content of elastic search config
+        shell: "cat {{ apigateway_kibana_config_file }}"
+        register: kibana_config_yml
+      
+      - name: Print the raw elasticsearch config
+        debug:
+          var: kibana_config_yml.stdout_lines
+
+      - set_fact:
+          kibana_config: "{{ kibana_config_yml.stdout | from_yaml }}"
+
+      - name: Print the ingested kibana_config
+        debug:
+          var: kibana_config
+
+      - name: Print elasticsearch.hosts from the config
+        debug:
+          msg: "Looking at item: {{ kibana_config['elasticsearch.hosts'] }}"
+
+      - name: Change kibana elasticsearch.hosts value to the list of hosts
+        set_fact:
+          content_yml: "{{ kibana_config | combine({'elasticsearch.hosts': elasticsearch_hosts_list}, recursive=True) }}"
+
+      - name: Print the updated content
+        debug: 
+          var: content_yml
+    
+      - name: Write the updated content back to the same YAML file.
+        template:
+          src: yaml_content.yml.j2
+          dest: "{{ apigateway_kibana_config_file }}"
+          backup: yes
+
+      - name: Re-Clear the elasticsearch_hosts_list list
+        set_fact:
+          elasticsearch_hosts_list: []
+
+    when: external_elasticsearch_hosts is defined and (external_elasticsearch_hosts|length > 0)
+
+
+

@@ -1,0 +1,10 @@
+---
+
+  - name: "Update config file {{ tc_custom_wrapper_file }} with jvm_wrapper_configs params if defined"
+    lineinfile:
+      path: "{{ custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: "{{ jvm_wrapper_configs }}"
+    when: jvm_wrapper_configs is defined and (jvm_wrapper_configs|length > 0)

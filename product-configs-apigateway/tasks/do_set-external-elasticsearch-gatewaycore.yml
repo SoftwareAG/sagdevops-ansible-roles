@@ -1,0 +1,33 @@
+---
+
+  - name: Set external elastic search in the right file 
+    block:
+
+      ## first: prepare the elastic search format that's expected
+      ## from [{host="somehost",port:XXXX,protocol: "http"},{host="somehost",port:XXXX,protocol: "http"}]
+      ## to "host1:port,host2:port,host3:port"
+
+      - name: Clear the elasticsearch_hosts_list list
+        set_fact:
+          elasticsearch_hosts_list: []
+      
+      - name: Build a list of all the host items as defined by the ansible inventory
+        set_fact:
+          elasticsearch_hosts_list: "{{ elasticsearch_hosts_list }} + [ '{{ item.host }}:{{ item.port }}' ]"
+        with_items: "{{ external_elasticsearch_hosts }}"
+
+      - name: "Update config file {{ apigateway_elasticsearch_config_file }}"
+        lineinfile:
+          path: "{{ apigateway_elasticsearch_config_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          pg.gateway.elasticsearch.autostart: "false"
+          pg.gateway.elasticsearch.hosts: "{{ elasticsearch_hosts_list | join(',') }}"
+
+      - name: Re-Clear the elasticsearch_hosts_list list
+        set_fact:
+          elasticsearch_hosts_list: []
+
+    when: external_elasticsearch_hosts is defined and (external_elasticsearch_hosts|length > 0)
