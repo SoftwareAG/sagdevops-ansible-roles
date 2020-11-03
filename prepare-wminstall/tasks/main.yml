@@ -5,11 +5,26 @@
     path: "{{ install_dir }}"
     state: directory
 
-- name: Create wM folder
+- name: Create wM sum folder
   file: 
     path: "{{ install_sum_dir }}"
     state: directory
 
+- name: '/etc/fstab: remove noexec opt for /tmp mount'
+  lineinfile:
+    path: /etc/fstab
+    backup: yes
+    backrefs: yes
+    regexp: '^(\S+\s+\/tmp\s+\S+\s+)(\S+)(,noexec)(\s+.+)$'
+    line: '\1\2\4'
+  register: fstab
+ 
+- name: 'If /tmp changed, remount'
+  command: 'mount /tmp -o remount'
+  args:
+    warn: no
+  when: fstab.changed
+  
 - name: Create a new primary partition
   parted:
     device: "{{ disk_device }}"
