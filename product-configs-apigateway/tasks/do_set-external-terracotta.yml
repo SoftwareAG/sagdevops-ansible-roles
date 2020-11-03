@@ -1,0 +1,34 @@
+---
+
+
+  - name: Set external terracotta in the right file 
+    block:
+
+      ## first: prepare the terracotta url format that's expected
+      ## from host1={host="somehost",port:XXXX}
+      ## to "host1:port1,host2:port2"
+
+      - name: Clear the elasticsearch_hosts_formatted list
+        set_fact:
+          terracotta_hosts_list: []
+      
+      - name: Build a list of all the host items as defined by the ansible inventory
+        set_fact:
+          terracotta_hosts_list: "{{ terracotta_hosts_list }} + [ '{{ item.host }}:{{ item.port }}' ]"
+        with_items: "{{ external_terracotta_hosts }}"
+
+      - name: "Update config file {{ runtime_instance_config_file }}"
+        lineinfile:
+          path: "{{ runtime_instance_config_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          watt.server.cluster.aware: "true"
+          watt.server.cluster.tsaURLs: "{{ terracotta_hosts_list | join(',') }}"
+          watt.server.cluster.name: "TC_CLUSTER"
+          watt.server.cluster.action.errorOnStartup: "shutdown"
+          watt.server.cachemanager.connectTimeout: 30000
+          watt.server.cluster.SessTimeout: 90
+
+    when: external_terracotta_hosts is defined and (external_terracotta_hosts|length > 0)

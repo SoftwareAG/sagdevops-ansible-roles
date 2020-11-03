@@ -22,3 +22,7 @@ external_elasticsearch_hosts:
   - protocol: http
     host: localhost
     port: 9240
+
+external_terracotta_hosts:
+  - host: localhost
+    port: 9510
