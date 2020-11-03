@@ -2,7 +2,7 @@
 
 - name: Print the params
   debug:
-    msg: "Running product-configs-terracotta with action {{ configs_action | default('undefined') }}"
+    msg: "Running configure-terracotta with action {{ configs_action | default('undefined') }}"
 
 - name: fail if configs_action not specified
   fail: 
