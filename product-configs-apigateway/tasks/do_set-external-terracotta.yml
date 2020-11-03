@@ -51,7 +51,8 @@
           name: provision-with-installer-from-s3
         vars:
           provision_action: get_from_s3
-
+        when: stat_terracotta_license_exists.stat.exists == false
+        
       - name: Copy license file if it does not exist
         copy:
           src: "{{ webmethods_localrepo_target_dir }}/terracotta-license.key"
