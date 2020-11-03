@@ -31,4 +31,19 @@
           watt.server.cachemanager.connectTimeout: 30000
           watt.server.cluster.SessTimeout: 90
 
+      - name: Check if terracotta license file is there
+        stat: 
+          path: "{{ webmethods_terracotta_license_path }}"
+        register: stat_terracotta_license_exists
+
+      - name: Copy license file if it does not exist
+        copy:
+          src: "{{ webmethods_terracotta_license_path_local }}"
+          dest: "{{ webmethods_terracotta_license_path }}"
+          owner: "{{ webmethods_user }}"
+          group: "{{ webmethods_group }}"
+          mode: 0644
+          remote_src: no
+        when: stat_terracotta_license_exists.stat.exists == false
+
     when: external_terracotta_hosts is defined and (external_terracotta_hosts|length > 0)
