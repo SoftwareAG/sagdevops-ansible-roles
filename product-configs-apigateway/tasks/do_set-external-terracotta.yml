@@ -36,9 +36,20 @@
           path: "{{ webmethods_terracotta_license_path }}"
         register: stat_terracotta_license_exists
 
+      - import_role: 
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: setup_files
+          webmethods_s3repo_scripts_dir: "scripts/terracotta"
+          webmethods_s3repo_inzip_license_filepath: "TC Clustering/terracotta-license.key"
+          webmethods_s3repo_products_autoscript_filename: "TerracottaBigMemory43Install.script"
+          webmethods_s3repo_fixes_autoscript_filename: "TerracottaBigMemory43Update.script"
+          webmethods_localrepo_license_filepath: "terracotta-license.key"
+        when: stat_terracotta_license_exists.stat.exists == false
+
       - name: Copy license file if it does not exist
         copy:
-          src: "{{ webmethods_terracotta_license_path_local }}"
+          src: "{{ webmethods_localrepo_target_dir }}/terracotta-license.key"
           dest: "{{ webmethods_terracotta_license_path }}"
           owner: "{{ webmethods_user }}"
           group: "{{ webmethods_group }}"
@@ -46,4 +57,13 @@
           remote_src: no
         when: stat_terracotta_license_exists.stat.exists == false
 
+      - import_role: 
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: cleanup
+        when: stat_terracotta_license_exists.stat.exists == false
+        
     when: external_terracotta_hosts is defined and (external_terracotta_hosts|length > 0)
+
+
+
