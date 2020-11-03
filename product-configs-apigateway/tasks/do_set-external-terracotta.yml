@@ -59,7 +59,7 @@
           owner: "{{ webmethods_user }}"
           group: "{{ webmethods_group }}"
           mode: 0644
-          remote_src: no
+          remote_src: yes
         when: stat_terracotta_license_exists.stat.exists == false
 
       - import_role: 
