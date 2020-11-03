@@ -14,6 +14,8 @@ jvm_heap_min: 1024
 jvm_heap_max: 2048
 jvm_wrapper_configs: {}
 
+apigateway_kibana_port: 9405
+
 ## format: host1={host="somehost",port:XXXX,protocol: "http"}
 external_elasticsearch_hosts:
   - protocol: http

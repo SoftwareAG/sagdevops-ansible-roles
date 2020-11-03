@@ -1,0 +1,29 @@
+---
+
+  - name: Must run as root - Set service for kibana if the external_elasticsearch_hosts was set (TODO - we should do a better check than checking on external_elasticsearch_hosts )
+    block:
+
+        - import_role: 
+            name: service-webmethods
+          vars:
+            product_command: "create"
+            product_name: "apigatewaykibana"
+            product_instance_name: "default"
+            force_create: false
+            service_user: "{{ webmethods_user }}"
+
+        - import_role: 
+            name: service-webmethods
+          vars:
+            product_command: "restart"
+            product_name: "apigatewaykibana"
+            product_instance_name: "default"
+
+        - name: Wait for kibana port to become open on the host
+          wait_for:
+            host: "localhost"
+            port: "{{ apigateway_kibana_port }}"
+            delay: 5
+            timeout: 300
+
+    when: external_elasticsearch_hosts is defined and (external_elasticsearch_hosts|length > 0)
