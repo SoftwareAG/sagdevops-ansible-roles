@@ -10,7 +10,7 @@ tc_jvm_heap_min: 1024
 tc_jvm_heap_max: 2048
 tc_jvm_wrapper_configs: {}
 
-tc_host1: "localhost"
+tc_host1: "%h"
 tc_host1_name: "%h"
 tc_host1_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
 tc_host1_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
