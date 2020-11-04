@@ -1,0 +1,91 @@
+---
+
+
+  - name: Set external terracotta in the right file 
+    block:
+
+      ## first: prepare the terracotta url format that's expected
+      ## from host1={host="somehost",port:XXXX}
+      ## to "host1:port1,host2:port2"
+
+      - name: Clear the elasticsearch_hosts_formatted list
+        set_fact:
+          terracotta_hosts_list: []
+      
+      - name: Build a list of all the host items as defined by the ansible inventory
+        set_fact:
+          terracotta_hosts_list: "{{ terracotta_hosts_list }} + [ '{{ item.host }}:{{ item.port }}' ]"
+        with_items: "{{ external_terracotta_hosts }}"
+
+      - name: "Update config file {{ runtime_instance_config_file }}"
+        lineinfile:
+          path: "{{ runtime_instance_config_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          watt.server.cluster.aware: "true"
+          watt.server.cluster.tsaURLs: "{{ terracotta_hosts_list | join(',') }}"
+          watt.server.cluster.name: "TC_CLUSTER"
+          watt.server.cluster.action.errorOnStartup: "shutdown"
+          watt.server.cachemanager.connectTimeout: 30000
+          watt.server.cluster.SessTimeout: 90
+
+      - name: "Update config file {{ custom_wrapper_file }} with jvm_wrapper_configs params if defined"
+        lineinfile:
+          path: "{{ custom_wrapper_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ clustering_use_internal_db }}"
+          wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
+          wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
+          wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"
+          wrapper.java.additional.504: "-Dl1.max.connect.retries=180"
+          wrapper.java.additional.505: "-Dl1.connect.versionMatchCheck.enabled=true"
+          wrapper.java.additional.506: "-Dl1.socket.connect.timeout=10000"
+          wrapper.java.additional.507: "-Dl1.socket.reconnect.waitInterval=10000"
+
+      - name: Check if terracotta license file is there
+        stat: 
+          path: "{{ webmethods_terracotta_license_path }}"
+        register: stat_terracotta_license_exists
+
+      - import_role: 
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: setup_files
+          webmethods_s3repo_scripts_dir: "scripts/terracotta"
+          webmethods_s3repo_inzip_license_filepath: "TC Clustering/terracotta-license.key"
+          webmethods_s3repo_products_autoscript_filename: "TerracottaBigMemory43Install.script"
+          webmethods_s3repo_fixes_autoscript_filename: "TerracottaBigMemory43Update.script"
+          webmethods_localrepo_license_filepath: "terracotta-license.key"
+        when: stat_terracotta_license_exists.stat.exists == false
+
+      - import_role: 
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: get_from_s3
+        when: stat_terracotta_license_exists.stat.exists == false
+        
+      - name: Copy license file if it does not exist
+        copy:
+          src: "{{ webmethods_localrepo_target_dir }}/terracotta-license.key"
+          dest: "{{ webmethods_terracotta_license_path }}"
+          owner: "{{ webmethods_user }}"
+          group: "{{ webmethods_group }}"
+          mode: 0644
+          remote_src: yes
+        when: stat_terracotta_license_exists.stat.exists == false
+
+      - import_role: 
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: cleanup
+        when: stat_terracotta_license_exists.stat.exists == false
+
+    when: external_terracotta_hosts is defined and (external_terracotta_hosts|length > 0)
+
+
+
