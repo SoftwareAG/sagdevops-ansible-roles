@@ -18,7 +18,7 @@ ids_inventory_pattern: ""
 
 ## the node name must be the current server's FQDN 
 ## (as it has to match the array ids_cluster_initial_master_nodes which will have the list of all the master nodes FQDNs)
-ids_node_name: "{{ ansible_hostname }}"
+ids_node_name: "{{ ansible_fqdn }}"
 
 ## cluster node roles
 ids_node_master: true
