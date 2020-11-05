@@ -1,0 +1,40 @@
+---
+
+  ## get IPs for the cluster
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ tc_inventory_pattern }}"
+      inventory_action: second_level_lookup
+      inventory_hosts_property: ansible_default_ipv4
+      inventory_hosts_property_2ndlevel: address
+
+  - name: Set tc_ips facts
+    set_fact:
+      tc_ips: "{{ output_inventory_hosts }}"
+
+  ## get FQDNs for the cluster
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ tc_inventory_pattern }}"
+      inventory_action: first_level_lookup
+      inventory_hosts_property: "ansible_fqdn"
+
+  - name: Set tc_hostnames facts
+    set_fact:
+      tc_hostnames: "{{ output_inventory_hosts }}"
+
+  - name: Write the config for a X-node terracotta cluster
+    template:
+      src: "tc-config.template.xml.j2" 
+      dest: "{{ tc_config_file }}"
+      backup: yes
+      owner: "{{ webmethods_user }}"
+      group: "{{ webmethods_group }}"
+      mode: 0644
+
+  - name: clear facts
+    set_fact:
+      tc_ips: ""
+      tc_hostnames: ""
