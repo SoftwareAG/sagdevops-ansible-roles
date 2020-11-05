@@ -14,16 +14,16 @@ ids_jvm_params: {}
 
 ## the ansible inventory pattern for the internal datastore nodes
 ## note: ids_discovery_seed_hosts and ids_cluster_initial_master_nodes will be derived from this
-ids_inventory_pattern: ""
+ids_coordinators_inventory_pattern: ""
 
 ## the node name must be the current server's FQDN 
 ## (as it has to match the array ids_cluster_initial_master_nodes which will have the list of all the master nodes FQDNs)
 ids_node_name: "{{ ansible_fqdn }}"
 
-## cluster node roles
-ids_node_master: true
-ids_node_data: true
-ids_node_ingest: true
+## cluster node role variables
+ids_node_master:
+ids_node_data:
+ids_node_ingest:
 
 ## common values
 ids_cluster_name: "SAG_EventDataStore"
