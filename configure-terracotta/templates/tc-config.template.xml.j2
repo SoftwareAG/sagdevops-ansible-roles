@@ -8,8 +8,8 @@
         <property name="logging.maxLogFileSize" value="50"/>
     </tc-properties>
     <servers>
-        {% for tc_host in tc_hosts %}
-        <server host="{{ tc_host }}" name="{{ inventory_hostname }}">
+        {% for tc_ip in tc_ips %}
+        <server host="{{ tc_ip }}" name="{{ tc_hostnames[loop.index] }}">
             <data>{{ tc_common_data_path }}</data>
             <logs>{{ tc_common_logs_path }}</logs>
             <index>{{ tc_common_index_path }}</index>

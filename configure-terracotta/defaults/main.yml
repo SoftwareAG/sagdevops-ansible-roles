@@ -9,8 +9,10 @@ tc_jvm_heap_max: 2048
 tc_jvm_wrapper_configs: {}
 
 # list of tc host names accessible from the network
-tc_hosts: []
-tc_hostnames: []
+tc_inventory_pattern: ""
+
+# tc_hosts: []
+# tc_hostnames: []
 
 tc_common_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
 tc_common_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
