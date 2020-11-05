@@ -4,36 +4,23 @@ tc_config_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/conf"
 tc_config_file: "{{ tc_config_path }}/tc-config.xml"
 tc_custom_wrapper_file: "{{ tc_config_path }}/custom_wrapper.conf"
 
-tc_restartable_enabled: true
-tc_garbage_collection: 900
 tc_jvm_heap_min: 1024
 tc_jvm_heap_max: 2048
 tc_jvm_wrapper_configs: {}
 
-tc_host1: "%h"
-tc_host1_name: "%h"
-tc_host1_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
-tc_host1_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
-tc_host1_index_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/index"
-tc_host1_data_backup_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/backups"
-tc_host1_tsa_port: "9510"
-tc_host1_jmx_port: "9520"
-tc_host1_tsa_group_port: "9530"
-tc_host1_management_port: "9540"
-tc_host1_datastorage_size: "10G"
-tc_host1_offheap_size: "2G"
-tc_host1_hybrid_enabled: true
+# list of tc host names accessible from the network
+tc_hosts: []
 
-tc_host2: ""
-tc_host2_name: ""
-tc_host2_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
-tc_host2_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
-tc_host2_index_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/index"
-tc_host2_data_backup_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/backups"
-tc_host2_tsa_port: "9510"
-tc_host2_jmx_port: "9520"
-tc_host2_tsa_group_port: "9530"
-tc_host2_management_port: "9540"
-tc_host2_datastorage_size: "10G"
-tc_host2_offheap_size: "2G"
-tc_host2_hybrid_enabled: true
+tc_common_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
+tc_common_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
+tc_common_index_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/index"
+tc_common_data_backup_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/backups"
+tc_common_tsa_port: "9510"
+tc_common_jmx_port: "9520"
+tc_common_tsa_group_port: "9530"
+tc_common_management_port: "9540"
+tc_common_datastorage_size: "10G"
+tc_common_offheap_size: "2G"
+tc_common_hybrid_enabled: true
+tc_common_restartable_enabled: true
+tc_common_garbage_collection: 900

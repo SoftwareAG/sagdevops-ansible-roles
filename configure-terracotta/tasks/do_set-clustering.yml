@@ -1,0 +1,10 @@
+---
+
+  - name: Write the config for a X-node terracotta cluster
+    template:
+      src: "tc-config.template.xml.j2" 
+      dest: "{{ tc_config_file }}"
+      backup: yes
+      owner: "{{ webmethods_user }}"
+      group: "{{ webmethods_group }}"
+      mode: 0644

@@ -8,29 +8,33 @@
         <property name="logging.maxLogFileSize" value="50"/>
     </tc-properties>
     <servers>
-        <server host="{{ tc_host1 }}" name="{{ tc_host1_name }}">
-            <data>{{ tc_host1_data_path }}</data>
-            <logs>{{ tc_host1_logs_path }}</logs>
-            <index>{{ tc_host1_index_path }}</index>
-            <data-backup>{{ tc_host1_data_backup_path }}</data-backup>
-            <tsa-port>{{ tc_host1_tsa_port }}</tsa-port>
-            <jmx-port>{{ tc_host1_jmx_port }}</jmx-port>
-            <tsa-group-port>{{ tc_host1_tsa_group_port }}</tsa-group-port>
-            <management-port>{{ tc_host1_management_port }}</management-port>
-            <dataStorage size="{{ tc_host1_datastorage_size }}">
-                <offheap size="{{ tc_host1_offheap_size }}" />
-                {% if tc_host1_hybrid_enabled %}<hybrid />{% endif %}
+        {% for tc_host in tc_hosts %}
+        <server host="{{ tc_host }}" name="{{ inventory_hostname }}">
+            <data>{{ tc_common_data_path }}</data>
+            <logs>{{ tc_common_logs_path }}</logs>
+            <index>{{ tc_common_index_path }}</index>
+            <data-backup>{{ tc_common_data_backup_path }}</data-backup>
+            <tsa-port>{{ tc_common_tsa_port }}</tsa-port>
+            <jmx-port>{{ tc_common_jmx_port }}</jmx-port>
+            <tsa-group-port>{{ tc_common_tsa_group_port }}</tsa-group-port>
+            <management-port>{{ tc_common_management_port }}</management-port>
+            <dataStorage size="{{ tc_common_datastorage_size }}">
+                <offheap size="{{ tc_common_offheap_size }}" />
+                {% if tc_common_hybrid_enabled %}
+                <hybrid />
+                {% endif %}
             </dataStorage>
         </server>
+        {% endfor %}
         <update-check>
             <enabled>false</enabled>
         </update-check>
         <garbage-collection>
             <enabled>true</enabled>
             <verbose>false</verbose>
-            <interval>{{ tc_garbage_collection }}</interval>
+            <interval>{{ tc_common_garbage_collection }}</interval>
         </garbage-collection>
-        <restartable enabled="{{ tc_restartable_enabled | bool | lower }}"/>
+        <restartable enabled="{{ tc_common_restartable_enabled | bool | lower }}"/>
         <client-reconnect-window>120</client-reconnect-window>
     </servers>
     <clients>
