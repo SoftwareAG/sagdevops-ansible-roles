@@ -9,7 +9,7 @@
     </tc-properties>
     <servers>
         {% for tc_ip in tc_ips %}
-        <server host="{{ tc_ip }}" name="{{ tc_hostnames[loop.index] }}">
+        <server host="{{ tc_ip }}" name="{{ tc_hostnames[loop.index0] }}">
             <data>{{ tc_common_data_path }}</data>
             <logs>{{ tc_common_logs_path }}</logs>
             <index>{{ tc_common_index_path }}</index>
