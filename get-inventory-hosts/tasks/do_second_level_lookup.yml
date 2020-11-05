@@ -8,6 +8,11 @@
       - "inventory_pattern = {{ inventory_pattern | default('undefined') }}"
       - "inventory_hosts_property = {{ inventory_hosts_property | default('undefined') }}"
 
+  - name: fail if inventory_hosts_property_2ndlevel is not defined
+    fail: 
+      msg: "Property inventory_hosts_property_2ndlevel is not define...cannot do anything."
+    when: inventory_hosts_property_2ndlevel is not defined or inventory_hosts_property_2ndlevel == ""
+
   - name: set initial facts
     set_fact:
       all_inventory_host_items: []
@@ -28,9 +33,12 @@
 
   - name: Build a list of all the host items as defined by the ansible inventory, taking the value from the provided property
     set_fact:
-      output_inventory_hosts: "{{ output_inventory_hosts }} + [ '{{ inventory_hosts_add_prefix }}{{ hostvars[item]['ansible_default_ipv4'][inventory_hosts_property] }}{{ inventory_hosts_add_suffix }}' ]"
+      output_inventory_hosts: "{{ output_inventory_hosts }} + [ '{{ inventory_hosts_add_prefix }}{{ hostvars[item][inventory_hosts_property][inventory_hosts_property_2ndlevel] }}{{ inventory_hosts_add_suffix }}' ]"
     with_items: "{{ all_inventory_host_items }}"
     when: all_inventory_host_items is defined and (all_inventory_host_items|length>0) and (inventory_hosts_property is defined and inventory_hosts_property != "") 
 
   - name: Print the final fact output_inventory_hosts
     debug: var=output_inventory_hosts
+
+
+    

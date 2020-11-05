@@ -5,9 +5,10 @@
       name: get-inventory-hosts
     vars:
       inventory_pattern: "{{ tc_inventory_pattern }}"
-      inventory_action: ipv4_properties
-      inventory_hosts_property: address
-  
+      inventory_action: second_level_lookup
+      inventory_hosts_property: ansible_default_ipv4
+      inventory_hosts_property_2ndlevel: address
+
   - name: Set tc_ips facts
     set_fact:
       tc_ips: "{{ output_inventory_hosts }}"
@@ -17,7 +18,7 @@
       name: get-inventory-hosts
     vars:
       inventory_pattern: "{{ tc_inventory_pattern }}"
-      inventory_action: inventory_generic
+      inventory_action: first_level_lookup
       inventory_hosts_property: "ansible_fqdn"
 
   - name: Set tc_hostnames facts
