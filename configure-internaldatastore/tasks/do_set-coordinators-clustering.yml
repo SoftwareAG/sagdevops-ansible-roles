@@ -9,7 +9,7 @@
       inventory_hosts_property: ansible_default_ipv4
       inventory_hosts_property_2ndlevel: address
       inventory_hosts_clear_first: true
-      inventory_hosts_add_prefix: "'"
+      inventory_hosts_add_prefix: ""
       inventory_hosts_add_suffix: ":{{ ids_transport_tcp_port }}'"
 
   - name: Set ids_cluster_ips facts
@@ -25,8 +25,8 @@
       inventory_hosts_property: "ansible_fqdn"
       inventory_hosts_property_2ndlevel: ""
       inventory_hosts_clear_first: true
-      inventory_hosts_add_prefix: "'"
-      inventory_hosts_add_suffix: "'"
+      inventory_hosts_add_prefix: ""
+      inventory_hosts_add_suffix: ""
 
   - name: Set ids_cluster_hostnames facts
     set_fact:
