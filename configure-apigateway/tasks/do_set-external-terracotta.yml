@@ -1,6 +1,7 @@
 ---
 
   ## get the hosts of the terracotta nodes
+  ## in the format that's expected: "host1:port,host2:port,host3:port"
   - import_role: 
       name: get-inventory-hosts
     vars:
@@ -31,7 +32,7 @@
           watt.server.cachemanager.connectTimeout: 30000
           watt.server.cluster.SessTimeout: 90
 
-      - name: "Update config file {{ custom_wrapper_file }} with apigateway_jvm_params params if defined"
+      - name: "Update config file {{ custom_wrapper_file }} with jvm_params params if defined"
         lineinfile:
           path: "{{ custom_wrapper_file }}"
           regexp: '^{{ item.key }}'
