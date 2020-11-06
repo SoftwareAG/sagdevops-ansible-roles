@@ -8,7 +8,7 @@
       inventory_pattern: "{{ external_elasticsearch_inventory_pattern }}"
       inventory_hosts_property: "ansible_host"
       inventory_hosts_clear_first: true
-      inventory_hosts_add_prefix: "{{ external_elasticsearch_protocol }}"
+      inventory_hosts_add_prefix: "{{ external_elasticsearch_protocol }}://"
       inventory_hosts_add_suffix: ":{{ external_elasticsearch_port }}"
   
   - name: Set elasticsearch_hosts_list facts

@@ -4,7 +4,7 @@
 ids_install_home: "{{ webmethods_install_dir }}/InternalDataStore"
 ids_install_configs_dir: "{{ ids_install_home }}/config"
 ids_install_logs_dir: "{{ ids_install_home }}/logs"
-ids_install_jvm_options_file: "{{ ids_install_configs_dir }}/jvm.options"
+ids_install_ids_jvm_options_file: "{{ ids_install_configs_dir }}/jvm.options"
 ids_install_elasticsearch_file: "{{ ids_install_configs_dir }}/elasticsearch.yml"
 
 ## global JVM settings

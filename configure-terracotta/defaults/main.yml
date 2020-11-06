@@ -5,9 +5,9 @@ tc_config_file: "{{ tc_config_path }}/tc-config.xml"
 tc_custom_wrapper_file: "{{ tc_config_path }}/custom_wrapper.conf"
 
 ## global JVM settings
-jvm_heap_min: 1024
-jvm_heap_max: 2048
-jvm_params: {}
+tc_jvm_heap_min: 1024
+tc_jvm_heap_max: 2048
+tc_jvm_params: {}
 
 # list of tc host names accessible from the network
 tc_inventory_pattern: ""
