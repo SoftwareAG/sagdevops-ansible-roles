@@ -4,15 +4,13 @@ tc_config_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/conf"
 tc_config_file: "{{ tc_config_path }}/tc-config.xml"
 tc_custom_wrapper_file: "{{ tc_config_path }}/custom_wrapper.conf"
 
+## global JVM settings
 tc_jvm_heap_min: 1024
 tc_jvm_heap_max: 2048
-tc_jvm_wrapper_configs: {}
+tc_jvm_params: {}
 
 # list of tc host names accessible from the network
 tc_inventory_pattern: ""
-
-# tc_hosts: []
-# tc_hostnames: []
 
 tc_common_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
 tc_common_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"

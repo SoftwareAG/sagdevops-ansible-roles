@@ -1,23 +1,22 @@
 ---
 
+  ## get the hosts of the elasticsearch / internal data store nodes
+  ## in the format that's expected: "protocol://host1:port1,protocol://host2:port2"
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ external_elasticsearch_inventory_pattern }}"
+      inventory_hosts_property: "ansible_host"
+      inventory_hosts_clear_first: true
+      inventory_hosts_add_prefix: "{{ external_elasticsearch_protocol }}"
+      inventory_hosts_add_suffix: ":{{ external_elasticsearch_port }}"
+  
+  - name: Set elasticsearch_hosts_list facts
+    set_fact:
+      elasticsearch_hosts_list: "{{ output_inventory_hosts }}"
 
   - name: Set external elastic search in the right file 
     block:
-
-      #### update: uiconfiguration_config_file
-
-      ## first: prepare the elastic search format that's expected
-      ## from host1={host="somehost",port:XXXX,protocol: "http"}
-      ## to "protocol://host1:port1,protocol://host2:port2"
-
-      - name: Clear the elasticsearch_hosts_formatted list
-        set_fact:
-          elasticsearch_hosts_list: []
-      
-      - name: Build a list of all the host items as defined by the ansible inventory
-        set_fact:
-          elasticsearch_hosts_list: "{{ elasticsearch_hosts_list }} + [ '{{ item.protocol }}://{{ item.host }}:{{ item.port }}' ]"
-        with_items: "{{ external_elasticsearch_hosts }}"
 
       - name: "Update config file {{ apigateway_uiconfiguration_config_file }}"
         lineinfile:
@@ -66,8 +65,9 @@
       - name: Re-Clear the elasticsearch_hosts_list list
         set_fact:
           elasticsearch_hosts_list: []
+          output_inventory_hosts: []
 
-    when: external_elasticsearch_hosts is defined and (external_elasticsearch_hosts|length > 0)
+    when: elasticsearch_hosts_list is defined and (elasticsearch_hosts_list|length > 0)
 
 
 
