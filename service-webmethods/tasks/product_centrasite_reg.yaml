@@ -19,25 +19,3 @@
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
-
-# # @/opt/softwareag/CentraSite/bin/saginm@ # do not modify this line
-# [Unit]
-# Description=sag1inm
-# After=multi-user.target
-
-# [Service]
-# Type=forking
-# RemainAfterExit=yes
-# PrivateTmp=no
-# KillMode=none
-# TimeoutStartSec=330
-# TimeoutStopSec=330
-# User=saguser
-# Group=saguser
-# ExecStart=/bin/bash -c "for f in /etc/profile ~/.bash_profile ~/.bashrc; do [ -f $f ] && . $f; done; /opt/softwareag/CentraSite/bin/saginm start"
-# ExecStop=/bin/bash -c "for f in /etc/profile ~/.bash_profile ~/.bashrc; do [ -f $f ] && . $f; done; /opt/softwareag/CentraSite/bin/saginm stop"
-# LimitNOFILE=250000
-# LimitNPROC=20000
-
-# [Install]
-# WantedBy=multi-user.target
