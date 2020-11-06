@@ -1,15 +1,43 @@
 ---
 
+# /bin/sh $SAGROOT/common/bin/daemon.sh -f $THISDIR/saginm -n inm -i $CS_INSTANCE -K 20 -S 80
+
 - include_tasks: "command_{{ product_command }}.yaml"
   vars:
     service_exec_filepath: "{{ webmethods_install_dir }}/CentraSite/bin/saginm"
     service_name: "sag1inm"
+    service_runlevel_kill: 20
+    service_runlevel_start: 80
     service_env:
       RemainAfterExit: "no"
       Restart: "always"
-      RestartSec: 30
+      RestartSec: 60
       TimeoutStartSec: 330
       TimeoutStopSec: 330
+      LimitNOFILE: "{{ limits_openfiles }}"
+      LimitNPROC: "{{ limits_processes }}"
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
+
+# # @/opt/softwareag/CentraSite/bin/saginm@ # do not modify this line
+# [Unit]
+# Description=sag1inm
+# After=multi-user.target
+
+# [Service]
+# Type=forking
+# RemainAfterExit=yes
+# PrivateTmp=no
+# KillMode=none
+# TimeoutStartSec=330
+# TimeoutStopSec=330
+# User=saguser
+# Group=saguser
+# ExecStart=/bin/bash -c "for f in /etc/profile ~/.bash_profile ~/.bashrc; do [ -f $f ] && . $f; done; /opt/softwareag/CentraSite/bin/saginm start"
+# ExecStop=/bin/bash -c "for f in /etc/profile ~/.bash_profile ~/.bashrc; do [ -f $f ] && . $f; done; /opt/softwareag/CentraSite/bin/saginm stop"
+# LimitNOFILE=250000
+# LimitNPROC=20000
+
+# [Install]
+# WantedBy=multi-user.target

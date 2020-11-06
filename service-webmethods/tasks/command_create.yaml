@@ -60,6 +60,10 @@
         - "{{ service_name }}"
         - "-T"
         - "{{ service_type }}"
+        - "-K"
+        - "{{ service_runlevel_kill | default(20,true) }}"
+        - "-S"
+        - "{{ service_runlevel_start | default(20,true) }}"
     when: stat_wmdDaemonFile.stat.exists and (service_pidfile is not defined or service_pidfile == "")
 
   - name: get service facts
