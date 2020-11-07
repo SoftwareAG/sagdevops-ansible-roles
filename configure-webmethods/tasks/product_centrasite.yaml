@@ -3,11 +3,17 @@
 - name: tasks for set_process_memory
   block:
 
+    - name: "Configure Process Memory settings"
+      debug:
+        msg: "Not Implemented: Process Memory settings"
 
   when: configure_setting == "set_process_memory"
 
 - name: tasks for set_process_params
   block:
 
+    - name: "Configure Process params"
+      debug:
+        msg: "Not Implemented: Configure Process params"
 
   when: configure_setting == "set_process_params"
