@@ -1,0 +1,24 @@
+---
+
+- name: tasks for set_process_memory
+  block:
+
+    - import_role:
+        name: configure-centrasite
+      vars:
+        configs_action: set-jvm-memory
+        is_jvm_heap_min: "{{ process_memory_min }}"
+        is_jvm_heap_max: "{{ process_memory_max }}"
+
+  when: configure_setting == "set_process_memory"
+
+- name: tasks for set_process_params
+  block:
+
+    - import_role:
+        name: configure-centrasite
+      vars:
+        configs_action: set-jvm-params
+        is_jvm_params: "{{ process_params }}"
+
+  when: configure_setting == "set_process_params"
