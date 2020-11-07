@@ -1,0 +1,10 @@
+---
+
+  - name: "Update config file {{ custom_wrapper_file }} with jvm_params params if defined"
+    lineinfile:
+      path: "{{ custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: "{{ jvm_params }}"
+    when: jvm_params is defined and (jvm_params|length > 0)
