@@ -10,28 +10,47 @@ REMOTE_S3_BUCKET_SCRIPT_FOLDER="{{ webmethods_s3repo_scripts_dir }}"
 LOCAL_TARGET_DIR="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
 FORCE_REDOWNLOAD="{{ webmethods_s3repo_force_redownload | default('false', true) }}"
 
-## installers
+################# installers
 REMOTE_S3_BUCKET_PRODUCT_INSTALLER="{{ webmethods_s3repo_installer_filename }}"
 LOCAL_PRODUCT_INSTALLER="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
 REMOTE_S3_BUCKET_PRODUCTUPDATES_INSTALLER="{{ webmethods_s3repo_sum_filename }}"
 LOCAL_PRODUCTUPDATES_INSTALLER="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_sum_filename | default('softwareagupdatemanager-linux.bin', true) }}"
 
-## licenses
+################# licenses
 REMOTE_S3_BUCKET_LICENSES="{{ webmethods_s3repo_license_zip_filename }}"
 LOCAL_LICENSE_ZIP="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
 REMOTE_S3_BUCKET_INZIP_LICENSE_PATH="{{ webmethods_s3repo_inzip_license_filepath }}"
 LOCAL_LICENSE_PATH="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_license_filepath | default('installer_license.xml', true) }}"
 
-## products
+################# products
+{% if webmethods_s3repo_products_image_filename is defined and webmethods_s3repo_products_image_filename %}
 REMOTE_S3_BUCKET_PRODUCT_IMAGE="{{ webmethods_s3repo_products_image_filename }}"
+{% else %}
+REMOTE_S3_BUCKET_PRODUCT_IMAGE=""
+{% endif %}
 LOCAL_PRODUCT_IMAGE="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
+
+{% if webmethods_s3repo_products_autoscript_filename is defined and webmethods_s3repo_products_autoscript_filename %}
 REMOTE_S3_BUCKET_PRODUCT_SCRIPT="${REMOTE_S3_BUCKET_SCRIPT_FOLDER}/{{ webmethods_s3repo_products_autoscript_filename }}"
+{% else %}
+REMOTE_S3_BUCKET_PRODUCT_SCRIPT=""
+{% endif %}
 LOCAL_PRODUCT_SCRIPT="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_products_autoscript_filename | default('installer.script', true) }}"
 
-## fixes
+################# fixes
+
+{% if webmethods_s3repo_fixes_image_filename is defined and webmethods_s3repo_fixes_image_filename %}
 REMOTE_S3_BUCKET_FIX_IMAGE="{{ webmethods_s3repo_fixes_image_filename }}"
+{% else %}
+REMOTE_S3_BUCKET_FIX_IMAGE=""
+{% endif %}
 LOCAL_FIX_IMAGE="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_fixes_image_filename | default('sum_image.zip', true) }}"
+
+{% if webmethods_s3repo_fixes_autoscript_filename is defined and webmethods_s3repo_fixes_autoscript_filename %}
 REMOTE_S3_BUCKET_FIX_SCRIPT="${REMOTE_S3_BUCKET_SCRIPT_FOLDER}/{{ webmethods_s3repo_fixes_autoscript_filename }}"
+{% else %}
+REMOTE_S3_BUCKET_FIX_SCRIPT=""
+{% endif %}
 LOCAL_FIX_SCRIPT="$LOCAL_TARGET_DIR/{{ webmethods_localrepo_fixes_autoscript_filename | default('sum.script', true) }}"
 
 #############################################################################################
