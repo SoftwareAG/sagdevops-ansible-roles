@@ -8,4 +8,4 @@
     service_env:
       RemainAfterExit: "no"
       Restart: "on-failure"
-      RestartSec: "30"
+      RestartSec: "90"

@@ -14,5 +14,3 @@
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
-      StartLimitIntervalSec: 500
-      StartLimitBurst: 5

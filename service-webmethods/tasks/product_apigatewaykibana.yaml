@@ -7,8 +7,6 @@
       Description: "APIGW Kibana"
       After: "multi-user.target network-online.target"
       Requires: "network-online.target"
-      StartLimitIntervalSec: 500
-      StartLimitBurst: 5
     full_service_env:
       Type: "simple"
       User: "{{ service_user }}"
@@ -21,7 +19,7 @@
       TimeoutStopSec: 5
       KillMode: "process"
       Restart: "on-failure"
-      RestartSec: "30"
+      RestartSec: "90"
     full_install_env:
       WantedBy: multi-user.target
   when: product_command == "create"
