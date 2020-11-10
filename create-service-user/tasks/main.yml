@@ -28,3 +28,21 @@
     key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
     - "{{ authorized_sshkey_path | default('/nonexistant') }}"
+ 
+- name: Create .aws directory
+  file:
+    path: "/home/{{ username }}/.aws"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ groupname }}"
+    mode: 0700
+  when: aws_access_key is defined and aws_access_key != ""
+ 
+- name:  Write the aws config
+  template:
+    src: aws_credentials.j2
+    dest: "/home/{{ username }}/.aws/credentials"
+    owner: "{{ username }}"
+    group: "{{ groupname }}"
+    mode: 0600
+  when: aws_access_key is defined and aws_access_key != ""

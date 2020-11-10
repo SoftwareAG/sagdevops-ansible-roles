@@ -9,8 +9,8 @@
   command: "/bin/bash install_sum.sh"
   args:
     chdir: "{{ webmethods_localrepo_target_dir }}"
-  async: 1000
-  poll: 0
+  async: "{{ webmethods_install_async }}"
+  poll: "{{ webmethods_install_poll ))"
   register: install_sum_sleeper
 
 - name: Check status for install_sum task
@@ -18,8 +18,8 @@
     jid: "{{ install_sum_sleeper.ansible_job_id }}"
   register: job_result
   until: job_result.finished
-  retries: 100
-  delay: 10
+  retries: "{{ webmethods_install_async_retries }}"
+  delay: "{{ webmethods_install_async_delay }}"
 
 - name: Print the job_result to the console.
   debug:
