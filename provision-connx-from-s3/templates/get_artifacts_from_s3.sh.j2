@@ -1,0 +1,28 @@
+#!/bin/sh
+
+REMOTE_S3_BUCKET="{{ webmethods_s3repo_bucket_name }}"
+REMOTE_S3_BUCKET_PREFIX="{{ webmethods_s3repo_bucket_prefix }}"
+LOCAL_TARGET_DIR="{{ webmethods_localrepo_target_dir | default('/opt/softwareag/sag_install_artifacts', true) }}"
+
+S3_BASE_URL=""
+if [ "x$REMOTE_S3_BUCKET_PREFIX" == "x" ]; then
+    S3_BASE_URL="s3://${REMOTE_S3_BUCKET}"
+else
+    S3_BASE_URL="s3://${REMOTE_S3_BUCKET}/${REMOTE_S3_BUCKET_PREFIX}"
+fi
+echo "Download artifacts from S3 with S3_BASE_URL=$S3_BASE_URL"
+
+echo "Downloading file ${S3_BASE_URL}/clientlnx.tar.z"
+aws s3 cp ${S3_BASE_URL}/clientlnx.tar.z $LOCAL_TARGET_DIR
+
+echo "Downloading file ${S3_BASE_URL}/clientsb.tar.z"
+aws s3 cp ${S3_BASE_URL}/clientsb.tar.z $LOCAL_TARGET_DIR
+
+echo "Downloading file ${S3_BASE_URL}/installclient"
+aws s3 cp ${S3_BASE_URL}/installclient $LOCAL_TARGET_DIR
+
+echo "Downloading file ${S3_BASE_URL}/serverlist"
+aws s3 cp ${S3_BASE_URL}/serverlist $LOCAL_TARGET_DIR
+
+echo "Downloading file ${S3_BASE_URL}/responseFile"
+aws s3 cp ${S3_BASE_URL}/responseFile $LOCAL_TARGET_DIR
