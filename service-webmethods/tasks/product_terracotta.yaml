@@ -8,8 +8,10 @@
     service_env:
       LimitMEMLOCK: "infinity"
       RemainAfterExit: "no"
-      Restart: "always"
+      Restart: "on-failure"
       RestartSec: "30"
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
+      StartLimitIntervalSec: 500
+      StartLimitBurst: 5

@@ -7,5 +7,5 @@
     service_name: "sagmws{{ product_version_full }}_{{ product_instance_name }}_1"
     service_env:
       RemainAfterExit: "no"
-      Restart: "always"
+      Restart: "on-failure"
       RestartSec: "30"

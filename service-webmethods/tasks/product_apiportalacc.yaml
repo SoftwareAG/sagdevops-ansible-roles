@@ -6,8 +6,10 @@
     service_name: "sag1apiportal{{ product_version_full }}"
     service_env:
       RemainAfterExit: "no"
-      Restart: "always"
+      Restart: "on-failure"
       RestartSec: "30"
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
+      StartLimitIntervalSec: 500
+      StartLimitBurst: 5

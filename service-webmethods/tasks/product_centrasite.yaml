@@ -7,10 +7,12 @@
     service_pidfile: "{{ webmethods_install_dir }}/profiles/CTP/bin/sagctp{{ product_version_full }}.pid"
     service_env:
       RemainAfterExit: "no"
-      Restart: "always"
+      Restart: "on-failure"
       RestartSec: 30
       TimeoutStartSec: 330
       TimeoutStopSec: 330
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
+      StartLimitIntervalSec: 500
+      StartLimitBurst: 5
