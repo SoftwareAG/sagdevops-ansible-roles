@@ -1,0 +1,9 @@
+---
+
+- name: "Update config file {{ tc_custom_wrapper_file }} with tc_jvm_params params if defined"
+  lineinfile:
+    path: "/home/{{ ansible_env.HOME }}/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - "export CONNXREGISTRY=/opt/softwareag/connx/connxreg.db"
+    - "export CONNXREGISTRY64=/opt/softwareag/connx/connxreg64.db"
