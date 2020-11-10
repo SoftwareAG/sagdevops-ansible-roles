@@ -1,8 +1,8 @@
 ---
 
-- name: "Update config file {{ tc_custom_wrapper_file }} with tc_jvm_params params if defined"
+- name: "Update user login script"
   lineinfile:
-    path: "/home/{{ ansible_env.HOME }}/.bash_profile"
+    path: "{{ ansible_env.HOME }}/.bash_profile"
     line: "{{ item }}"
   with_items:
     - "export CONNXREGISTRY=/opt/softwareag/connx/connxreg.db"
