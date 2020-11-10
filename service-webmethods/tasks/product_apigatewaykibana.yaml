@@ -19,7 +19,7 @@
       TimeoutStopSec: 5
       KillMode: "process"
       Restart: "on-failure"
-      RestartSec: "90"
+      RestartSec: 90
     full_install_env:
       WantedBy: multi-user.target
   when: product_command == "create"

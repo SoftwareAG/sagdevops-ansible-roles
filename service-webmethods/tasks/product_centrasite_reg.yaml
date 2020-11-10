@@ -11,7 +11,7 @@
     service_env:
       RemainAfterExit: "no"
       Restart: "on-failure"
-      RestartSec: 60
+      RestartSec: 90
       TimeoutStartSec: 330
       TimeoutStopSec: 330
       LimitNOFILE: "{{ limits_openfiles }}"

@@ -7,7 +7,7 @@
     service_env:
       RemainAfterExit: "no"
       Restart: "on-failure"
-      RestartSec: "90"
+      RestartSec: 90
     unit_env:
       After: "network-online.target"
       Requires: "network-online.target"
