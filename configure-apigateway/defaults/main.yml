@@ -33,3 +33,7 @@ external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510
 
 ## user passwords setting
+apigateway_rest_login_username: "Administrator"
+apigateway_rest_login_password: ""
+apigateway_update_local_user_id: ""
+apigateway_update_local_user_password: ""
