@@ -6,6 +6,7 @@ service_user:
 service_name:
 service_type: forking
 force_create: false
+fail_service_notfound: true
 
 product_name:
 product_version_full:

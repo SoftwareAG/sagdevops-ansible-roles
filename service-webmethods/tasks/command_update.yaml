@@ -17,9 +17,9 @@
       service_name_index: "{{ service_name }}.service"
 
   - name: fail if service is not found
-    fail: 
+    fail:
       msg: "service {{ service_name }} not found..."
-    when: ansible_facts.services[service_name_index] is not defined
+    when: fail_service_notfound|bool and ansible_facts.services[service_name_index] is not defined
 
   - name: Perform service overrides if service exists
     block:
