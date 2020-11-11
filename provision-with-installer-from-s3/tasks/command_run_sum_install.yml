@@ -10,7 +10,7 @@
   args:
     chdir: "{{ webmethods_localrepo_target_dir }}"
   async: "{{ webmethods_install_async }}"
-  poll: "{{ webmethods_install_poll ))"
+  poll: "{{ webmethods_install_poll }}"
   register: install_sum_sleeper
 
 - name: Check status for install_sum task
