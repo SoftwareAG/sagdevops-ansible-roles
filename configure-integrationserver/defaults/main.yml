@@ -13,8 +13,7 @@ is_jvm_heap_min: 1024
 is_jvm_heap_max: 2048
 is_jvm_params: {}
 
-is_clustering_use_internal_db: true
-
 ## external terracotta
+is_clustering_use_internal_db: false
 external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510

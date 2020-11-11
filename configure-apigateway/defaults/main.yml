@@ -29,6 +29,7 @@ external_elasticsearch_protocol: http
 external_elasticsearch_port: 9240
 
 ## external terracotta
+is_clustering_use_internal_db: true
 external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510
 

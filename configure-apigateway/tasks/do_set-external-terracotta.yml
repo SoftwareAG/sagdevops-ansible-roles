@@ -32,14 +32,14 @@
           watt.server.cachemanager.connectTimeout: 30000
           watt.server.cluster.SessTimeout: 90
 
-      - name: "Update config file {{ custom_wrapper_file }} with jvm_params params if defined"
+      - name: "Update config file {{ custom_wrapper_file }} with terracotta specific settings"
         lineinfile:
           path: "{{ custom_wrapper_file }}"
           regexp: '^{{ item.key }}'
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"
         with_dict:
-          wrapper.java.additional.500: "-Dtest.cluster.withDerby=true"
+          wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ is_clustering_use_internal_db }}"
           wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
           wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
           wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"

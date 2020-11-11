@@ -32,7 +32,7 @@
           watt.server.cachemanager.connectTimeout: 30000
           watt.server.cluster.SessTimeout: 90
 
-      - name: "Update config file {{ custom_wrapper_file }} with is_jvm_params params if defined"
+      - name: "Update config file {{ custom_wrapper_file }} with terracotta specific settings"
         lineinfile:
           path: "{{ custom_wrapper_file }}"
           regexp: '^{{ item.key }}'
