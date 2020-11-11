@@ -3,7 +3,7 @@
     "loginId": "Administrator",
     "firstName": "Administrator",
     "language": "",
-    "password": "test123!",
+    "password": "",
     "type": "local",
     "allowDigestAuth": false,
     "active": true,
