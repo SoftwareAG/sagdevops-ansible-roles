@@ -8,7 +8,7 @@
       line: "{{ item.key }}{{ item.value }}"
     with_dict:
       "-Xms": "{{ ids_jvm_heap_min }}m"
-    when: ids_jvm_heap_min is defined and ids_jvm_heap_min > 0
+    when: ids_jvm_heap_min is defined and ids_jvm_heap_min != ""
 
   - name: "Update config file {{ ids_install_ids_jvm_options_file }} with ids_jvm_heap_max param if defined"
     lineinfile:
@@ -18,4 +18,4 @@
       line: "{{ item.key }}{{ item.value }}"
     with_dict:
       "-Xmx": "{{ ids_jvm_heap_max }}m"
-    when: ids_jvm_heap_max is defined and ids_jvm_heap_max > 0
+    when: ids_jvm_heap_max is defined and ids_jvm_heap_max != ""

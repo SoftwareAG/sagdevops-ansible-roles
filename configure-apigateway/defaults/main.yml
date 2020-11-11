@@ -9,8 +9,12 @@ runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
 apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
 apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
 apigateway_uiconfiguration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
-
 webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
+
+## gateway rest apis
+apigateway_rest_base_uri: "http://localhost:5555"
+apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
+apigateway_rest_users_api: "{{ apigateway_rest_base_path }}/users"
 
 ## global JVM settings
 apigateway_jvm_heap_min: 1024
@@ -27,3 +31,5 @@ external_elasticsearch_port: 9240
 ## external terracotta
 external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510
+
+## user passwords setting
