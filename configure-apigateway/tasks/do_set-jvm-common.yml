@@ -18,5 +18,4 @@
       wrapper.java.additional.408: "-XX:NumberOfGCLogFiles=5"
       wrapper.java.additional.409: "-Xbootclasspath/a:\"%JAVA_BOOT_CLASSPATH%\""
       wrapper.java.additional.410: "-Xloggc:%OSGI_INSTALL_AREA%/logs/gc_agw.log"
-      wrapper.java.additional.411: "-server"
-      wrapper.java.additional.412: "-verbose:gc"
+      wrapper.java.additional.411: "-verbose:gc"
