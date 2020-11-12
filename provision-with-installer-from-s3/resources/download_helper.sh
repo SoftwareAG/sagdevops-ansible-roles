@@ -52,9 +52,9 @@ function download_artifacts {
         echo "$LOCAL_LICENSE_ZIP already downloaded...not downloading again."
     fi
 
-    if [ ! -f $LOCAL_LICENSE_ZIP ]; then
+    if [ -f $LOCAL_LICENSE_ZIP ]; then
         mkdir -p $LOCAL_TARGET_DIR/licenses/
-        unzip $LOCAL_LICENSE_ZIP -d $LOCAL_TARGET_DIR/licenses/
+        unzip -o $LOCAL_LICENSE_ZIP -d $LOCAL_TARGET_DIR/licenses/
         cp "$LOCAL_TARGET_DIR/licenses/$REMOTE_S3_BUCKET_INZIP_LICENSE_PATH" $LOCAL_LICENSE_PATH
     fi
 
