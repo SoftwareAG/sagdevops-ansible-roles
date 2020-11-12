@@ -39,7 +39,7 @@
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"
         with_dict:
-          wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ is_clustering_use_internal_db }}"
+          wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ is_clustering_use_internal_db | bool | lower }}"
           wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
           wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
           wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"
