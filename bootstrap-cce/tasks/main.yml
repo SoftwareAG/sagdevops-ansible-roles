@@ -69,7 +69,6 @@
           argv: "{{ install_command }}"
         args:
           chdir: "{{ webmethods_cce_bootstrap_installer_exec_dir }}"
-          creates: "{{ webmethods_cce_bootstrap_successflag_file }}"
         async: 1000
         poll: 0
         register: install_ccserver_sleeper
@@ -85,5 +84,10 @@
       - name: Print the job_result to the console.
         debug:
           msg: "{{ job_result.stdout_lines | join('\n') }}"
+
+      - name: touch to mark that it's been run
+        file:
+          path: "{{ webmethods_cce_bootstrap_successflag_file }}"
+          state: touch
 
     when: stat_cceInstallAlreadyDone.stat.exists == false

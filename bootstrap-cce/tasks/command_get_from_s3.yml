@@ -41,10 +41,6 @@
   retries: 100
   delay: 10
 
-- name: Print the job_result to the console.
-  debug:
-    msg: "{{ job_result.stdout_lines | join('\n') }}"
-
 - name: Update file permissions to executable
   file:
     path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_installer_filename }}"
