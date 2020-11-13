@@ -13,56 +13,56 @@
 
       - name: Set the params initial
         set_fact:
-          install_command: ['{{ webmethods_cce_bootstrap_installer }} ']
+          install_command: ["./{{ webmethods_cce_bootstrap_installer }}"]
 
       - name: append webmethods_cce_bootstrap_agreement if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '{{ webmethods_cce_bootstrap_agreement }}' ]"
+          install_command: "{{ install_command }} + [ {{ webmethods_cce_bootstrap_agreement }} ]"
         when: webmethods_cce_bootstrap_agreement is defined and webmethods_cce_bootstrap_agreement != ""
       
       - name: append webmethods_cce_bootstrap_install_dir if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-d {{ webmethods_cce_bootstrap_install_dir }}' ]"
+          install_command: "{{ install_command }} + [ -d {{ webmethods_cce_bootstrap_install_dir }} ]"
         when: webmethods_cce_bootstrap_install_dir is defined and webmethods_cce_bootstrap_install_dir != ""
 
       - name: append webmethods_cce_bootstrap_distro if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-D {{ webmethods_cce_bootstrap_distro }}' ]"
+          install_command: "{{ install_command }} + [ -D {{ webmethods_cce_bootstrap_distro }} ]"
         when: webmethods_cce_bootstrap_distro is defined and webmethods_cce_bootstrap_distro != ""
 
       - name: append webmethods_cce_bootstrap_http_port if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-c {{ webmethods_cce_bootstrap_http_port }}' ]"
+          install_command: "{{ install_command }} + [ -c {{ webmethods_cce_bootstrap_http_port }} ]"
         when: webmethods_cce_bootstrap_http_port is defined and webmethods_cce_bootstrap_http_port != ""
 
       - name: append webmethods_cce_bootstrap_https_port if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-C {{ webmethods_cce_bootstrap_https_port }}' ]"
+          install_command: "{{ install_command }} + [ -C {{ webmethods_cce_bootstrap_https_port }} ]"
         when: webmethods_cce_bootstrap_https_port is defined and webmethods_cce_bootstrap_https_port != ""
 
       - name: append webmethods_cce_bootstrap_spm_http_port if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-s {{ webmethods_cce_bootstrap_spm_http_port }}' ]"
+          install_command: "{{ install_command }} + [ -s {{ webmethods_cce_bootstrap_spm_http_port }} ]"
         when: webmethods_cce_bootstrap_spm_http_port is defined and webmethods_cce_bootstrap_spm_http_port != ""
 
       - name: append webmethods_cce_bootstrap_spm_https_port if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-S {{ webmethods_cce_bootstrap_spm_https_port }}' ]"
+          install_command: "{{ install_command }} + [ -S {{ webmethods_cce_bootstrap_spm_https_port }} ]"
         when: webmethods_cce_bootstrap_spm_https_port is defined and webmethods_cce_bootstrap_spm_https_port != ""
 
       - name: append webmethods_cce_bootstrap_password if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-p {{ webmethods_cce_bootstrap_password }}' ]"
+          install_command: "{{ install_command }} + [ -p {{ webmethods_cce_bootstrap_password }} ]"
         when: webmethods_cce_bootstrap_password is defined and webmethods_cce_bootstrap_password != ""
 
       - name: append webmethods_cce_bootstrap_host if exists
         set_fact:
-          install_command: "{{ install_command }} + [ '-H {{ webmethods_cce_bootstrap_host }}' ]"
+          install_command: "{{ install_command }} + [ -H {{ webmethods_cce_bootstrap_host }} ]"
         when: webmethods_cce_bootstrap_host is defined and webmethods_cce_bootstrap_host != ""
 
       - name: Print the command
         debug:
-          msg: "Running Installation Command from {{ webmethods_cce_bootstrap_installer_exec_dir }}: {{ install_command | join(' ') }}"
+          msg: "Running Installation Command from {{ webmethods_cce_bootstrap_installer_exec_dir }}: {{ install_command | join( ) }}"
 
       - name: Run CCE installation
         command:
