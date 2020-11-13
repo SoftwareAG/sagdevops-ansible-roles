@@ -21,12 +21,12 @@
     backup: no
     owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
     group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: 0644
+    mode: 0755
   with_items:
     - { src: 'get_artifacts_from_s3.sh.j2', dest: '{{ webmethods_localrepo_target_dir }}/get_artifacts_from_s3.sh' }
 
 - name: run get_artifacts_from_s3 command
-  command: get_artifacts_from_s3.sh
+  command: ./get_artifacts_from_s3.sh
   args:
     chdir: "{{ webmethods_localrepo_target_dir }}"
   async: 1000
