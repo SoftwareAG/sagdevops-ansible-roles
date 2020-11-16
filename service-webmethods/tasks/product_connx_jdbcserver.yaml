@@ -26,15 +26,15 @@
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
-            ExecStart: "{{ webmethods_install_dir }}/connx/jdbcserver START"
-            ExecStop: "{{ webmethods_install_dir }}/connx/jdbcserver STOP"
+            ExecStart: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver START"
+            ExecStop: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver STOP"
             PrivateTmp: "no"
             KillMode: "none"
             TimeoutStartSec: 330
             TimeoutStopSec: 330
-            # RemainAfterExit: "no"
-            # Restart: "on-failure"
-            # RestartSec: 90
+            RemainAfterExit: "no"
+            Restart: "on-failure"
+            RestartSec: 90
           full_install_params:
             WantedBy: multi-user.target
 

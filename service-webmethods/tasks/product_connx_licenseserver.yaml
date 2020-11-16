@@ -26,8 +26,8 @@
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
-            ExecStart: "{{ webmethods_install_dir }}/connx/licenseserver START"
-            ExecStop: "{{ webmethods_install_dir }}/connx/licenseserver STOP"
+            ExecStart: "/bin/sh {{ webmethods_install_dir }}/connx/licenseserver START"
+            ExecStop: "/bin/sh {{ webmethods_install_dir }}/connx/licenseserver STOP"
             PrivateTmp: "no"
             KillMode: "none"
             TimeoutStartSec: 330
