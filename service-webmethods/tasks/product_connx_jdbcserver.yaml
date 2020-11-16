@@ -48,6 +48,11 @@
           path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
           state: absent
 
+      - name: touch to mark that it's been run
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
+          state: touch
+
       - name: Write params to file
         blockinfile:
           path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
