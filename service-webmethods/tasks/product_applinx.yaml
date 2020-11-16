@@ -1,0 +1,46 @@
+---
+
+  - name: Set systemd service for APPLinX Server
+    block:
+
+      - name: Copy systemd script files
+        copy:
+          src: "{{ item }}"
+          dest: "{{ webmethods_install_dir }}/connx"
+          owner: "{{ webmethods_user }}"
+          group: "{{ webmethods_group }}"
+          mode: 0755
+          remote_src: no
+        with_items:
+          - "resources/cnxJDBCsrv_sys.sh"
+
+      - include_tasks: "command_createcustom.yaml"
+        vars:
+          service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
+          full_unit_env:
+            Description: "SoftwareAG CONNX JDBC Server"
+            After: "multi-user.target network-online.target"
+            Requires: "network-online.target"
+          full_service_env:
+            Type: "simple"
+            User: "{{ service_user }}"
+            Group: "{{ service_user }}"
+            WorkingDirectory: "{{ webmethods_install_dir }}/connx"
+            ExecStart: "{{ webmethods_install_dir }}/connx/cnxJDBCsrv_sys.sh start"
+            ExecStop: "{{ webmethods_install_dir }}/connx/cnxJDBCsrv_sys.sh stop"
+            PrivateTmp: "no"
+            KillMode: "none"
+            TimeoutStartSec: 330
+            TimeoutStopSec: 330
+            RemainAfterExit: "no"
+            Restart: "on-failure"
+            RestartSec: 90
+          full_install_env:
+            WantedBy: multi-user.target
+
+    when: product_command == "create"
+
+  - include_tasks: "command_{{ product_command }}.yaml"
+    vars:
+      service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
+    when: product_command != "create"
