@@ -26,8 +26,8 @@
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
-            ExecStart: "{{ webmethods_install_dir }}/connx/cnxJDBCsrv_sys.sh start"
-            ExecStop: "{{ webmethods_install_dir }}/connx/cnxJDBCsrv_sys.sh stop"
+            ExecStart: "./jdbcserver START"
+            ExecStop: "./jdbcserver STOP"
             PrivateTmp: "no"
             KillMode: "none"
             TimeoutStartSec: 330
@@ -37,6 +37,28 @@
             RestartSec: 90
           full_install_env:
             WantedBy: multi-user.target
+
+      - name: create systemd override directory
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d
+          state: directory
+
+      - name: delete override file first if it exists (for compatibility with older concept)
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
+          state: absent
+
+      - name: Write params to file
+        blockinfile:
+          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
+          create: yes
+          block: |
+            [Service]
+            Environment="CONNXREGISTRY={{ webmethods_install_dir }}/connx/connxreg.db"
+            Environment="CONNXREGISTRY64={{ webmethods_install_dir }}/connx/connxreg64.db"
+      
+      - name: force systemd to reread configs after modification
+        systemd: daemon_reload=yes
 
     when: product_command == "create"
 
