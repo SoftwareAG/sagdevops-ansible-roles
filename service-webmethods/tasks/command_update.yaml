@@ -2,7 +2,9 @@
 
 ### Needs:
 ### - service_name
-### - service_env
+### - service_params
+### - service_envs
+### - unit_params
 
   - name: fail if service_name not specified
     fail: 
@@ -28,34 +30,44 @@
           path: /etc/systemd/system/{{ service_name }}.service.d
           state: directory
 
-      - name: delete override file first if it exists (for compatibility with older concept)
-        file:
-          path: /etc/systemd/system/{{ service_name }}.service.d/override.conf
-          state: absent
-
-      - name: Populate systemd override_service if the service_env is defined and non empty
+      ### - service_params
+      - name: Populate systemd override_service if the service_params is defined and non empty
         template:
-          src: override_service.j2
+          src: override_service_params.j2
           dest: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
-        when: service_env is defined and service_env.keys()|length > 0
+        when: service_params is defined and service_params.keys()|length > 0
       
-      - name: delete override_service file if service_env is un-defined or empty
+      - name: delete override_service file if service_params is un-defined or empty
         file:
           path: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
           state: absent
-        when: service_env is not defined or service_env.keys()|length == 0
+        when: service_params is not defined or service_params.keys()|length == 0
 
-      - name: Populate systemd override_unit if the unit_env is defined and non empty
+      ### - service_envs
+      - name: Populate systemd override_service_envs if the service_envs is defined and non empty
+        template:
+          src: override_service_envs.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_service_envs.conf
+        when: service_envs is defined and service_envs.keys()|length > 0
+      
+      - name: delete override_service_envs file if service_envs is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_service_envs.conf
+          state: absent
+        when: service_envs is not defined or service_envs.keys()|length == 0
+
+      ### - unit_paramss
+      - name: Populate systemd override_unit if the unit_params is defined and non empty
         template:
           src: override_unit.j2
           dest: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
-        when: unit_env is defined and unit_env.keys()|length > 0
+        when: unit_params is defined and unit_params.keys()|length > 0
 
-      - name: delete override_unit file if unit_env is un-defined or empty
+      - name: delete override_unit file if unit_params is un-defined or empty
         file:
           path: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
           state: absent
-        when: unit_env is not defined or unit_env.keys()|length == 0
+        when: unit_params is not defined or unit_params.keys()|length == 0
 
       - name: force systemd to reread configs after modification
         systemd: daemon_reload=yes

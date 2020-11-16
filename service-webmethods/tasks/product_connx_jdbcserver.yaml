@@ -17,11 +17,11 @@
       - include_tasks: "command_createcustom.yaml"
         vars:
           service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
-          full_unit_env:
+          full_unit_params:
             Description: "SoftwareAG CONNX JDBC Server"
             After: "multi-user.target network-online.target"
             Requires: "network-online.target"
-          full_service_env:
+          full_service_params:
             Type: "simple"
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
@@ -35,35 +35,15 @@
             RemainAfterExit: "no"
             Restart: "on-failure"
             RestartSec: 90
-          full_install_env:
+          full_install_params:
             WantedBy: multi-user.target
 
-      - name: create systemd override directory
-        file:
-          path: /etc/systemd/system/{{ service_name }}.service.d
-          state: directory
-
-      - name: delete override file first if it exists (for compatibility with older concept)
-        file:
-          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
-          state: absent
-
-      - name: touch to mark that it's been run
-        file:
-          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
-          state: touch
-
-      - name: Write params to file
-        blockinfile:
-          path: /etc/systemd/system/{{ service_name }}.service.d/connx_envs.conf
-          create: yes
-          block: |
-            [Service]
-            Environment="CONNXREGISTRY={{ webmethods_install_dir }}/connx/connxreg.db"
-            Environment="CONNXREGISTRY64={{ webmethods_install_dir }}/connx/connxreg64.db"
-      
-      - name: force systemd to reread configs after modification
-        systemd: daemon_reload=yes
+      - include_tasks: "command_update.yaml"
+        vars:
+          service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
+          service_envs:
+            CONNXREGISTRY: "{{ webmethods_install_dir }}/connx/connxreg.db"
+            CONNXREGISTRY64: "{{ webmethods_install_dir }}/connx/connxreg64.db"
 
     when: product_command == "create"
 

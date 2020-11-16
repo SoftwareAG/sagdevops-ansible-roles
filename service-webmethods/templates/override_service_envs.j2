@@ -1,0 +1,4 @@
+[Service]
+{% for k,v in service_envs.iteritems() %}
+Environment={{ k }}={{ v }}
+{% endfor %}

@@ -8,7 +8,7 @@
     service_name: "sag1inm"
     service_runlevel_kill: 20
     service_runlevel_start: 80
-    service_env:
+    service_params:
       RemainAfterExit: "no"
       Restart: "on-failure"
       RestartSec: 90
@@ -16,6 +16,6 @@
       TimeoutStopSec: 330
       LimitNOFILE: "{{ limits_openfiles }}"
       LimitNPROC: "{{ limits_processes }}"
-    unit_env:
+    unit_params:
       After: "network-online.target"
       Requires: "network-online.target"

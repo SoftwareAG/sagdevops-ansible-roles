@@ -16,7 +16,7 @@
     debug:
       msg: "Service {{ service_name }} will be created or recreated"
 
-  - name: Populate systemd override_service if the service_env is defined and non empty
+  - name: Populate systemd service with all the values in the param maps
     template:
       src: full_service.j2
       dest: /usr/lib/systemd/system/{{ service_name }}.service
