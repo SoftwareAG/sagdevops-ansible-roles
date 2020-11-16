@@ -26,8 +26,8 @@
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
-            ExecStart: "./jdbcserver START"
-            ExecStop: "./jdbcserver STOP"
+            ExecStart: "{{ webmethods_install_dir }}/connx/jdbcserver START"
+            ExecStop: "{{ webmethods_install_dir }}/connx/jdbcserver STOP"
             PrivateTmp: "no"
             KillMode: "none"
             TimeoutStartSec: 330
