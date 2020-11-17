@@ -1,33 +1,44 @@
 ---
 
-  - name: getting the packages to apply on integration server
-    include_role:
-      name: aws-wrapper
-    vars:
-      command: "getfroms3"
-      getfroms3_bucket_name: "{{ outer_item.remote_s3_bucket_name | default('', true) }}"
-      getfroms3_bucket_path: "{{ outer_item.remote_s3_bucket_path | default('', true) }}"
-      getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
-    with_items: "{{ webmethods_packages }}"
-    loop_control:
-      loop_var: outer_item
-    when: webmethods_packages is defined and (webmethods_packages|length > 0)
 
-  - name: Create the extracted dir on the remote machine if they don't exist
-    file:
-      path: "{{ runtime_instance_package_home }}/{{ (outer_item.remote_s3_bucket_path | basename | splitext)[0] }}"
-      state: directory
-    with_items: "{{ webmethods_packages }}"
-    loop_control:
-      loop_var: outer_item
-    when: webmethods_packages is defined and (webmethods_packages|length > 0)
+  - name: Install the packages in IS only if the list is not empty
+    block:
 
-  - name: Unarchive the packages on the remote machine
-    unarchive:
-      src: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
-      dest: "{{ runtime_instance_package_home }}/{{ (outer_item.remote_s3_bucket_path | basename | splitext)[0] }}"
-      remote_src: yes
-    with_items: "{{ webmethods_packages }}"
-    loop_control:
-      loop_var: outer_item
+      - name: getting the packages from s3 to apply on integration server
+        include_role:
+          name: aws-wrapper
+        vars:
+          command: "getfroms3"
+          getfroms3_bucket_name: "{{ outer_item.remote_s3_bucket_name | default('', true) }}"
+          getfroms3_bucket_path: "{{ outer_item.remote_s3_bucket_path | default('', true) }}"
+          getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
+        with_items: "{{ webmethods_packages }}"
+        loop_control:
+          loop_var: outer_item
+
+      - name: Create the extracted dir on the remote machine if they don't exist
+        file:
+          path: "{{ runtime_instance_package_home }}/{{ (outer_item.remote_s3_bucket_path | basename | splitext)[0] }}"
+          state: directory
+        with_items: "{{ webmethods_packages }}"
+        loop_control:
+          loop_var: outer_item
+
+      - name: Unarchive the packages on the remote machine
+        unarchive:
+          src: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
+          dest: "{{ runtime_instance_package_home }}/{{ (outer_item.remote_s3_bucket_path | basename | splitext)[0] }}"
+          remote_src: yes
+        with_items: "{{ webmethods_packages }}"
+        loop_control:
+          loop_var: outer_item
+
+      - name: Delete the archive once extracted
+        file:
+          path: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
+          state: absent
+        with_items: "{{ webmethods_packages }}"
+        loop_control:
+          loop_var: outer_item
+
     when: webmethods_packages is defined and (webmethods_packages|length > 0)
