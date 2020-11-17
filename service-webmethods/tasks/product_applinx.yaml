@@ -1,6 +1,6 @@
 ---
 
-  - name: Set systemd service for CONNX JDBC Server
+  - name: Set systemd service for ApplinX Server
     block:
 
       - include_tasks: "command_createcustom.yaml"
@@ -14,9 +14,9 @@
             Type: "forking"
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
-            WorkingDirectory: "{{ webmethods_install_dir }}/ApplinX"
-            ExecStart: "/bin/sh {{ webmethods_install_dir }}/ApplinX/startup.sh"
-            ExecStop: "/bin/sh {{ webmethods_install_dir }}/ApplinX/shutdown.sh"
+            WorkingDirectory: "{{ webmethods_install_dir }}/ApplinX/bin"
+            ExecStart: "/bin/sh {{ webmethods_install_dir }}/ApplinX/bin/startup.sh"
+            ExecStop: "/bin/sh {{ webmethods_install_dir }}/ApplinX/bin/shutdown.sh"
             PrivateTmp: "no"
             KillMode: "process"
             TimeoutStartSec: 330
