@@ -7,7 +7,7 @@
       command: "getfroms3"
       getfroms3_bucket_name: "{{ outer_item.remote_s3_bucket_name | default('', true) }}"
       getfroms3_bucket_path: "{{ outer_item.remote_s3_bucket_path | default('', true) }}"
-      getfroms3_local_path: "{{ runtime_instance_package_home }}/"
+      getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
     with_items: "{{ webmethods_packages }}"
     loop_control:
       loop_var: outer_item
