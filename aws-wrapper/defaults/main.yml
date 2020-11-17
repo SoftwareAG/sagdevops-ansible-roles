@@ -3,3 +3,4 @@
 getfroms3_bucket_name:
 getfroms3_bucket_path:
 getfroms3_local_path:
+getfroms3_local_path_permission: 0644

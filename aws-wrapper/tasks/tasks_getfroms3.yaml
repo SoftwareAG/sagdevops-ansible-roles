@@ -9,3 +9,9 @@
       dest: "{{ getfroms3_local_path }}"
       mode: get
       overwrite: always
+
+  - name: Fix permission on fetched file
+    file: 
+      path: "{{ getfroms3_local_path }}"
+      state: file
+      mode: "{{ getfroms3_local_path_permission }}"
