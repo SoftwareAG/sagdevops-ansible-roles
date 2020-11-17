@@ -12,3 +12,13 @@
     loop_control:
       loop_var: outer_item
     when: webmethods_packages is defined and (webmethods_packages|length > 0)
+
+  - name: Unarchive the packages on the remote machine
+    unarchive:
+      src: "{{ runtime_instance_package_home }}/{{ outer_item.remote_s3_bucket_path | basename }}"
+      dest: "{{ runtime_instance_package_home }}/{{ (outer_item.remote_s3_bucket_path | basename | splitext)[0] }}"
+      remote_src: yes
+    with_items: "{{ webmethods_packages }}"
+    loop_control:
+      loop_var: outer_item
+    when: webmethods_packages is defined and (webmethods_packages|length > 0)
