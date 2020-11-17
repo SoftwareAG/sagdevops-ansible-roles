@@ -22,14 +22,14 @@
             After: "multi-user.target network-online.target"
             Requires: "network-online.target"
           full_service_params:
-            Type: "simple"
+            Type: "forking"
             User: "{{ service_user }}"
             Group: "{{ service_user }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
             ExecStart: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver64 START"
             ExecStop: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver64 STOP"
             PrivateTmp: "no"
-            KillMode: "none"
+            KillMode: "process"
             TimeoutStartSec: 330
             TimeoutStopSec: 330
             RemainAfterExit: "no"
@@ -42,6 +42,7 @@
         vars:
           service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
           service_envs:
+            CNXDIR: "{{ webmethods_install_dir }}/connx"
             CONNXREGISTRY: "{{ webmethods_install_dir }}/connx/connxreg.db"
             CONNXREGISTRY64: "{{ webmethods_install_dir }}/connx/connxreg64.db"
 
