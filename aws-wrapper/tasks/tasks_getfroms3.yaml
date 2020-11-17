@@ -14,4 +14,6 @@
     file: 
       path: "{{ getfroms3_local_path }}"
       state: file
+      owner: "{{ getfroms3_local_path_owner_user }}"
+      group: "{{ getfroms3_local_path_owner_group }}"
       mode: "{{ getfroms3_local_path_permission }}"

@@ -1,14 +1,14 @@
 ---
 
-  - name: gettting the certs
+  - name: getting the packages to apply on integration server
     include_role:
       name: aws-wrapper
     vars:
       command: "getfroms3"
       getfroms3_bucket_name: "{{ outer_item.remote_s3_bucket_name | default('', true) }}"
       getfroms3_bucket_path: "{{ outer_item.remote_s3_bucket_path | default('', true) }}"
-      getfroms3_local_path: "{{ outer_item.local_path | default('',true) }}"
-    with_items: "{{ webmethods_ssl_files }}"
+      getfroms3_local_path: "{{ runtime_instance_package_home }}/"
+    with_items: "{{ webmethods_packages }}"
     loop_control:
       loop_var: outer_item
-    when: webmethods_ssl_files is defined and (webmethods_ssl_files|length > 0)
+    when: webmethods_packages is defined and (webmethods_packages|length > 0)
