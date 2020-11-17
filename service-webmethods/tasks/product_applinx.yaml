@@ -37,5 +37,5 @@
 
   - include_tasks: "command_{{ product_command }}.yaml"
     vars:
-      service_name: "sag1cnxJDBCsrv{{ product_version_full }}"
+      service_name: "sag1applinx{{ product_version_full }}"
     when: product_command != "create"
