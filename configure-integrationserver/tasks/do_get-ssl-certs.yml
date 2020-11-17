@@ -1,7 +1,7 @@
 ---
 
   - name: gettting the certs
-    import_role:
+    include_role:
       name: aws-wrapper
     vars:
       command: "getfroms3"
