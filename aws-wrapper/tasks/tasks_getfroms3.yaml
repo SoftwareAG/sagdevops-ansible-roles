@@ -1,8 +1,6 @@
 ---
 
   - name: Get file from S3
-    vars:
-      ansible_python_interpreter: /usr/bin/python3 
     amazon.aws.aws_s3:
       bucket: "{{ getfroms3_bucket_name }}"
       object: "{{ getfroms3_bucket_path }}"

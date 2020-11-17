@@ -1,0 +1,8 @@
+---
+
+  - name: making sure the required packages are installed on the targets
+    import_role:
+      name: manage-pip-packages
+    vars:
+      pip_install_packages:
+        - name: boto3
