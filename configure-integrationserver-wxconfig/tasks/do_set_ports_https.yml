@@ -26,10 +26,10 @@
       - name: Enable this new config in the main controller file
         lineinfile:
           path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
-          regexp: '^{{ item.key }}'
-          insertafter: '^#{{ item.key }}'
-          line: "{{ item.key }}={{ item.value }}"
-        with_dict:
-          wx.config.incl: "as-port-https.xml"
+          regexp: '^{{ item }}'
+          insertafter: '^#{{ item }}'
+          line: "{{ item }}"
+        with_items:
+          "wx.config.incl=as-port-https.xml"
 
     when: wxconfig_https_ports_list is defined and wxconfig_https_ports_list|length > 0
