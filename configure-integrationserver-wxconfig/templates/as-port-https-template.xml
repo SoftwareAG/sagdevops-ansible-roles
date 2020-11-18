@@ -14,7 +14,23 @@
                     <enabled>{{ wxconfig_https_port.threadPool.enabled }}</enabled>                    <!-- boolean -->
                     <min>{{ wxconfig_https_port.threadPool.min }}</min>                    <!-- required, if "enabled" == true; otherwise to be removed -->
                     <max>{{ wxconfig_https_port.threadPool.max }}</max>                    <!-- required, if "enabled" == true; otherwise to be removed -->
-                    <priority>{{ wxconfig_https_port.threadPool.priority }}</priority>                    <!-- required, if "enabled" == true; otherwise to be removed --></threadPool>
+                    <priority>{{ wxconfig_https_port.threadPool.priority }}</priority>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                </threadPool>
+                <serviceAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                        <exception>pub.flow:debugLog</exception>
+                        <exception>pub.flow:tracePipeline</exception>
+                        <exception>pub.json</exception>                        <!-- Entire folder , not only single service-->
+                    </exceptionList>
+                </serviceAccess>
+                <ipAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                    </exceptionList>
+                </ipAccess>
                 <security>
                     <!--clientAuthentication
                         none       : Username/password 
