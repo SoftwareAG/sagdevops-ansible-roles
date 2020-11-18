@@ -8,9 +8,28 @@
           msg: "wxconfig_target_package_name not specified...cannot create."
         when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
 
+      - name: Check if main wxconfig controller file is there already
+        stat: 
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+        register: stat_wxconfig_enabled
+
+      - name: fail if wxconfig is not enabled via the controller file
+        fail: 
+          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
+        when: stat_wxconfig_enabled.stat.exists == false
+
       - name: Populate wxconfig file if the wxconfig_jdbc_poolaliases is defined and non empty
         template:
           src: as-jdbc-template.xml.j2
           dest: "{{ wxconfig_target_package_config_path }}/as-jdbc.xml"
+
+      - name: Enable this new config in the main controller file
+        lineinfile:
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          wx.config.incl: "as-jdbc.xml"
 
     when: wxconfig_jdbc_poolaliases is defined and wxconfig_jdbc_poolaliases|length > 0

@@ -18,6 +18,9 @@ wxconfig_license_remote_s3:
   bucket_path: ""
 
 ## global settings values
+wxconfig_global_configs:
+  "wx.config.autoSetup.execute": "{{ wxconfig_enable_auto_config | bool | lower }}"
+
 wxconfig_target_package_name:
 wxconfig_target_package_path: "{{ runtime_instance_package_home }}/{{ wxconfig_target_package_name }}"
 wxconfig_target_package_config_path: "{{ wxconfig_target_package_path }}/config"
