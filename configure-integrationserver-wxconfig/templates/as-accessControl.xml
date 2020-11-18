@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><config>
-<autoConfig>
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <autoConfig>
     <accessControl>
 
 
@@ -30,10 +31,10 @@
       <!-- Integration Server ACLs asssignment to single service -->
 
       <service name="MyTest">
-    	  <!-- It is possible to set only some of the ACLs, e.g. the execute ACL
+        <!-- It is possible to set only some of the ACLs, e.g. the execute ACL
 				without changing any of the others -->
-        <executeACL enforce="always">MyTest</executeACL>  <!-- enforce and name can be set independently -->
-            <!-- 'enforce' can be "always" or "topLevelOnly"
+        <executeACL enforce="always">MyTest</executeACL>        <!-- enforce and name can be set independently -->
+        <!-- 'enforce' can be "always" or "topLevelOnly"
                  Other values will be converted to "topLevelOnly" -->
         <browseACL>MyTest</browseACL>
         <readACL>MyTest</readACL>
@@ -41,43 +42,43 @@
       </service>
 
 
-	  <!-- It is possible to only change the enforce mode of the execute ACL. This also works for folders. -->
-	  <service name="MyTest2">
+      <!-- It is possible to only change the enforce mode of the execute ACL. This also works for folders. -->
+      <service name="MyTest2">
         <executeACL enforce="always" />
-            <!-- 'enforce' can be "always" or "topLevelOnly"
+        <!-- 'enforce' can be "always" or "topLevelOnly"
                  Other values will be converted to "topLevelOnly" -->
 
       </service>
-	  
-	  <!-- It is possible to only change the value of the execute ACL. This also works for folders. -->
-	  <service name="MyTest3">
+
+      <!-- It is possible to only change the value of the execute ACL. This also works for folders. -->
+      <service name="MyTest3">
         <executeACL>Internal</executeACL>
       </service>
 
 
       <!-- Integration Server ACLs asssignment to all services in folder -->
 
-      <service folder="MyTest" includeSubfolders="false" >
+      <service folder="MyTest" includeSubfolders="false">
         <!-- includeSubfolders is "true" by default -->
 
-		<!-- Specific services can be excluded when an entire folder is processed -->
-		<exclude service="pub.flow:debugLog" />
-		<exclude service="pub.flow:tracePipeline" />
-		
-		<!-- It is possible to set only some of the ACLs, e.g. the execute ACL
+        <!-- Specific services can be excluded when an entire folder is processed -->
+        <exclude service="pub.flow:debugLog" />
+        <exclude service="pub.flow:tracePipeline" />
+
+        <!-- It is possible to set only some of the ACLs, e.g. the execute ACL
 			without changing any of the others -->
-		
-        <executeACL enforce="always">MyTest</executeACL>  <!-- enforce and name can be set independently -->
-            <!-- 'enforce' can be "always" or "topLevelOnly"
+
+        <executeACL enforce="always">MyTest</executeACL>        <!-- enforce and name can be set independently -->
+        <!-- 'enforce' can be "always" or "topLevelOnly"
                  Other values will be converted to "topLevelOnly" -->
         <browseACL>MyTest</browseACL>
         <readACL>MyTest</readACL>
         <writeACL>MyTest</writeACL>
       </service>
 
-   
 
-  </accessControl>
 
-</autoConfig>
+    </accessControl>
+
+  </autoConfig>
 </config>
