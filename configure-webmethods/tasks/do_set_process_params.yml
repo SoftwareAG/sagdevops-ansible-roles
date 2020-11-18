@@ -2,9 +2,10 @@
 
 - name: Print the params
   debug:
-    msg: "In process_memory setting"
-    msg: "Product Name: {{ product_name | default('undefined') }}"
-    msg: "Product Instance: {{ product_instance_name | default('undefined') }}"
+    msg: 
+    - "Inside process_params setting"
+    - "Product Name: {{ product_name | default('undefined') }}"
+    - "Product Instance: {{ product_instance_name | default('undefined') }}"
 
 - name: fail if product_name not specified
   fail: 

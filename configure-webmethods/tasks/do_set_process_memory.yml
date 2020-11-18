@@ -2,11 +2,12 @@
 
 - name: Print the params
   debug:
-    msg: "In process_memory setting"
-    msg: "Product Name: {{ product_name | default('undefined') }}"
-    msg: "Product Instance: {{ product_instance_name | default('undefined') }}"
-    msg: "Memory Min: {{ process_memory_min | default('undefined') }}"
-    msg: "Memory Min: {{ process_memory_max | default('undefined') }}"
+    msg: 
+    - "Inside process_memory setting"
+    - "Product Name: {{ product_name | default('undefined') }}"
+    - "Product Instance: {{ product_instance_name | default('undefined') }}"
+    - "Memory Min: {{ process_memory_min | default('undefined') }}"
+    - "Memory Max: {{ process_memory_max | default('undefined') }}"
 
 - name: fail if product_name not specified
   fail: 
