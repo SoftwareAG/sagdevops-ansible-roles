@@ -6,11 +6,11 @@
                 {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolaliases %}
                 <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="false" destroyOnShutdown="false">
                     <depends>
-                        {% for depends_functional_alias in wxconfig_jdbc_poolaliases.depends_functional_aliases.iteritems() %}
-                        <functionalAlias alias="{{ depends_functional_alias.name }}" />
+                        {% for functional_alias in wxconfig_jdbc_poolalias.functional_aliases_mapping %}
+                        <functionalAlias alias="{{ functional_alias }}" />
                         {% endfor %}
                     </depends>
-                    <description>{{ wxconfig_jdbc_poolaliases.description }}</description>
+                    <description>{{ wxconfig_jdbc_poolalias.description }}</description>
                     <driverAlias>{{ wxconfig_jdbc_poolalias.driverAlias }}</driverAlias>
                     <databaseUrl>{{ wxconfig_jdbc_poolalias.databaseUrl }}</databaseUrl>
                     <userId>{{ wxconfig_jdbc_poolalias.userId }}</userId>
