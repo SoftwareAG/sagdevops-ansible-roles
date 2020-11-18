@@ -18,7 +18,7 @@
           msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
         when: stat_wxconfig_enabled.stat.exists == false
 
-      - name: Populate wxconfig file if the wxconfig_extended_settings is defined and non empty
+      - name: Populate wxconfig file if the wxconfig_extended_settings_list is defined and non empty
         template:
           src: as-extendedSettings-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-extendedSettings.xml"
@@ -32,4 +32,4 @@
         with_items:
           "wx.config.incl=as-extendedSettings.xml"
 
-    when: wxconfig_extended_settings is defined and wxconfig_extended_settings|length > 0
+    when: wxconfig_extended_settings_list is defined and wxconfig_extended_settings_list|length > 0
