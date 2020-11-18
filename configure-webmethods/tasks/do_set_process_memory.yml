@@ -14,11 +14,11 @@
     msg: "product_name not specified...cannot do anything."
   when: product_name is not defined or product_name == ""
 
-- name: Include tasks
+- name: Include tasks if product supports it
   include_tasks: "do_set_process_memory_{{ product_name }}.yaml"
-  when: '"product_name" in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]'
+  when: product_name in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]
 
-- name: "Otherwise"
+- name: "Print message if product does not supports it"
   debug:
     msg: "Not Implemented: Process Memory settings"
-  when: '"product_name" not in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]'
+  when: product_name not in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]
