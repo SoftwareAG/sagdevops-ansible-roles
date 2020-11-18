@@ -13,7 +13,7 @@
   when: product_name is not defined or product_name == ""
 
 - name: Include tasks if product supports it
-  include_tasks: "do_set_process_params_{{ product_name }}.yaml"
+  include_tasks: "do_set_process_params_{{ product_name }}.yml"
   when: product_name in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]
 
 - name: "Print message if product does not supports it"
