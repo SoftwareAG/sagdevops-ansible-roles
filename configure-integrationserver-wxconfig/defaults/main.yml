@@ -12,6 +12,7 @@ wxconfig_target_package_config_path: "{{ wxconfig_target_package_path }}/config"
 wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
 
 ## install settings
+wxconfig_install_force: false
 wxconfig_package_remote_s3:
   bucket_name: ""
   bucket_path: ""

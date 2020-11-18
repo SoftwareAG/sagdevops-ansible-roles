@@ -1,0 +1,12 @@
+---
+
+    - import_role:
+        name: configure-integrationserver
+      vars:
+        configs_action: set-jvm-common
+
+    - import_role:
+        name: configure-integrationserver
+      vars:
+        configs_action: set-jvm-params
+        is_jvm_params: "{{ process_params }}"

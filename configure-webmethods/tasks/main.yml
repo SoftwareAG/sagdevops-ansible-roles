@@ -2,17 +2,12 @@
 
 - name: Print the params
   debug:
-    msg: "Running configure setting {{ configure_setting | default('undefined') }} for product {{ product_name | default('undefined') }}"
+    msg: "Running with action {{ configs_action | default('undefined') }}"
 
-- name: fail if product_name not specified
+- name: fail if configs_action not specified
   fail: 
-    msg: "product_name not specified...cannot do anything."
-  when: product_name is not defined or product_name == ""
-
-- name: fail if configure_setting not specified
-  fail: 
-    msg: "configure_setting not specified...cannot do anything."
-  when: configure_setting is not defined or configure_setting == ""
+    msg: "configs_action not specified...cannot do anything."
+  when: configs_action is not defined or configs_action == ""
 
 - name: Include tasks
-  include_tasks: "product_{{ product_name }}.yaml"
+  include_tasks: "do_{{ configs_action }}.yml"

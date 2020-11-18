@@ -1,0 +1,8 @@
+---
+
+    - import_role:
+        name: configure-internaldatastore
+      vars:
+        configs_action: set-jvm-memory
+        ids_jvm_heap_min: "{{ process_memory_min }}"
+        ids_jvm_heap_max: "{{ process_memory_max }}"

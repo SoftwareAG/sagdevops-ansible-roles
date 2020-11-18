@@ -1,0 +1,7 @@
+---
+
+    - import_role:
+        name: configure-terracotta
+      vars:
+        configs_action: set-jvm-params
+        tc_jvm_params: "{{ process_params }}"

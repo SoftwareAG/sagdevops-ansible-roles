@@ -1,0 +1,8 @@
+---
+
+    - name: Run tasks in set-wrapper-jvm-memory
+      include_tasks: "set-wrapper-jvm-memory.yml"
+      vars:
+        custom_wrapper_file: "{{ webmethods_install_dir }}/profiles/SPM/configuration/custom_wrapper.conf"
+        jvm_heap_min: "{{ process_memory_min }}"
+        jvm_heap_max: "{{ process_memory_max }}"
