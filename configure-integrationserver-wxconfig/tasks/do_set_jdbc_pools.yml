@@ -1,0 +1,16 @@
+---
+
+  - name: Install the wxconfig configs in IS target package only if the list is not empty
+    block:
+
+      - name: fail if wxconfig_target_package_name not specified
+        fail: 
+          msg: "wxconfig_target_package_name not specified...cannot create."
+        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+
+      - name: Populate wxconfig file if the wxconfig_jdbc_poolaliases is defined and non empty
+        template:
+          src: as-jdbc-template.xml.j2
+          dest: "{{ wxconfig_target_package_config_path }}/as-jdbc.xml"
+
+    when: wxconfig_jdbc_poolaliases is defined and wxconfig_jdbc_poolaliases|length > 0
