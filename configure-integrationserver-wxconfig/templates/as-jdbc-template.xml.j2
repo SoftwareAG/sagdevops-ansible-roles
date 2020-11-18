@@ -3,7 +3,7 @@
     <autoConfig>
         <jdbc>
             <poolAliasList>
-                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolaliases.iteritems() %}
+                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolaliases %}
                 <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="false" destroyOnShutdown="false">
                     <depends>
                         {% for depends_functional_alias in wxconfig_jdbc_poolaliases.depends_functional_aliases.iteritems() %}
