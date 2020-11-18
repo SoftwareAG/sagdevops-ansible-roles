@@ -18,7 +18,7 @@
           msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
         when: stat_wxconfig_enabled.stat.exists == false
 
-      - name: Populate wxconfig file if the wxconfig_jdbc_poolaliases is defined and non empty
+      - name: Populate wxconfig file if the wxconfig_keytruststore_list is defined and non empty
         template:
           src: as-keyTrustStore-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-keyTrustStore.xml"
@@ -32,4 +32,4 @@
         with_dict:
           wx.config.incl: "as-keyTrustStore.xml"
 
-    when: wxconfig_jdbc_poolaliases is defined and wxconfig_jdbc_poolaliases|length > 0
+    when: wxconfig_keytruststore_list is defined and wxconfig_keytruststore_list|length > 0
