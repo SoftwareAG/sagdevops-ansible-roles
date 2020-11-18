@@ -4,14 +4,14 @@
         <extendedSettings>
             {% for wxconfig_extended_setting in wxconfig_extended_settings_list %}
             
-            {% if wxconfig_extended_setting.type="add" %}
+            {% if wxconfig_extended_setting.type == "add" %}
                 <setting operation="addUpdate" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" />
                 <setting operation="{{ wxconfig_extended_setting.visibility | default('show',true) }}" name="{{ wxconfig_extended_setting.name }}" />
-            {% elif wxconfig_extended_setting.type="remove" %}
+            {% elif wxconfig_extended_setting.type == "remove" %}
                 <setting operation="remove" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" />
-            {% elif wxconfig_extended_setting.type="append" %}
+            {% elif wxconfig_extended_setting.type == "append" %}
                 <setting operation="addAppend" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" separator ="\," />
-            {% elif wxconfig_extended_setting.type="unappend" %}
+            {% elif wxconfig_extended_setting.type == "unappend" %}
                 <setting operation="removePart" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" separator ="\," />
             {% endif %}
 
