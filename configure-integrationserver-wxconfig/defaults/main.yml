@@ -29,10 +29,10 @@ wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
 wxconfig_encrypted_groupname: 
 
 ## jdbc settings
-wxconfig_jdbc_poolaliases: []
+wxconfig_jdbc_poolalias_list: []
 
 ## certs settings
-wxconfig_certs: []
+wxconfig_keytruststore_list: []
 
 ## ports settings
 wxconfig_ports: []

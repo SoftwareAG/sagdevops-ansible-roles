@@ -1,6 +1,6 @@
 ---
 
-  - name: Install the wxconfig configs in IS target package only if the list is not empty
+  - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
 
       - name: fail if wxconfig_target_package_name not specified
@@ -20,8 +20,8 @@
 
       - name: Populate wxconfig file if the wxconfig_jdbc_poolaliases is defined and non empty
         template:
-          src: as-jdbc-template.xml
-          dest: "{{ wxconfig_target_package_config_path }}/as-jdbc.xml"
+          src: as-keyTrustStore-template.xml
+          dest: "{{ wxconfig_target_package_config_path }}/as-keyTrustStore.xml"
 
       - name: Enable this new config in the main controller file
         lineinfile:
@@ -30,6 +30,6 @@
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"
         with_dict:
-          wx.config.incl: "as-jdbc.xml"
+          wx.config.incl: "as-keyTrustStore.xml"
 
     when: wxconfig_jdbc_poolaliases is defined and wxconfig_jdbc_poolaliases|length > 0

@@ -3,7 +3,7 @@
     <autoConfig>
         <jdbc>
             <poolAliasList>
-                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolaliases %}
+                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolalias_list %}
                 <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="false" destroyOnShutdown="false">
                     <depends>
                         {% for functional_alias in wxconfig_jdbc_poolalias.functional_aliases_mapping %}
@@ -20,7 +20,7 @@
                         <maxConnections>{{ wxconfig_jdbc_poolalias.maxConnections }}</maxConnections>
                         <availableConnectionsWarningThreshold>{{ wxconfig_jdbc_poolalias.availableConnectionsWarningThreshold }}</availableConnectionsWarningThreshold>
                         <waitingThreadThresholdCount>{{ wxconfig_jdbc_poolalias.waitingThreadThresholdCount }}</waitingThreadThresholdCount>
-                        <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout> <!-- in milliseconds -->
+                        <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout>                        <!-- in milliseconds -->
                     </connections>
                     <diagnostics>
                         <spy enable="false">
@@ -33,6 +33,17 @@
                 </poolAlias>
                 {% endfor %}
             </poolAliasList>
-        </jdbc>
-    </autoConfig>
+            <functionalAliasList>
+                <functionalAlias alias="ISCoreAudit" updateIfExists="false" destroyOnShutdown="false">
+                    <pool>local</pool>
+                    <description>My own alias</description>
+                    <enableFailFastMode>false</enableFailFastMode>                    <!-- default=false -->
+                    <enableAutoCommit>false</enableAutoCommit>                    <!-- optional; default = false  -->
+                    <enableCaching>false</enableCaching>                    <!-- optional; default = false  -->
+                    <isolationLevel>-1</isolationLevel>                    <!-- default = -1  -->
+                </functionalAlias>
+            </functionalAliasList>
+        </functionalAliasList>
+    </jdbc>
+</autoConfig>
 </config>
