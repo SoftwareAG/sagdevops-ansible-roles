@@ -43,7 +43,6 @@
                     <isolationLevel>-1</isolationLevel>                    <!-- default = -1  -->
                 </functionalAlias>
             </functionalAliasList>
-        </functionalAliasList>
-    </jdbc>
-</autoConfig>
+        </jdbc>
+    </autoConfig>
 </config>
