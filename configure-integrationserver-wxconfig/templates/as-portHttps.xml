@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <autoConfig>
+        <ports>
+            <https alias="SAGSecurePort" updateIfExists="true" autoStart="true" autoShutdown="false" destroyOnShutdown="false">
+                <package>WmRoot</package>                <!-- optional -->
+                <description>HTTPS port</description>
+                <port>5443</port>
+                <bindAddress></bindAddress>                <!-- optional -->
+                <backlog>200</backlog>
+                <keepAliveTimeout>20000</keepAliveTimeout>
+                <threadPool>
+                    <enabled>true</enabled>                    <!-- boolean -->
+                    <min>5</min>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                    <max>20</max>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                    <priority>5</priority>                    <!-- required, if "enabled" == true; otherwise to be removed --></threadPool>
+                <serviceAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                        <exception>pub.flow:debugLog</exception>
+                        <exception>pub.flow:tracePipeline</exception>
+                        <exception>pub.json</exception>                        <!-- Entire folder , not only single service--></exceptionList>
+                </serviceAccess>
+                <ipAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                        <exception>www.softwareag.com</exception>
+                        <exception>intranet.acme.com</exception>
+                    </exceptionList>
+                </ipAccess>
+                <security>
+                    <!--clientAuthentication
+                        none       : Username/password 
+                        digest     : Digest
+                        requestKrb : Request Kerberos Ticket
+                        requireKrb : Require Kerberos Ticket
+                        request    : Request Client Certificates
+                        require    : Require Client Certificates
+                        idProvider : Use Identity Provider
+                    -->
+                    <clientAuthentication>require</clientAuthentication>
+                    <identityProvider></identityProvider>                    <!-- required, if clientAuthentication=idProvider -->
+                    <kerberos>                        <!-- required, if clientAuthentication=requestKrb|requireKrb -->
+                        <jaasContext></jaasContext>
+                        <principal></principal>
+                        <principalPassword></principalPassword>
+                        <servicePrincipalName></servicePrincipalName>
+                    </kerberos>
+                    <useJsse>true</useJsse>
+                    <keystoreAlias>DEFAULT_IS_KEYSTORE</keystoreAlias>
+                    <keyAlias>SAGISKey</keyAlias>
+                    <truststoreAlias>DEFAULT_IS_TRUSTSTORE</truststoreAlias>
+                </security>
+            </https>
+        </ports>
+    </autoConfig>
+</config>

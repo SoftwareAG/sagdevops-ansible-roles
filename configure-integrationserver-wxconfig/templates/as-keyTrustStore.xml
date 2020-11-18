@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- The following line disables commas as a list delimiter.
+         If you keep this line, you can use commas like any other normal
+         character. If you remove this line, commas must be escaped 
+         by a backslash (\,) -->
+    <wx.config.disableDelimiterParsing>true</wx.config.disableDelimiterParsing>
+    <autoConfig>
+        <keyTrustStore>
+            <keyStore alias="SAGKeystore" updateIfExists="true" reloadOnStart="true" destroyOnShutdown="false">
+                <description>SAG Keystore</description>                <!-- optional -->
+                <type>JKS</type>                <!-- Possible value (out-of-the-box): JKS, PKCS12 -->
+                <provider>SUN</provider>                <!-- For type JKS: SUN;   for type PKCS12: SunJSSE -->
+                <location>C:\Users\prade\Documents\SSA\SSACerts\SAGKeystore.jks</location>
+                <password>manage</password>
+                <isHsmBased>false</isHsmBased>
+                <keyList>
+                    <key alias="1" password="manage" />
+                </keyList>
+            </keyStore>
+            <trustStore alias="SAGTruststore" updateIfExists="true" reloadOnStart="true" destroyOnShutdown="true">
+                <description>My truststore alias</description>                <!-- optional -->
+                <type>JKS</type>                <!-- Possible value (out-of-the-box): JKS -->
+                <provider>SUN</provider>                <!-- For type JKS: SUN-->
+                <location>C:\Users\prade\Documents\SSA\SSACerts\SAGTruststore.jks</location>
+                <password>manage</password>
+            </trustStore>
+            <securityProvider class="" />
+        </keyTrustStore>
+    </autoConfig>
+</config>

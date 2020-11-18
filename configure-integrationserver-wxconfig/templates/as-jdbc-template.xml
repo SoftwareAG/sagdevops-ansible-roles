@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <autoConfig>
+        <jdbc>
+            <poolAliasList>
+                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolaliases.iteritems() %}
+                <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="false" destroyOnShutdown="false">
+                    <depends>
+                        {% for depends_functional_alias in wxconfig_jdbc_poolaliases.depends_functional_aliases.iteritems() %}
+                        <functionalAlias alias="{{ depends_functional_alias.name }}" />
+                        {% endfor %}
+                    </depends>
+                    <description>{{ wxconfig_jdbc_poolaliases.description }}</description>
+                    <driverAlias>{{ wxconfig_jdbc_poolalias.driverAlias }}</driverAlias>
+                    <databaseUrl>{{ wxconfig_jdbc_poolalias.databaseUrl }}</databaseUrl>
+                    <userId>{{ wxconfig_jdbc_poolalias.userId }}</userId>
+                    <password>[[encrypted:{{ wxconfig_jdbc_poolalias.password_encrypted_handle }}]]</password>
+                    <connections>
+                        <minConnections>{{ wxconfig_jdbc_poolalias.minConnections }}</minConnections>
+                        <maxConnections>{{ wxconfig_jdbc_poolalias.maxConnections }}</maxConnections>
+                        <availableConnectionsWarningThreshold>{{ wxconfig_jdbc_poolalias.availableConnectionsWarningThreshold }}</availableConnectionsWarningThreshold>
+                        <waitingThreadThresholdCount>{{ wxconfig_jdbc_poolalias.waitingThreadThresholdCount }}</waitingThreadThresholdCount>
+                        <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout> <!-- in milliseconds -->
+                    </connections>
+                    <diagnostics>
+                        <spy enable="false">
+                            <attributes></attributes>
+                        </spy>
+                        <snoop enable="false">
+                            <attributes></attributes>
+                        </snoop>
+                    </diagnostics>
+                </poolAlias>
+                {% endfor %}
+            </poolAliasList>
+        </jdbc>
+    </autoConfig>
+</config>

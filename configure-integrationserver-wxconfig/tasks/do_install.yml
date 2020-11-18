@@ -1,0 +1,40 @@
+---
+
+  - name: Create the wxconfig config dir on the machine if it does not exist
+    file:
+      path: "{{ wxconfig_configs_dir }}"
+      state: directory
+
+  - name: getting the wxconfig license from s3 to apply on integration server
+    include_role:
+      name: aws-wrapper
+    vars:
+      command: "getfroms3"
+      getfroms3_bucket_name: "{{ wxconfig_license_remote_s3.bucket_name | default('', true) }}"
+      getfroms3_bucket_path: "{{ wxconfig_license_remote_s3.bucket_path | default('', true) }}"
+      getfroms3_local_path: "{{ wxconfig_configs_dir }}/WxConfig_v1.9.license"
+
+  - name: getting the wxconfig packages from s3 to apply on integration server
+    include_role:
+      name: aws-wrapper
+    vars:
+      command: "getfroms3"
+      getfroms3_bucket_name: "{{ wxconfig_package_remote_s3.bucket_name | default('', true) }}"
+      getfroms3_bucket_path: "{{ wxconfig_package_remote_s3.bucket_path | default('', true) }}"
+      getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ wxconfig_package_remote_s3.bucket_path | basename }}"
+
+  - name: Create the extracted dir on the remote machine if it doesn't exist
+    file:
+      path: "{{ runtime_instance_package_home }}/{{ ( wxconfig_package_remote_s3.bucket_path | basename | splitext )[0] }}"
+      state: directory
+
+  - name: Unarchive the packages on the remote machine
+    unarchive:
+      src: "{{ runtime_instance_package_home }}/{{ wxconfig_package_remote_s3.bucket_path | basename }}"
+      dest: "{{ runtime_instance_package_home }}/{{ ( wxconfig_package_remote_s3.bucket_path | basename | splitext )[0] }}"
+      remote_src: yes
+
+  - name: Delete the archive once extracted
+    file:
+      path: "{{ runtime_instance_package_home }}/{{ wxconfig_package_remote_s3.bucket_path | basename }}"
+      state: absent

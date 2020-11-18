@@ -1,0 +1,39 @@
+---
+
+## Config files
+product_instance_name: "default"
+profile_instance_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}"
+runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
+runtime_instance_configs_home: "{{ runtime_instance_home }}/config"
+runtime_instance_package_home: "{{ runtime_instance_home }}/packages"
+wxconfig_configs_dir: "{{ runtime_instance_configs_home }}/WxConfig"
+
+## install settings
+wxconfig_package_remote_s3:
+  bucket_name: ""
+  bucket_path: ""
+
+wxconfig_license_remote_s3:
+  bucket_name: ""
+  bucket_path: ""
+
+## global settings values
+wxconfig_target_package_name:
+wxconfig_target_package_path: "{{ runtime_instance_package_home }}/{{ wxconfig_target_package_name }}"
+wxconfig_target_package_config_path: "{{ wxconfig_target_package_path }}/config"
+
+## encrypted values
+wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
+wxconfig_encrypted_groupname: 
+
+## jdbc settings
+wxconfig_jdbc_poolaliases: []
+
+## certs settings
+wxconfig_certs: []
+
+## ports settings
+wxconfig_ports: []
+
+## extended settings
+wxconfig_extended_settings: []
