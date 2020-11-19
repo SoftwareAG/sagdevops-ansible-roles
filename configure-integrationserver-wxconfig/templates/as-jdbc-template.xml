@@ -4,7 +4,7 @@
         <jdbc>
             <poolAliasList>
                 {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolalias_list %}
-                <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="false" destroyOnShutdown="false">
+                <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_jdbc_poolalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_poolalias.destroyOnShutdown }}">
                     <depends>
                         {% for functional_alias in wxconfig_jdbc_poolalias.functional_aliases_mapping %}
                         <functionalAlias alias="{{ functional_alias }}" />
