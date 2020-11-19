@@ -14,7 +14,22 @@ webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/te
 ## gateway rest apis
 apigateway_rest_base_uri: "http://localhost:5555"
 apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
+
+# general
 apigateway_rest_users_api: "{{ apigateway_rest_base_path }}/users"
+apigateway_rest_urlaliases_api: "{{ apigateway_rest_base_path }}/urlaliases"
+
+# is configs
+apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
+apigateway_rest_is_keystore: "{{ apigateway_rest_is_baseapi }}/keystore"
+apigateway_rest_is_truststore: "{{ apigateway_rest_is_baseapi }}/truststore"
+
+# configurations
+apigateway_rest_configurations_baseapi: "{{ apigateway_rest_base_path }}/configurations"
+apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_baseapi }}/loadBalancer"
+apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi }}/cache"
+apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
+apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
 
 ## global JVM settings
 apigateway_jvm_heap_min: 1024
