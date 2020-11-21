@@ -4,10 +4,11 @@
     stat: 
       path: "{{ runtime_instance_package_home }}/WxConfig/manifest.rel"
     register: stat_wxconfig_installed
-  
-  - name: Set just-installed flag to false at the start
+
+  - name: Set changed flag to false if not defined
     set_fact: 
-      wxconfig_just_installed: false
+      configure_integrationserver_wxconfig_install_changed: false
+    when: configure_integrationserver_wxconfig_install_changed is not defined
 
   - name: Install wxconfig if it's not already there
     block:
@@ -51,8 +52,8 @@
           path: "{{ runtime_instance_package_home }}/WxConfig.zip"
           state: absent
 
-      - name: Set just-installed flag to true
+      - name: Set changed flag to true
         set_fact: 
-          wxconfig_just_installed: true
+          configure_integrationserver_wxconfig_install_changed: true
 
     when: stat_wxconfig_installed.stat.exists == false or wxconfig_install_force == true

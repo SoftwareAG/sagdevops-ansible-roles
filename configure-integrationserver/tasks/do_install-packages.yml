@@ -1,16 +1,24 @@
 ---
 
-  - name: Installing the packages as defined in the list, only if the list is not empty
-    include_tasks: "do_install-package.yml"
-    vars:
-      webmethods_packages_remote_s3_bucket_name: "{{ outer_item.remote_s3_bucket_name }}"
-      webmethods_packages_remote_s3_bucket_path: "{{ outer_item.remote_s3_bucket_path }}"
-    with_items: "{{ webmethods_packages }}"
-    loop_control:
-      loop_var: outer_item
-    register: install_package_result
-    when: webmethods_packages is defined and (webmethods_packages|length > 0)
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_install_packages_changed: false
+    when: configure_integrationserver_install_packages_changed is not defined
 
-  - name: Print the install_package_result
-    debug:
-      var: install_package_result.results
+  - name: Install package only if it's not already there
+    block:
+
+      - name: Installing the packages as defined in the list, only if the list is not empty
+        include_tasks: "do_install-package.yml"
+        vars:
+          webmethods_packages_remote_s3_bucket_name: "{{ outer_item.remote_s3_bucket_name }}"
+          webmethods_packages_remote_s3_bucket_path: "{{ outer_item.remote_s3_bucket_path }}"
+        with_items: "{{ webmethods_packages }}"
+        loop_control:
+          loop_var: outer_item
+
+      - name: Set changed flag to true if a change happened
+        set_fact: 
+          configure_integrationserver_install_packages_changed: "{{ configure_integrationserver_install_package_changed }}"
+
+    when: webmethods_packages is defined and (webmethods_packages|length > 0)

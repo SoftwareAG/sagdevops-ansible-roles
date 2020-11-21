@@ -6,9 +6,10 @@
       path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
     register: check_package_installed
 
-  - name: Set just-installed flag to false at the start
+  - name: Set changed flag to false if not defined
     set_fact: 
-      webmethods_package_just_installed: false
+      configure_integrationserver_install_package_changed: false
+    when: configure_integrationserver_install_package_changed is not defined
 
   - name: Install package only if it's not already there
     block:
@@ -38,8 +39,13 @@
           path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
           state: absent
       
-      - name: Set just-installed flag to true
+      - name: check if package already installed
+        stat: 
+          path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
+        register: webmethods_package_just_installed
+
+      - name: Set changed flag to true
         set_fact:
-          webmethods_package_just_installed: true
+          configure_integrationserver_install_package_changed: true
   
     when: check_package_installed.stat.exists == false or webmethods_packages_force_install == true
