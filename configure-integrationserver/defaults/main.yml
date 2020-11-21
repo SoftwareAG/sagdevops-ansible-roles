@@ -18,3 +18,8 @@ is_jvm_params: {}
 is_clustering_use_internal_db: false
 external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510
+
+## install package
+webmethods_packages_force_install: false
+webmethods_packages_remote_s3_bucket_name:
+webmethods_packages_remote_s3_bucket_path:

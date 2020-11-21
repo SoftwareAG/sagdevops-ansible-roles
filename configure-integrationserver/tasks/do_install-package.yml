@@ -1,0 +1,45 @@
+---
+
+
+  - name: check if package already installed
+    stat: 
+      path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
+    register: check_package_installed
+
+  - name: Set just-installed flag to false at the start
+    set_fact: 
+      webmethods_package_just_installed: false
+
+  - name: Install package only if it's not already there
+    block:
+
+      - name: getting the packages from s3 to apply on integration server
+        include_role:
+          name: aws-wrapper
+        vars:
+          command: "getfroms3"
+          getfroms3_bucket_name: "{{ webmethods_packages_remote_s3_bucket_name | default('', true) }}"
+          getfroms3_bucket_path: "{{ webmethods_packages_remote_s3_bucket_path | default('', true) }}"
+          getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
+        
+      - name: Create the extracted dir on the remote machine if they don't exist
+        file:
+          path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}"
+          state: directory
+
+      - name: Unarchive the packages on the remote machine
+        unarchive:
+          src: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
+          dest: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}"
+          remote_src: yes
+
+      - name: Delete the archive once extracted
+        file:
+          path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
+          state: absent
+      
+      - name: Set just-installed flag to true
+        set_fact:
+          webmethods_package_just_installed: true
+  
+    when: check_package_installed.stat.exists == false or webmethods_packages_force_install == true
