@@ -6,6 +6,10 @@
       path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
     register: check_package_installed
 
+  - name: Package installed status
+    debug:
+      var: check_package_installed.stat.exists
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_install_package_changed: false

@@ -5,6 +5,10 @@
       path: "{{ runtime_instance_package_home }}/WxConfig/manifest.rel"
     register: stat_wxconfig_installed
 
+  - name: Package installed status
+    debug:
+      var: stat_wxconfig_installed.stat.exists
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_install_changed: false
