@@ -8,4 +8,9 @@
     with_items: "{{ webmethods_packages }}"
     loop_control:
       loop_var: outer_item
+    register: install_package_result
     when: webmethods_packages is defined and (webmethods_packages|length > 0)
+
+  - name: Print the install_package_result
+    debug:
+      var: install_package_result.results
