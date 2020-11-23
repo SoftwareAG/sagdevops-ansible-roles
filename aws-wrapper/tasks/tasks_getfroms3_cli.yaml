@@ -52,14 +52,14 @@
           msg: "File at {{ getfroms3_local_path }} still does not exist...check download parameters"
         when: stat_s3download_exists.stat.exists == false
 
-      - name: Fix permission on fetched file
+      - name: Fix owner on fetched file
         file: 
           path: "{{ getfroms3_local_path }}"
           state: file
           owner: "{{ getfroms3_local_path_owner_user }}"
         when: getfroms3_local_path_owner_user is defined and getfroms3_local_path_owner_user != ""
       
-      - name: Fix permission on fetched file
+      - name: Fix group on fetched file
         file: 
           path: "{{ getfroms3_local_path }}"
           state: file
