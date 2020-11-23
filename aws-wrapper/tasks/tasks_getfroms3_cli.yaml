@@ -42,14 +42,37 @@
         debug:
           msg: "{{ job_result.stdout_lines | join('\n') }}"
 
+      - name: Check if getfroms3_local_path still does not exist
+        stat: 
+          path: "{{ getfroms3_local_path }}"
+        register: stat_s3download_exists
+
+      - name: fail if file getfroms3_local_path does not exist
+        fail: 
+          msg: "File at {{ getfroms3_local_path }} still does not exist...check download parameters"
+        when: stat_s3download_exists.stat.exists == false
+
       - name: Fix permission on fetched file
         file: 
           path: "{{ getfroms3_local_path }}"
           state: file
           owner: "{{ getfroms3_local_path_owner_user }}"
-          group: "{{ getfroms3_local_path_owner_group }}"
-          mode: "{{ getfroms3_local_path_permission }}"
+        when: getfroms3_local_path_owner_user is defined and getfroms3_local_path_owner_user != ""
       
+      - name: Fix permission on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          group: "{{ getfroms3_local_path_owner_group }}"
+        when: getfroms3_local_path_owner_group is defined and getfroms3_local_path_owner_group != ""
+
+      - name: Fix permission on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          mode: "{{ getfroms3_local_path_permission }}"
+        when: getfroms3_local_path_permission is defined and getfroms3_local_path_permission != ""
+
       - name: Set changed flag to true
         set_fact: 
           aws_wrapper_getfroms3_changed: true
