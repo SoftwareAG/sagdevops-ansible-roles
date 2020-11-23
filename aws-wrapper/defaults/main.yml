@@ -10,7 +10,7 @@ getfroms3_implementation: "cli"
 getfroms3_bucket_name:
 getfroms3_bucket_path:
 getfroms3_local_path:
-getfroms3_local_path_create_dir_ifnotexist: true
+getfroms3_local_path_create_dir_ifnotexist: false
 getfroms3_local_path_create_dir_owner_user:
 getfroms3_local_path_create_dir_owner_group:
 getfroms3_local_path_create_dir_permission: "0755"
