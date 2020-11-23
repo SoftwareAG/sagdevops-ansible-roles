@@ -1,6 +1,6 @@
 ---
 
-getfroms3_aws_cli_exe: "/usr/bin/aws"
+getfroms3_aws_cli_exe: "{{ aws_cli_exe }}"
 getfroms3_async_retries: 200
 getfroms3_async_delay: 10
 getfroms3_async: 2000
