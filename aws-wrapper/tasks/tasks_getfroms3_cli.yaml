@@ -54,4 +54,4 @@
         set_fact: 
           aws_wrapper_getfroms3_changed: true
 
-    when: aws_wrapper_getfroms3_changed.stat.exists == false or getfroms3_force_download == true
+    when: stat_s3download_exists.stat.exists == false or getfroms3_force_download == true
