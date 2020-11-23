@@ -1,0 +1,19 @@
+---
+
+  - name: Get file from S3
+    vars:
+      ansible_python_interpreter: /usr/bin/python3 
+    amazon.aws.aws_s3:
+      bucket: "{{ getfroms3_bucket_name }}"
+      object: "{{ getfroms3_bucket_path }}"
+      dest: "{{ getfroms3_local_path }}"
+      mode: get
+      overwrite: always
+
+  - name: Fix permission on fetched file
+    file: 
+      path: "{{ getfroms3_local_path }}"
+      state: file
+      owner: "{{ getfroms3_local_path_owner_user }}"
+      group: "{{ getfroms3_local_path_owner_group }}"
+      mode: "{{ getfroms3_local_path_permission }}"

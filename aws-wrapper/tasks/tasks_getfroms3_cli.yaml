@@ -1,0 +1,57 @@
+---
+
+  - name: fail if getfroms3_bucket_name not specified
+    fail: 
+      msg: "getfroms3_bucket_name not specified...can't do anything"
+    when: getfroms3_bucket_name is not defined or getfroms3_bucket_name == ""
+
+  - name: Check if getfroms3_local_path exists already
+    stat: 
+      path: "{{ getfroms3_local_path }}"
+    register: stat_s3download_exists
+
+  - name: Does download artifact alreay exist?
+    debug:
+      var: stat_s3download_exists.stat.exists
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      aws_wrapper_getfroms3_changed: false
+    when: aws_wrapper_getfroms3_changed is not defined
+
+  - name: Get download artifact if not already there or redownload is forced
+    block:
+
+      - name: run AWS CLI S3 CP command
+        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_bucket_path }} {{ getfroms3_local_path }}"
+        args:
+          chdir: "{{ ansible_env.HOME }}"
+        async: "{{ getfroms3_async }}"
+        poll: "{{ getfroms3_poll }}"
+        register: getfroms3_sleeper
+
+      - name: Check status of AWS CLI S3 CP command
+        async_status:
+          jid: "{{ getfroms3_sleeper.ansible_job_id }}"
+        register: job_result
+        until: job_result.finished
+        retries: "{{ getfroms3_async_retries }}"
+        delay: "{{ getfroms3_async_delay }}"
+
+      - name: Print the job_result to the console.
+        debug:
+          msg: "{{ job_result.stdout_lines | join('\n') }}"
+
+      - name: Fix permission on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          owner: "{{ getfroms3_local_path_owner_user }}"
+          group: "{{ getfroms3_local_path_owner_group }}"
+          mode: "{{ getfroms3_local_path_permission }}"
+      
+      - name: Set changed flag to true
+        set_fact: 
+          aws_wrapper_getfroms3_changed: true
+
+    when: aws_wrapper_getfroms3_changed.stat.exists == false or getfroms3_force_download == true

@@ -1,8 +1,16 @@
 ---
 
+getfroms3_aws_cli_exe: "/usr/bin/aws"
+getfroms3_async_retries: 200
+getfroms3_async_delay: 10
+getfroms3_async: 2000
+getfroms3_poll: 0
+getfroms3_implementation: "cli"
+
 getfroms3_bucket_name:
 getfroms3_bucket_path:
 getfroms3_local_path:
 getfroms3_local_path_owner_user:
 getfroms3_local_path_owner_group:
 getfroms3_local_path_permission: 0644
+getfroms3_force_download: false
