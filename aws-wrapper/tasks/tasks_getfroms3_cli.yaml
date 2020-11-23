@@ -22,6 +22,35 @@
   - name: Get download artifact if not already there or redownload is forced
     block:
 
+      - name: Create the local path dir on the machine if it does not exist
+        block:
+          - name: Create the local path dir on the machine if it does not exist
+            file:
+              path: "{{ getfroms3_local_path | dirname }}"
+              state: directory
+
+          - name: Fix owner on local path dir
+            file: 
+              path: "{{ getfroms3_local_path | dirname }}"
+              state: directory
+              owner: "{{ getfroms3_local_path_create_dir_owner_user }}"
+            when: getfroms3_local_path_create_dir_owner_user is defined and getfroms3_local_path_create_dir_owner_user != ""
+          
+          - name: Fix group on local path dir
+            file: 
+              path: "{{ getfroms3_local_path | dirname }}"
+              state: directory
+              group: "{{ getfroms3_local_path_create_dir_owner_group }}"
+            when: getfroms3_local_path_create_dir_owner_group is defined and getfroms3_local_path_create_dir_owner_group != ""
+
+          - name: Fix permission on local path dir
+            file: 
+              path: "{{ getfroms3_local_path | dirname }}"
+              state: directory
+              mode: "{{ getfroms3_local_path_create_dir_permission }}"
+            when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
+        when: getfroms3_local_path_create_dir_ifnotexist == true
+
       - name: run AWS CLI S3 CP command
         command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_bucket_path }} {{ getfroms3_local_path }}"
         args:
