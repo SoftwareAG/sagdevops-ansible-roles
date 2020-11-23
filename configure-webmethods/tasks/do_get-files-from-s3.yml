@@ -34,10 +34,3 @@
           loop_var: outer_item
 
     when: webmethods_download_files_s3 is defined and (webmethods_download_files_s3|length > 0)
-
-
-    - "getfroms3_local_path_create_dir_ifnotexist: {{ getfroms3_local_path_create_dir_ifnotexist | default('undefined',true) }}"
-      - "getfroms3_local_path_create_dir_owner_user: {{ getfroms3_local_path_create_dir_owner_user | default('undefined',true) }}"
-      - "getfroms3_local_path_create_dir_owner_group: {{ getfroms3_local_path_create_dir_owner_group | default('undefined',true) }}"
-      - "getfroms3_local_path_create_dir_permission: {{ getfroms3_local_path_create_dir_permission | default('undefined',true) }}"
-      
