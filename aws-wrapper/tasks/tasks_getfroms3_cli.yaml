@@ -1,5 +1,20 @@
 ---
 
+  - name: Print variables
+    debug:
+      msg:
+      - "getfroms3_bucket_name: {{ getfroms3_bucket_name | default('undefined',true) }}"
+      - "getfroms3_bucket_path: {{ getfroms3_bucket_path | default('undefined',true) }}"
+      - "getfroms3_local_path: {{ getfroms3_local_path | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_ifnotexist: {{ getfroms3_local_path_create_dir_ifnotexist | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_owner_user: {{ getfroms3_local_path_create_dir_owner_user | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_owner_group: {{ getfroms3_local_path_create_dir_owner_group | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_permission: {{ getfroms3_local_path_create_dir_permission | default('undefined',true) }}"
+      - "getfroms3_local_path_owner_user: {{ getfroms3_local_path_owner_user | default('undefined',true) }}"
+      - "getfroms3_local_path_owner_group: {{ getfroms3_local_path_owner_group | default('undefined',true) }}"
+      - "getfroms3_local_path_permission: {{ getfroms3_local_path_permission | default('undefined',true) }}"
+      - "getfroms3_force_download: {{ getfroms3_force_download | default('undefined',true) }}"
+      
   - name: fail if getfroms3_bucket_name not specified
     fail: 
       msg: "getfroms3_bucket_name not specified...can't do anything"
