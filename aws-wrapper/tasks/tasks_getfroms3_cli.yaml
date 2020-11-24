@@ -97,12 +97,12 @@
       - name: Check if getfroms3_local_path still does not exist
         stat: 
           path: "{{ getfroms3_local_path }}"
-        register: stat_s3download_exists
+        register: stat_s3justdownloaded_exists
 
       - name: fail if file getfroms3_local_path does not exist
         fail: 
           msg: "File at {{ getfroms3_local_path }} still does not exist...check download parameters"
-        when: stat_s3download_exists.stat.exists == false
+        when: stat_s3justdownloaded_exists.stat.exists == false
 
       - name: Fix owner on fetched file
         file: 
