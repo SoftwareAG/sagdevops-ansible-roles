@@ -3,6 +3,7 @@
 webmethods_install_dir:
 service_exec_filepath:
 service_user:
+service_group:
 service_name:
 service_type: forking
 force_create: false
