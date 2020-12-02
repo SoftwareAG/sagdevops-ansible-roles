@@ -13,7 +13,7 @@
 
       - name: Set the params initial
         set_fact:
-          install_command: ['./{{ webmethods_cce_bootstrap_installer }}']
+          install_command: ['/bin/bash {{ webmethods_cce_bootstrap_installer }}']
 
       - name: append webmethods_cce_bootstrap_agreement if exists
         set_fact:
