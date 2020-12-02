@@ -49,7 +49,7 @@
   - name: Install / extract license zip files if they were downloaded
     block:
 
-      - name: Create the extracted dir on the rmachine if it does not exist
+      - name: Create the extracted dir on the machine if it does not exist
         file:
           path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
           state: directory
