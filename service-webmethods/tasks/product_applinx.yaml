@@ -13,7 +13,7 @@
           full_service_params:
             Type: "forking"
             User: "{{ service_user }}"
-            Group: "{{ service_user }}"
+            Group: "{{ service_group }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/ApplinX/bin"
             ExecStart: "/bin/sh {{ webmethods_install_dir }}/ApplinX/bin/startup.sh"
             ExecStop: "/bin/sh {{ webmethods_install_dir }}/ApplinX/bin/shutdown.sh"

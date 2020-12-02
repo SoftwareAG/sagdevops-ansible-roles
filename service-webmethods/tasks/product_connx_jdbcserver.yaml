@@ -24,7 +24,7 @@
           full_service_params:
             Type: "forking"
             User: "{{ service_user }}"
-            Group: "{{ service_user }}"
+            Group: "{{ service_group }}"
             WorkingDirectory: "{{ webmethods_install_dir }}/connx"
             ExecStart: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver64 START"
             ExecStop: "/bin/sh {{ webmethods_install_dir }}/connx/jdbcserver64 STOP"

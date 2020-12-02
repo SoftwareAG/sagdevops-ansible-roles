@@ -10,7 +10,7 @@
     full_service_params:
       Type: "simple"
       User: "{{ service_user }}"
-      Group: "{{ service_user }}"
+      Group: "{{ service_group }}"
       WorkingDirectory: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/"
       PIDFile: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/kibana.pid"
       ExecStart: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/kibana"

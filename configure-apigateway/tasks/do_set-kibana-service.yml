@@ -2,7 +2,7 @@
 
   ## get the hosts of the elasticsearch / internal data store nodes
   ## in the format that's expected: "protocol://host1:port1,protocol://host2:port2"
-  - import_role: 
+  - import_role:
       name: get-inventory-hosts
     vars:
       inventory_pattern: "{{ external_elasticsearch_inventory_pattern }}"
@@ -10,7 +10,7 @@
       inventory_hosts_clear_first: true
       inventory_hosts_add_prefix: "{{ external_elasticsearch_protocol }}"
       inventory_hosts_add_suffix: ":{{ external_elasticsearch_port }}"
-  
+
   - name: Set elasticsearch_hosts_list facts
     set_fact:
       elasticsearch_hosts_list: "{{ output_inventory_hosts }}"
@@ -18,7 +18,7 @@
   - name: Must run as root - Set service for kibana if the elasticsearch_hosts_list was set (TODO - we should do a better check than checking on external_elasticsearch_hosts )
     block:
 
-        - import_role: 
+        - import_role:
             name: service-webmethods
           vars:
             product_command: "create"
@@ -26,8 +26,9 @@
             product_instance_name: "default"
             force_create: false
             service_user: "{{ webmethods_user }}"
+            service_group: "{{ webmethods_group }}"
 
-        - import_role: 
+        - import_role:
             name: service-webmethods
           vars:
             product_command: "restart"

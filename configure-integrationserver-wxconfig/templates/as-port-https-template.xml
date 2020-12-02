@@ -33,7 +33,7 @@
                 </ipAccess>
                 <security>
                     <!--clientAuthentication
-                        none       : Username/password 
+                        none       : Username/password
                         digest     : Digest
                         requestKrb : Request Kerberos Ticket
                         requireKrb : Require Kerberos Ticket
@@ -41,7 +41,7 @@
                         require    : Require Client Certificates
                         idProvider : Use Identity Provider
                     -->
-                    <clientAuthentication>require</clientAuthentication>
+                    <clientAuthentication>{{ wxconfig_https_port.clientAuthentication }}</clientAuthentication>
                     <useJsse>{{ wxconfig_https_port.useJsse }}</useJsse>
                     <keystoreAlias>{{ wxconfig_https_port.keystoreAlias }}</keystoreAlias>
                     <keyAlias>{{ wxconfig_https_port.keyAlias }}</keyAlias>

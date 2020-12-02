@@ -7,7 +7,7 @@
 ### - service_type
 
   - name: fail if service_name not specified
-    fail: 
+    fail:
       msg: "service_name not specified...cannot create."
     when: service_name is not defined or service_name == ""
 
@@ -23,12 +23,12 @@
       msg: "Service {{ service_name }} will be created or recreated"
 
   - name: Check for wM daemon script
-    stat: 
+    stat:
       path: "{{ webmethods_install_dir }}/common/bin/daemon.sh"
     register: stat_wmdDaemonFile
 
   - name: fail if service_exec_filepath not specified
-    fail: 
+    fail:
       msg: "service_exec_filepath not specified...cannot create."
     when: service_exec_filepath is not defined or service_exec_filepath == ""
 
@@ -40,6 +40,8 @@
         - "{{ service_exec_filepath }}"
         - "-u"
         - "{{ service_user }}"
+        - "-g"
+        - "{{ service_group }}"
         - "-n"
         - "{{ service_name }}"
         - "-T"
@@ -47,7 +49,7 @@
         - "-P"
         - "{{ service_pidfile }}"
     when: stat_wmdDaemonFile.stat.exists and service_pidfile is defined and service_pidfile != ""
-  
+
   - name: Create service using daemon script with general defaults
     command:
       argv:
@@ -56,6 +58,8 @@
         - "{{ service_exec_filepath }}"
         - "-u"
         - "{{ service_user }}"
+        - "-g"
+        - "{{ service_group }}"
         - "-n"
         - "{{ service_name }}"
         - "-T"
@@ -70,7 +74,7 @@
     service_facts:
 
   - name: fail if service is not found
-    fail: 
+    fail:
       msg: "service {{ service_name }} is still not found even though we just created it - operation must have failed."
     when: ansible_facts.services[service_name_index] is not defined
 
