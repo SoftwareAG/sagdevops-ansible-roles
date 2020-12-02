@@ -14,9 +14,7 @@
       - name: Make sure the webmethods_cce_bootstrap_installer file is executable
         file: 
           path: "{{ webmethods_cce_bootstrap_installer_exec_dir }}/{{ webmethods_cce_bootstrap_installer }}"
-          state: file
-          mode: "a+x"
-        when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
+          mode: "u+rwx"
         
       - name: Set the params initial
         set_fact:
