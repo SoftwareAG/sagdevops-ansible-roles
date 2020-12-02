@@ -45,7 +45,7 @@
         file:
           path: "{{ getfroms3_local_path | dirname }}"
           state: directory
-        when: getfroms3_local_path_create_dir_ifnotexist == true
+        when: getfroms3_local_path_create_dir_ifnotexist|bool == true
 
       - name: Check if local path dir on the machine exists
         stat: 
@@ -133,4 +133,4 @@
         set_fact: 
           aws_wrapper_getfroms3_changed: true
 
-    when: stat_s3download_exists.stat.exists == false or getfroms3_force_download == true
+    when: stat_s3download_exists.stat.exists == false or getfroms3_force_download|bool == true
