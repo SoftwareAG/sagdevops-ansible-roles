@@ -92,7 +92,7 @@
 
       - name: Print the job_result to the console.
         debug:
-          msg: "{{ job_result.stdout_lines | join('\n') }}"
+          msg: "{{ job_result.stdout_lines | last }}"
 
       - name: Check if getfroms3_local_path still does not exist
         stat: 
