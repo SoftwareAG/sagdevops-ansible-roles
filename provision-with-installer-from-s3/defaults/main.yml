@@ -8,15 +8,19 @@ webmethods_install_poll: 0
 ## global settings
 webmethods_install_target_dir: ""
 webmethods_install_sum_target_dir: ""
+webmethods_install_localtarget_files_owner_user: ""
+webmethods_install_localtarget_files_owner_group: ""
+webmethods_install_localtarget_files_permissions: "0644"
+webmethods_install_localtarget_create_dir_ifnotexist: "true"
+webmethods_install_localtarget_create_dir_owner_user: ""
+webmethods_install_localtarget_create_dir_owner_group: ""
+webmethods_install_localtarget_create_dir_permission: "0755"
 
-webmethods_localrepo_target_dir: ""
-webmethods_localrepo_target_dir_owner_user: ""
-webmethods_localrepo_target_dir_owner_group: ""
-
+## download settings
 webmethods_s3repo_bucket_name: ""
 webmethods_s3repo_bucket_prefix: ""
-webmethods_s3repo_scripts_dir: ""
 webmethods_s3repo_force_redownload: ""
+webmethods_localrepo_target_dir: ""
 
 ## installers
 webmethods_s3repo_installer_filename: ""
@@ -27,8 +31,7 @@ webmethods_localrepo_sum_filename: ""
 ## licenses
 webmethods_s3repo_license_zip_filename: ""
 webmethods_localrepo_license_zip_filename: ""
-webmethods_s3repo_inzip_license_filepath: ""
-webmethods_localrepo_license_filepath: ""
+webmethods_localrepo_license_inzip_filepath_list: []
 
 ## products
 webmethods_s3repo_products_image_filename: ""
