@@ -1,47 +1,29 @@
 ---
 
+  - name: fail if webmethods_localrepo_target_dir not specified
+    fail: 
+      msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+    when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
-- name: fail if webmethods_localrepo_target_dir not specified
-  fail: 
-    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
-  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
-
-- name: Create local dir folder for artifacts
-  file: 
-    path: "{{ webmethods_localrepo_target_dir }}"
-    state: directory
-    owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
-    group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: 0755
-
-- name: Write the various scripts with all the params in them
-  template:
-    src: "{{ item.src }}" 
-    dest: "{{ item.dest }}"
-    backup: no
-    owner: "{{ webmethods_localrepo_target_dir_owner_user }}"
-    group: "{{ webmethods_localrepo_target_dir_owner_group }}"
-    mode: 0755
-  with_items:
-    - { src: 'get_artifacts_from_s3.sh.j2', dest: '{{ webmethods_localrepo_target_dir }}/get_artifacts_from_s3.sh' }
-
-- name: run get_artifacts_from_s3 command
-  command: ./get_artifacts_from_s3.sh
-  args:
-    chdir: "{{ webmethods_localrepo_target_dir }}"
-  async: 1000
-  poll: 0
-  register: get_artifacts_from_s3_sleeper
-
-- name: Check status for artifacts download
-  async_status:
-    jid: "{{ get_artifacts_from_s3_sleeper.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 100
-  delay: 10
-
-- name: Update file permissions to executable
-  file:
-    path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_installer_filename }}"
-    mode: '0755'
+  - name: Downloading all required files from S3
+    include_role:
+      name: aws-wrapper
+    vars:
+      command: "getfroms3"
+      getfroms3_bucket_name: "{{ webmethods_s3repo_bucket_name }}"
+      getfroms3_bucket_path: "{{ webmethods_s3repo_bucket_prefix }}/{{ outer_item.bucket_path }}"
+      getfroms3_local_path: "{{ webmethods_localrepo_target_dir }}/{{ outer_item.local_path }}"
+      getfroms3_force_download: "{{ webmethods_s3repo_force_redownload | default(false,true) }}"
+      getfroms3_local_path_owner_user: "{{ webmethods_install_localtarget_files_owner_user }}"
+      getfroms3_local_path_owner_group: "{{ webmethods_install_localtarget_files_owner_group }}"
+      getfroms3_local_path_permission: "{{ webmethods_install_localtarget_files_permissions }}"
+      getfroms3_local_path_create_dir_ifnotexist: "{{ webmethods_install_localtarget_create_dir_ifnotexist }}"
+      getfroms3_local_path_create_dir_owner_user: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
+      getfroms3_local_path_create_dir_owner_group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
+      getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
+    when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
+    with_items:
+      - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
+        local_path: "{{ webmethods_localrepo_installer_filename }}"
+    loop_control:
+      loop_var: outer_item
