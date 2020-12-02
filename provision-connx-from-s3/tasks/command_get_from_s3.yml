@@ -23,15 +23,15 @@
       getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
     when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
     with_items:
-      - bucket_path: "clientlnx.tar.z"
+      - bucket_path: "connxInstall/clientlnx.tar.z"
         local_path: "clientlnx.tar.z"
-      - bucket_path: "clientsb.tar.z"
+      - bucket_path: "connxInstall/clientsb.tar.z"
         local_path: "clientsb.tar.z"
-      - bucket_path: "installclient"
+      - bucket_path: "connxInstall/installclient"
         local_path: "installclient"
-      - bucket_path: "serverlist"
+      - bucket_path: "connxInstall/serverlist"
         local_path: "serverlist"
-      - bucket_path: "responseFile"
+      - bucket_path: "connxInstall/responseFile"
         local_path: "responseFile"
     loop_control:
       loop_var: outer_item
