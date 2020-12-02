@@ -37,6 +37,10 @@
   - name: Get download artifact if not already there or redownload is forced
     block:
 
+      - name: Print variables
+        debug:
+          msg: "Local path directory: {{ getfroms3_local_path | dirname }}"
+
       - name: Create the local path dir on the machine if it does not exist
         file:
           path: "{{ getfroms3_local_path | dirname }}"
