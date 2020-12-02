@@ -5,8 +5,17 @@
     msg: "webmethods_localrepo_target_dir not specified...can't do anything"
   when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
+- name: Write the install scripts on disk with all the params
+  template:
+    src: "install_products.sh.j2" 
+    dest: "{{ webmethods_localrepo_target_dir }}/install_products.sh"
+    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+    group: "{{ webmethods_install_localtarget_files_owner_group }}"
+    mode: "{{ webmethods_install_localtarget_files_permissions }}"
+    backup: no
+
 - name: run install_product command
-  command: "/bin/bash install_product.sh"
+  command: "/bin/bash install_products.sh"
   args:
     chdir: "{{ webmethods_localrepo_target_dir }}"
   async: 1000
