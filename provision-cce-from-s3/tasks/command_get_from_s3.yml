@@ -1,5 +1,10 @@
 ---
 
+  - name: Print variables
+    debug:
+      msg:
+      - "webmethods_s3repo_force_redownload: {{ webmethods_s3repo_force_redownload | default('undefined',true) }}"
+
   - name: fail if webmethods_localrepo_target_dir not specified
     fail: 
       msg: "webmethods_localrepo_target_dir not specified...can't do anything"
