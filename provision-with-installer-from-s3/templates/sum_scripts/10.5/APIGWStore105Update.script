@@ -1,6 +1,0 @@
-#Thu Oct 22 00:48:23 UTC 2020
-installDir={{ __sum_fix_target_path }}
-action=Install fixes from image
-imageFile={{ __sum_fix_image_path }}
-selectedFixes=wMFix.ACDLDeployerSharedBundle_10.5.0.0001-0200,wMFix.SCGCommon.IS_10.5.0.0004-0010,wMFix.TPP.Log4j_10.5.0.0001-0001,wMFix.jsw.LNXAMD64_10.5.0.0001-0001,wMFix.SJP.Java64.LNXAMD64_10.5.0.0124-0007,wMFix.WISSharedInstallerLibs_10.5.0.0001-0162,wMFix.WISSharedResources_10.5.0.0001-0228,wMFix.CCShared_10.5.0.0007-0105,wMFix.SPM_10.5.0.0007-0237,wMFix.ALL.SIN_10.5.0.0003-0254,wMFix.OSGI.Diagnostic_10.5.0.0001-0549,wMFix.OSGI.Migration_10.5.0.0004-0288,wMFix.OSGI.Platform_10.5.0.0004-0493,wMFix.LARSharedBundles_10.5.0.0001-0274,wMFix.SDRepository_10.5.0.0003-0167,wMFix.CEL_10.5.0.0001-0156,wMFix.SUMApi_10.5.0.0004-0201,wMFix.MeteringAgent_10.5.0.0002-0251
-installSP=N

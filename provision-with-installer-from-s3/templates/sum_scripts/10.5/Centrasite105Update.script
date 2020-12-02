@@ -1,6 +1,0 @@
-#Thu Oct 22 14:22:28 UTC 2020
-installDir={{ __sum_fix_target_path }}
-action=Install fixes from image
-imageFile={{ __sum_fix_image_path }}
-selectedFixes=wMFix.ACDLDeployerSharedBundle_10.5.0.0001-0200,wMFix.CentraSite.Core_10.5.0.0008-0425,wMFix.CentraSite.Server_10.5.0.0008-0425,wMFix.CentraSite.Server.LNXAMD64_10.5.0.0008-0295,wMFix.SCGCommon.DatabaseComponentConfigurator_10.5.0.0005-0241,wMFix.SCGCommon.IS_10.5.0.0004-0010,wMFix.SCGCommon.acdl_10.5.0.0001-0200,wMFix.TPP.ApacheCommons_10.5.0.0001-0001,wMFix.TPP.Log4j_10.5.0.0001-0001,wMFix.TPP.Misc_10.5.0.0002-0001,wMFix.jsw.LNXAMD64_10.5.0.0001-0001,wMFix.tppParsers_10.5.0.0001-0001,wMFix.SJP.Java64.LNXAMD64_10.5.0.0124-0007,wMFix.CentraSite.SharedLibs_10.5.0.0008-0425,wMFix.WISSharedInstallerLibs_10.5.0.0001-0162,wMFix.WISSharedResources_10.5.0.0001-0228,wMFix.CCShared_10.5.0.0007-0105,wMFix.SPM_10.5.0.0007-0237,wMFix.ALL.SIN_10.5.0.0003-0254,wMFix.OSGI.Diagnostic_10.5.0.0001-0549,wMFix.OSGI.Migration_10.5.0.0004-0288,wMFix.OSGI.Platform_10.5.0.0004-0493,wMFix.LARSharedBundles_10.5.0.0001-0274,wMFix.SDRepository_10.5.0.0003-0167,wMFix.TESOSGi_4.3.8.0001-0001,wMFix.WSSCore_10.5.0.0003-0412,wMFix.WSSOSGi_10.5.0.0003-0412,wMFix.SUMApi_10.5.0.0004-0201,wMFix.MeteringAgent_10.5.0.0002-0251
-installSP=N

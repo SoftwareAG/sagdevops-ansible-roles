@@ -1,6 +1,0 @@
-#Thu Oct 22 02:48:13 UTC 2020
-installDir={{ __sum_fix_target_path }}
-action=Install fixes from image
-imageFile={{ __sum_fix_image_path }}
-selectedFixes=wMFix.ACDLDeployerSharedBundle_10.5.0.0001-0200,wMFix.SCGCommon.IS_10.5.0.0003-0003,wMFix.SCGCommon.acdl_10.5.0.0001-0200,wMFix.TPP.Log4j_10.5.0.0001-0001,wMFix.SJP.Java64.LNXAMD64_10.5.0.0124-0007,wMFix.WISSharedInstallerLibs_10.5.0.0001-0162,wMFix.WISSharedResources_10.5.0.0001-0228,wMFix.CCShared_10.5.0.0006-0102,wMFix.SPM_10.5.0.0006-0232,wMFix.NUMspmBundles_10.5.0.0001-0136,wMFix.ALL.SIN_10.5.0.0002-0249,wMFix.OSGI.Migration_10.5.0.0003-0286,wMFix.OSGI.Platform_10.5.0.0004-0493,wMFix.LARSharedBundles_10.5.0.0001-0274,wMFix.SDRepository_10.5.0.0003-0167,wMFix.SUMApi_10.5.0.0003-0197,wMFix.NUMRepository.SharedBundles_10.5.0.0006-130752,wMFix.TPS.ApacheCommons_10.5.0.0001-0001,wMFix.TPS.Glassfish_10.5.0.0001-0001,wMFix.TPS.Misc_10.5.0.0001-0001,wMFix.NUMClient_10.5.0.0006-130752,wMFix.NUMClient.JavaScript_10.5.0.0006-130752,wMFix.NUMClient.LNX64_10.5.0.0006-130752,wMFix.NUMEnterpriseManager_10.5.0.0005-129390,wMFix.NUMRealmServer_10.5.0.0006-130752,wMFix.NUMRealmServerMigrationUtility_10.5.0.0001-130682,wMFix.NUMTemplateApplications.LNX_10.5.0.0006-130752,wMFix.MeteringAgent_10.5.0.0002-0251
-installSP=N
