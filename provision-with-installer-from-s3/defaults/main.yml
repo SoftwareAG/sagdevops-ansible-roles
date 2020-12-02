@@ -19,7 +19,7 @@ webmethods_install_localtarget_create_dir_permission: "0755"
 ## download settings
 webmethods_s3repo_bucket_name: ""
 webmethods_s3repo_bucket_prefix: ""
-webmethods_s3repo_force_redownload: ""
+webmethods_s3repo_force_redownload: false
 webmethods_localrepo_target_dir: ""
 
 ## installers
