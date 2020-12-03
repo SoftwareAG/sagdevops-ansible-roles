@@ -4,12 +4,28 @@
 ### - service_name
 ### - service_exec_filepath
 ### - service_user
+### - service_group
 ### - service_type
 
   - name: fail if service_name not specified
     fail:
       msg: "service_name not specified...cannot create."
     when: service_name is not defined or service_name == ""
+
+  - name: fail if service_exec_filepath not specified
+    fail:
+      msg: "service_exec_filepath not specified...cannot create."
+    when: service_exec_filepath is not defined or service_exec_filepath == ""
+
+  - name: fail if service_user not specified
+    fail:
+      msg: "service_user not specified...cannot create."
+    when: service_user is not defined or service_user == ""
+
+  - name: fail if service_group not specified
+    fail:
+      msg: "service_group not specified...cannot create."
+    when: service_group is not defined or service_group == ""
 
   - name: get service facts
     service_facts:
@@ -27,11 +43,6 @@
       path: "{{ webmethods_install_dir }}/common/bin/daemon.sh"
     register: stat_wmdDaemonFile
 
-  - name: fail if service_exec_filepath not specified
-    fail:
-      msg: "service_exec_filepath not specified...cannot create."
-    when: service_exec_filepath is not defined or service_exec_filepath == ""
-
   - name: Create service using daemon script + specific PID file
     command:
       argv:
@@ -45,7 +56,7 @@
         - "-n"
         - "{{ service_name }}"
         - "-T"
-        - "{{ service_type }}"
+        - "{{ service_type | default('forking',true) }}"
         - "-P"
         - "{{ service_pidfile }}"
     when: stat_wmdDaemonFile.stat.exists and service_pidfile is defined and service_pidfile != ""
@@ -63,7 +74,7 @@
         - "-n"
         - "{{ service_name }}"
         - "-T"
-        - "{{ service_type }}"
+        - "{{ service_type | default('forking',true) }}"
         - "-K"
         - "{{ service_runlevel_kill | default(20,true) }}"
         - "-S"
