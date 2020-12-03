@@ -8,6 +8,7 @@ runtime_instance_package_home: "{{ webmethods_install_dir }}/IntegrationServer/i
 custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
 runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
 webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
+webmethods_terracotta_license_downloadnew_inzip_path:
 
 ## global JVM settings
 is_jvm_heap_min: 1024

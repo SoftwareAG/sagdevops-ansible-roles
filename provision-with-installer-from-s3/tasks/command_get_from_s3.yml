@@ -28,8 +28,6 @@
         local_path: "{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
       - bucket_path: "{{ webmethods_s3repo_sum_filename }}"
         local_path: "{{ webmethods_localrepo_sum_filename | default('softwareagupdatemanager-linux.bin', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
-        local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
       - bucket_path: "{{ webmethods_s3repo_products_image_filename }}"
         local_path: "{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
       - bucket_path: "{{ webmethods_s3repo_products_autoscript_filename }}"
@@ -41,39 +39,5 @@
     loop_control:
       loop_var: outer_item
 
-  - name: check if license zip file was downloaded
-    stat: 
-      path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
-    register: check_licenses_zip_downloaded
-
-  - name: Install / extract license zip files if they were downloaded
-    block:
-
-      - name: Create the extracted dir on the machine if it does not exist
-        file:
-          path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
-          state: directory
-          owner: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
-          group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
-          mode: "{{ webmethods_install_localtarget_create_dir_permission }}"
-
-      - name: Unarchive the zip on the remote machine
-        unarchive:
-          src: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
-          dest: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
-          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-          group: "{{ webmethods_install_localtarget_files_owner_group }}"
-          remote_src: yes
-
-      - name: fix permissions on the extracted folder
-        file:
-          path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
-          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-          group: "{{ webmethods_install_localtarget_files_owner_group }}"
-          recurse: yes
-
-      - name: Set changed flag to true
-        set_fact:
-          configure_integrationserver_install_package_changed: true
-  
-    when: check_licenses_zip_downloaded.stat.exists == true
+  - name: "Include tasks to fetch the license files"
+    include_tasks: "command_get_licenses_from_s3.yml"

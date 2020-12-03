@@ -1,0 +1,91 @@
+---
+
+
+  - name: fail if webmethods_localrepo_target_dir not specified
+    fail: 
+      msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+    when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+  - name: Downloading all required files from S3
+    include_role:
+      name: aws-wrapper
+    vars:
+      command: "getfroms3"
+      getfroms3_bucket_name: "{{ webmethods_s3repo_bucket_name }}"
+      getfroms3_bucket_path: "{{ webmethods_s3repo_bucket_prefix }}/{{ outer_item.bucket_path }}"
+      getfroms3_local_path: "{{ webmethods_localrepo_target_dir }}/{{ outer_item.local_path }}"
+      getfroms3_force_download: "{{ webmethods_s3repo_force_redownload | default(false,true) }}"
+      getfroms3_local_path_owner_user: "{{ webmethods_install_localtarget_files_owner_user }}"
+      getfroms3_local_path_owner_group: "{{ webmethods_install_localtarget_files_owner_group }}"
+      getfroms3_local_path_permission: "{{ webmethods_install_localtarget_files_permissions }}"
+      getfroms3_local_path_create_dir_ifnotexist: "{{ webmethods_install_localtarget_create_dir_ifnotexist }}"
+      getfroms3_local_path_create_dir_owner_user: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
+      getfroms3_local_path_create_dir_owner_group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
+      getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
+    when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
+    with_items:
+      - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
+        local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+    loop_control:
+      loop_var: outer_item
+
+  - name: check if license zip file was downloaded
+    stat: 
+      path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+    register: check_licenses_zip_downloaded
+
+  - name: Install / extract license zip files if they were downloaded
+    block:
+
+      - name: Set all_hostnames facts
+        set_fact:
+          extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
+
+      - name: Create the extracted dir on the machine if it does not exist
+        file:
+          path: "{{ extracted_zir_dir_path }}/"
+          state: directory
+          owner: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
+          group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
+          mode: "{{ webmethods_install_localtarget_create_dir_permission }}"
+
+      - name: Unarchive the zip on the remote machine
+        unarchive:
+          src: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+          dest: "{{ extracted_zir_dir_path}}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          remote_src: yes
+
+      - name: fix permissions on the extracted folder
+        file:
+          path: "{{ extracted_zir_dir_path}}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          recurse: yes
+
+      - name: copy a license file inside the zip into a custom target
+        block:
+
+        - name: check if license is inside the zip file
+          stat: 
+            path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+          register: check_license_copysrc_inzip
+
+        - name: Copy the license in the zip to a destination of choice
+          copy:
+            src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+            dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
+            owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+            group: "{{ webmethods_install_localtarget_files_owner_group }}"
+            mode: "{{ webmethods_install_localtarget_files_permissions }}"
+            remote_src: yes
+          when: check_license_copysrc_inzip.stat.exists == true and webmethods_localrepo_license_inzip_filepath_copy_dest is defined and webmethods_localrepo_license_inzip_filepath_copy_dest != ""
+
+        when: webmethods_localrepo_license_inzip_filepath_copy_src is defined and webmethods_localrepo_license_inzip_filepath_copy_src != ""
+
+      - name: Set changed flag to true
+        set_fact:
+          configure_integrationserver_install_package_changed: true
+  
+    when: check_licenses_zip_downloaded.stat.exists == true

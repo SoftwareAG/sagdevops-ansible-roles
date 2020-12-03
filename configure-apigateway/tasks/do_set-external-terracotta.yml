@@ -53,37 +53,32 @@
           path: "{{ webmethods_terracotta_license_path }}"
         register: stat_terracotta_license_exists
 
-      - import_role: 
-          name: provision-with-installer-from-s3
-        vars:
-          provision_action: setup_files
-          webmethods_s3repo_scripts_dir: "scripts/terracotta"
-          webmethods_s3repo_inzip_license_filepath: "TC Clustering/terracotta-license.key"
-          webmethods_s3repo_products_autoscript_filename: "TerracottaBigMemory43Install.script"
-          webmethods_s3repo_fixes_autoscript_filename: "TerracottaBigMemory43Update.script"
-          webmethods_localrepo_license_filepath: "terracotta-license.key"
-        when: stat_terracotta_license_exists.stat.exists == false
+      - name: Get Terracotta license from the license repo if it's not there already
+        block:
 
-      - import_role: 
-          name: provision-with-installer-from-s3
-        vars:
-          provision_action: get_from_s3
-        when: stat_terracotta_license_exists.stat.exists == false
-        
-      - name: Copy license file if it does not exist
-        copy:
-          src: "{{ webmethods_localrepo_target_dir }}/terracotta-license.key"
-          dest: "{{ webmethods_terracotta_license_path }}"
-          owner: "{{ webmethods_user }}"
-          group: "{{ webmethods_group }}"
-          mode: 0644
-          remote_src: yes
-        when: stat_terracotta_license_exists.stat.exists == false
+          - import_role: 
+              name: provision-with-installer-from-s3
+            vars:
+              provision_action: get_licenses_from_s3
+              webmethods_localrepo_license_zip_filename: "licenses_for_terracotta.zip"
+              webmethods_localrepo_license_inzip_filepath_copy_src: "{{ webmethods_terracotta_license_downloadnew_inzip_path }}"
+              webmethods_localrepo_license_inzip_filepath_copy_dest: "{{ webmethods_terracotta_license_path }}"
 
-      - import_role: 
-          name: provision-with-installer-from-s3
-        vars:
-          provision_action: cleanup
+          - import_role: 
+              name: provision-with-installer-from-s3
+            vars:
+              provision_action: cleanup
+
+          - name: Re-Check if terracotta license file is there now
+            stat: 
+              path: "{{ webmethods_terracotta_license_path }}"
+            register: stat_terracotta_license_exists_recheck
+
+          - name: fail if terracotta license file is still not there
+            fail:
+              msg: "terracotta license file is still not in the expected location...clustering will not work without it."
+            when: stat_terracotta_license_exists_recheck.stat.exists == false
+
         when: stat_terracotta_license_exists.stat.exists == false
 
       - name: Re-Clear the terracotta_hosts_list list

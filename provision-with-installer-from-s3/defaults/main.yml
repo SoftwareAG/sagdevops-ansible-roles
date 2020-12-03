@@ -15,6 +15,8 @@ webmethods_install_localtarget_create_dir_ifnotexist: "true"
 webmethods_install_localtarget_create_dir_owner_user: ""
 webmethods_install_localtarget_create_dir_owner_group: ""
 webmethods_install_localtarget_create_dir_permission: "0755"
+webmethods_localrepo_license_inzip_filepath_copy_src:
+webmethods_localrepo_license_inzip_filepath_copy_dest:
 
 ## download settings
 webmethods_s3repo_bucket_name: ""
