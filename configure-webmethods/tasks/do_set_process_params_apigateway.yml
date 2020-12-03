@@ -1,0 +1,12 @@
+---
+
+    - import_role:
+        name: configure-apigateway
+      vars:
+        configs_action: set-jvm-common
+
+    - import_role:
+        name: configure-apigateway
+      vars:
+        configs_action: set-jvm-params
+        apigateway_jvm_params: "{{ process_params }}"

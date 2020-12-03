@@ -1,0 +1,37 @@
+---
+
+  - name: Install dnsmasq
+    yum:
+      name: "dnsmasq"
+      state: present
+
+  - name: deploy networkmanager dnscache plugin
+    template:
+      src: networkmanager-dnsmasq.conf.j2
+      dest: /etc/NetworkManager/conf.d/00-enable-dnsmasq.conf
+      owner: root
+      group: root
+      mode: 0755
+      backup: yes
+    notify:
+      - reload network manager
+      - restart dnsmasq
+
+  - name: deploy networkmanager dnscache plugin
+    template:
+      src: dnsmasq.conf.j2
+      dest: /etc/NetworkManager/dnsmasq.d/00-configs.conf
+      owner: root
+      group: root
+      mode: 0755
+      backup: yes
+    notify:
+      - reload network manager
+      - restart dnsmasq
+  
+  - name: Make sure Dnsmasq is running
+    service:
+      name: dnsmasq
+      state: started
+      enabled: yes
+    tags: dnsmasq

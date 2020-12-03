@@ -1,0 +1,14 @@
+---
+
+webmethods_apiportal_postgresdata_dir: "{{ webmethods_install_dir }}/API_Portal/server/bin/work/work_postgres_s/pgworkdata"
+webmethods_apiportal_acc_exec_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc"
+webmethods_apiportal_acc_host: localhost
+webmethods_apiportal_acc_port: 18011
+webmethods_apiportal_acc_user: Clous
+webmethods_apiportal_acc_password: g3h31m
+
+webmethods_apiportal_acc_command:
+
+### large, medium, small
+webmethods_apiportal_acc_install_size: ""
+webmethods_apiportal_loadbalancer_fqdn: ""

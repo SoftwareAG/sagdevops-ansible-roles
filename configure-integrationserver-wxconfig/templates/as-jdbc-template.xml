@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <autoConfig>
+        <jdbc>
+            <poolAliasList>
+                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolalias_list %}
+                <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_jdbc_poolalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_poolalias.destroyOnShutdown }}">
+                    <depends>
+                        {% for functional_alias in wxconfig_jdbc_poolalias.functional_aliases_mapping %}
+                        <functionalAlias alias="{{ functional_alias }}" />
+                        {% endfor %}
+                    </depends>
+                    <description>{{ wxconfig_jdbc_poolalias.description }}</description>
+                    <driverAlias>{{ wxconfig_jdbc_poolalias.driverAlias }}</driverAlias>
+                    <databaseUrl>{{ wxconfig_jdbc_poolalias.databaseUrl }}</databaseUrl>
+                    <userId>{{ wxconfig_jdbc_poolalias.userId }}</userId>
+                    <password>[[encrypted:{{ wxconfig_jdbc_poolalias.password_encrypted_handle }}]]</password>
+                    <connections>
+                        <minConnections>{{ wxconfig_jdbc_poolalias.minConnections }}</minConnections>
+                        <maxConnections>{{ wxconfig_jdbc_poolalias.maxConnections }}</maxConnections>
+                        <availableConnectionsWarningThreshold>{{ wxconfig_jdbc_poolalias.availableConnectionsWarningThreshold }}</availableConnectionsWarningThreshold>
+                        <waitingThreadThresholdCount>{{ wxconfig_jdbc_poolalias.waitingThreadThresholdCount }}</waitingThreadThresholdCount>
+                        <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout>                        <!-- in milliseconds -->
+                    </connections>
+                    <diagnostics>
+                        <spy enable="false">
+                            <attributes></attributes>
+                        </spy>
+                        <snoop enable="false">
+                            <attributes></attributes>
+                        </snoop>
+                    </diagnostics>
+                </poolAlias>
+                {% endfor %}
+            </poolAliasList>
+            <functionalAliasList>
+                <functionalAlias alias="ISCoreAudit" updateIfExists="false" destroyOnShutdown="false">
+                    <pool>local</pool>
+                    <description>My own alias</description>
+                    <enableFailFastMode>false</enableFailFastMode>                    <!-- default=false -->
+                    <enableAutoCommit>false</enableAutoCommit>                    <!-- optional; default = false  -->
+                    <enableCaching>false</enableCaching>                    <!-- optional; default = false  -->
+                    <isolationLevel>-1</isolationLevel>                    <!-- default = -1  -->
+                </functionalAlias>
+            </functionalAliasList>
+        </jdbc>
+    </autoConfig>
+</config>

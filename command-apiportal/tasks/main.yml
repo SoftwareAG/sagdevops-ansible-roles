@@ -1,0 +1,52 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running apiportal with command {{ webmethods_apiportal_acc_command | default('undefined') }}"
+
+- name: fail if webmethods_apiportal_acc_command not specified
+  fail: 
+    msg: "webmethods_apiportal_acc_command not specified...cannot do anything."
+  when: webmethods_apiportal_acc_command is not defined or webmethods_apiportal_acc_command == ""
+
+- name: fail if acc params webmethods_apiportal_acc_host not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_host missing...cannot do anything."
+  when: webmethods_apiportal_acc_host is not defined or webmethods_apiportal_acc_host == ""
+
+- name: fail if acc params webmethods_apiportal_acc_port not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_port missing...cannot do anything."
+  when: webmethods_apiportal_acc_port is not defined or webmethods_apiportal_acc_port == ""
+
+- name: fail if acc params webmethods_apiportal_acc_user not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_user missing...cannot do anything."
+  when: webmethods_apiportal_acc_user is not defined or webmethods_apiportal_acc_user == ""
+
+- name: fail if acc params webmethods_apiportal_acc_password not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_password missing...cannot do anything."
+  when: webmethods_apiportal_acc_password is not defined or webmethods_apiportal_acc_password == ""
+
+- name: "Running command \"{{ webmethods_apiportal_acc_command }}\""
+  shell: "./acc.sh -h {{webmethods_apiportal_acc_host}} -u {{webmethods_apiportal_acc_user}} -pwd {{webmethods_apiportal_acc_password}} -p {{webmethods_apiportal_acc_port}} {{webmethods_apiportal_acc_command}}"
+  args:
+    chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
+    executable: /bin/sh
+  async: 1800
+  poll: 0
+  no_log: yes
+  register: webmethods_apiportal_acc_command_sleeper
+  
+- name: "Check status for command \"{{ webmethods_apiportal_acc_command }}\""
+  async_status:
+    jid: "{{ webmethods_apiportal_acc_command_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 360
+  delay: 5
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"

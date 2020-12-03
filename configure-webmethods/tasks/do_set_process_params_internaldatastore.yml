@@ -1,0 +1,7 @@
+---
+
+    - import_role:
+        name: configure-internaldatastore
+      vars:
+        configs_action: set-jvm-params
+        ids_jvm_params: "{{ process_params }}"

@@ -1,0 +1,37 @@
+---
+
+  - name: fail if webmethods_localrepo_target_dir not specified
+    fail: 
+      msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+    when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+  - name: Downloading all required files from S3
+    include_role:
+      name: aws-wrapper
+    vars:
+      command: "getfroms3"
+      getfroms3_bucket_name: "{{ webmethods_s3repo_bucket_name }}"
+      getfroms3_bucket_path: "{{ webmethods_s3repo_bucket_prefix }}/{{ outer_item.bucket_path }}"
+      getfroms3_local_path: "{{ webmethods_localrepo_target_dir }}/{{ outer_item.local_path }}"
+      getfroms3_force_download: "{{ webmethods_s3repo_force_redownload | default(false,true) }}"
+      getfroms3_local_path_owner_user: "{{ webmethods_install_localtarget_files_owner_user }}"
+      getfroms3_local_path_owner_group: "{{ webmethods_install_localtarget_files_owner_group }}"
+      getfroms3_local_path_permission: "{{ webmethods_install_localtarget_files_permissions }}"
+      getfroms3_local_path_create_dir_ifnotexist: "{{ webmethods_install_localtarget_create_dir_ifnotexist }}"
+      getfroms3_local_path_create_dir_owner_user: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
+      getfroms3_local_path_create_dir_owner_group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
+      getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
+    when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
+    with_items:
+      - bucket_path: "connxInstall/clientlnx.tar.z"
+        local_path: "clientlnx.tar.z"
+      - bucket_path: "connxInstall/clientsb.tar.z"
+        local_path: "clientsb.tar.z"
+      - bucket_path: "connxInstall/installclient"
+        local_path: "installclient"
+      - bucket_path: "connxInstall/serverlist"
+        local_path: "serverlist"
+      - bucket_path: "connxInstall/responseFile"
+        local_path: "responseFile"
+    loop_control:
+      loop_var: outer_item

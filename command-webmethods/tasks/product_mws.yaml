@@ -1,0 +1,7 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/profiles/MWS_{{ product_instance_name }}/bin"
+    webmethods_script_start: "./startup.sh"
+    webmethods_script_stop: "./shutdown.sh"

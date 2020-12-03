@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <autoConfig>
+        <ldap>
+            <cache>
+                <numberOfUsers></numberOfUsers>
+                <credentialTimeToLiveMin></credentialTimeToLiveMin>
+            </cache>
+            <serverList>
+                <server updateIfExists="true" deleteOnUnload="true">
+                    <url></url>
+                    <authentication>
+                        <principal></principal>
+                        <password></password>
+                    </authentication>
+                    <connection>
+                        <timeoutSec></timeoutSec>
+                        <poolSize>
+                            <min></min>
+                            <max></max>
+                        </poolSize>
+                    </connection>
+                    <userDn>
+                        <synthesize>
+                            <prefix></prefix>
+                            <suffix></suffix>
+                        </synthesize>
+                        <query>
+                            <idProperty></idProperty>
+                            <rootDn></rootDn>
+                        </query>
+                    </userDn>
+                    <group>
+                        <default></default>
+                        <memberAttribute></memberAttribute>
+                        <query>
+                            <idProperty></idProperty>
+                            <rootDn></rootDn>
+                        </query>
+                    </group>
+                </server>
+            </serverList>
+        </ldap>
+    </autoConfig>
+</config>

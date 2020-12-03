@@ -1,0 +1,9 @@
+---
+
+run_dir: ""
+template: ""
+properties: ""
+hosts_property: ""
+aliases_property: ""
+template_params: {}
+template_params_secure: {}

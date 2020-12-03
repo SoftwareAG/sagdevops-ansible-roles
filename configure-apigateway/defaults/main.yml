@@ -1,0 +1,55 @@
+---
+
+## Config files
+product_instance_name: "default"
+runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}"
+runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
+custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
+runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
+apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
+apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
+apigateway_uiconfiguration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
+webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
+
+## gateway rest apis
+apigateway_rest_base_uri: "http://localhost:5555"
+apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
+
+# general
+apigateway_rest_users_api: "{{ apigateway_rest_base_path }}/users"
+apigateway_rest_urlaliases_api: "{{ apigateway_rest_base_path }}/urlaliases"
+
+# is configs
+apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
+apigateway_rest_is_keystore: "{{ apigateway_rest_is_baseapi }}/keystore"
+apigateway_rest_is_truststore: "{{ apigateway_rest_is_baseapi }}/truststore"
+
+# configurations
+apigateway_rest_configurations_baseapi: "{{ apigateway_rest_base_path }}/configurations"
+apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_baseapi }}/loadBalancer"
+apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi }}/cache"
+apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
+apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
+
+## global JVM settings
+apigateway_jvm_heap_min: 1024
+apigateway_jvm_heap_max: 2048
+apigateway_jvm_params: {}
+
+apigateway_kibana_port: 9405
+
+## external elastic search
+external_elasticsearch_inventory_pattern: ""
+external_elasticsearch_protocol: http
+external_elasticsearch_port: 9240
+
+## external terracotta
+is_clustering_use_internal_db: true
+external_terracotta_inventory_pattern: ""
+external_terracotta_port: 9510
+
+## user passwords setting
+apigateway_rest_login_username: "Administrator"
+apigateway_rest_login_password: ""
+apigateway_update_local_user_id: ""
+apigateway_update_local_user_password: ""

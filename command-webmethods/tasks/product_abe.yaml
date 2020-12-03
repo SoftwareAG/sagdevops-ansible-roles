@@ -1,0 +1,7 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: ""
+    webmethods_script_start: ""
+    webmethods_script_stop: ""

@@ -1,0 +1,13 @@
+---
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/profiles/SPM/bin/sagspm{{ product_version_full }}"
+    service_name: "sag1spm{{ product_version_full }}"
+    service_params:
+      RemainAfterExit: "no"
+      Restart: "on-failure"
+      RestartSec: 90
+    unit_params:
+      After: "network-online.target"
+      Requires: "network-online.target"

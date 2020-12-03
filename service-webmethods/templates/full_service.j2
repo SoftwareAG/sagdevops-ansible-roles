@@ -1,0 +1,14 @@
+[Unit]
+{% for k,v in full_unit_params.iteritems() %}
+{{ k }}={{ v }}
+{% endfor %}
+
+[Service]
+{% for k,v in full_service_params.iteritems() %}
+{{ k }}={{ v }}
+{% endfor %}
+
+[Install]
+{% for k,v in full_install_params.iteritems() %}
+{{ k }}={{ v }}
+{% endfor %}

@@ -1,0 +1,40 @@
+---
+
+  - name: fail if service_name not specified
+    fail: 
+      msg: "service_name not specified...cannot create."
+    when: service_name is not defined or service_name == ""
+
+  - name: get service facts
+    service_facts:
+
+  - name: Format service name to {{ service_name }}.service for service_facts lookup
+    set_fact:
+      service_name_index: "{{ service_name }}.service"
+
+  - name: Print debug message
+    debug:
+      msg: "Service {{ service_name }} will be created or recreated"
+
+  - name: Populate systemd service with all the values in the param maps
+    template:
+      src: full_service.j2
+      dest: /usr/lib/systemd/system/{{ service_name }}.service
+
+  - name: force systemd to reread configs after modification
+    systemd: 
+      daemon_reload: yes
+
+  - name: enable service to start at server startup
+    systemd:
+      name: "{{ service_name }}"
+      enabled: yes
+      masked: no
+
+  - name: get service facts
+    service_facts:
+
+  - name: fail if service is not found
+    fail: 
+      msg: "service {{ service_name }} is still not found even though we just created it - operation must have failed."
+    when: ansible_facts.services[service_name_index] is not defined

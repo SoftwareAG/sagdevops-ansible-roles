@@ -1,0 +1,10 @@
+---
+
+- import_role: 
+    name: copy-file
+  vars:
+    file_local_path: "{{ provision_installer_script_filepath_local }}"
+    file_remote_path: "{{ provision_installer_script_filepath }}"
+    file_remote_owner: "{{ provision_installer_files_owner }}"
+    file_remote_group: "{{ provision_installer_files_group }}"
+    file_remote_permission: 0600

@@ -1,0 +1,24 @@
+---
+
+- name: Print the params
+  debug:
+    msg: 
+    - "Inside process_memory setting"
+    - "Product Name: {{ product_name | default('undefined') }}"
+    - "Product Instance: {{ product_instance_name | default('undefined') }}"
+    - "Memory Min: {{ process_memory_min | default('undefined') }}"
+    - "Memory Max: {{ process_memory_max | default('undefined') }}"
+
+- name: fail if product_name not specified
+  fail: 
+    msg: "product_name not specified...cannot do anything."
+  when: product_name is not defined or product_name == ""
+
+- name: Include tasks if product supports it
+  include_tasks: "do_set_process_memory_{{ product_name }}.yml"
+  when: product_name in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]
+
+- name: "Print message if product does not supports it"
+  debug:
+    msg: "Not Implemented: Process Memory settings"
+  when: product_name not in ["apigateway","integrationserver","internaldatastore","spm","terracotta"]

@@ -1,0 +1,6 @@
+---
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: ""
+    service_name: ""

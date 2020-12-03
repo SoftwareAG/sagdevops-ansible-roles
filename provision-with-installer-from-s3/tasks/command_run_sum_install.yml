@@ -1,0 +1,35 @@
+---
+  
+- name: fail if webmethods_localrepo_target_dir not specified
+  fail: 
+    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+- name: Write the install scripts on disk with all the params
+  template:
+    src: "install_sum.sh.j2" 
+    dest: "{{ webmethods_localrepo_target_dir }}/install_sum.sh"
+    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+    group: "{{ webmethods_install_localtarget_files_owner_group }}"
+    mode: "{{ webmethods_install_localtarget_files_permissions }}"
+    backup: no
+
+- name: run install_sum command
+  command: "/bin/bash install_sum.sh"
+  args:
+    chdir: "{{ webmethods_localrepo_target_dir }}"
+  async: "{{ webmethods_install_async }}"
+  poll: "{{ webmethods_install_poll }}"
+  register: install_sum_sleeper
+
+- name: Check status for install_sum task
+  async_status:
+    jid: "{{ install_sum_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: "{{ webmethods_install_async_retries }}"
+  delay: "{{ webmethods_install_async_delay }}"
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"

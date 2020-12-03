@@ -1,0 +1,35 @@
+---
+
+## Config files
+ids_install_home: "{{ webmethods_install_dir }}/InternalDataStore"
+ids_install_configs_dir: "{{ ids_install_home }}/config"
+ids_install_logs_dir: "{{ ids_install_home }}/logs"
+ids_install_ids_jvm_options_file: "{{ ids_install_configs_dir }}/jvm.options"
+ids_install_elasticsearch_file: "{{ ids_install_configs_dir }}/elasticsearch.yml"
+
+## global JVM settings
+ids_jvm_heap_min: 2048
+ids_jvm_heap_max: 2048
+ids_jvm_params: {}
+
+## the ansible inventory pattern for the internal datastore nodes
+## note: ids_discovery_seed_hosts and ids_cluster_initial_master_nodes will be derived from this
+ids_coordinators_inventory_pattern: ""
+
+## the node name must be the current server's FQDN 
+## (as it has to match the array ids_cluster_initial_master_nodes which will have the list of all the master nodes FQDNs)
+ids_node_name: "{{ ansible_fqdn }}"
+
+## cluster node role variables
+ids_node_master:
+ids_node_data:
+ids_node_ingest:
+
+## common values
+ids_cluster_name: "SAG_EventDataStore"
+ids_network_host: "0.0.0.0"
+ids_transport_tcp_port: 9340
+ids_http_port: 9240
+ids_path_data: "{{ ids_install_home }}/data"
+ids_path_logs: "{{ ids_install_home }}/logs"
+ids_path_archives: [ "{{ ids_install_home }}/archives" ]

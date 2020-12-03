@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <autoConfig>
+        <ports>
+            {% for wxconfig_https_port in wxconfig_https_ports_list %}
+            <https alias="{{ wxconfig_https_port.alias }}" updateIfExists="{{ wxconfig_https_port.updateIfExists }}" autoStart="{{ wxconfig_https_port.autoStart }}" autoShutdown="{{ wxconfig_https_port.autoShutdown }}" destroyOnShutdown="{{ wxconfig_https_port.destroyOnShutdown }}">
+                <package>{{ wxconfig_https_port.package }}</package>                <!-- optional -->
+                <description>{{ wxconfig_https_port.description }}</description>
+                <port>{{ wxconfig_https_port.port }}</port>
+                <bindAddress>{{ wxconfig_https_port.bindAddress }}</bindAddress>                <!-- optional -->
+                <backlog>{{ wxconfig_https_port.backlog }}</backlog>
+                <keepAliveTimeout>{{ wxconfig_https_port.keepAliveTimeoutMillis }}</keepAliveTimeout>
+                <threadPool>
+                    <enabled>{{ wxconfig_https_port.threadPool.enabled }}</enabled>                    <!-- boolean -->
+                    <min>{{ wxconfig_https_port.threadPool.min }}</min>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                    <max>{{ wxconfig_https_port.threadPool.max }}</max>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                    <priority>{{ wxconfig_https_port.threadPool.priority }}</priority>                    <!-- required, if "enabled" == true; otherwise to be removed -->
+                </threadPool>
+                <serviceAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                        <exception>pub.flow:debugLog</exception>
+                        <exception>pub.flow:tracePipeline</exception>
+                        <exception>pub.json</exception>                        <!-- Entire folder , not only single service-->
+                    </exceptionList>
+                </serviceAccess>
+                <ipAccess>                    <!-- optional, default: mode = global default -->
+                    <mode>allow</mode>                    <!-- allow  = allow by default
+                                                                                deny   = deny by default -->
+                    <exceptionList cleanBeforeAdding="true">
+                    </exceptionList>
+                </ipAccess>
+                <security>
+                    <!--clientAuthentication
+                        none       : Username/password
+                        digest     : Digest
+                        requestKrb : Request Kerberos Ticket
+                        requireKrb : Require Kerberos Ticket
+                        request    : Request Client Certificates
+                        require    : Require Client Certificates
+                        idProvider : Use Identity Provider
+                    -->
+                    <clientAuthentication>{{ wxconfig_https_port.clientAuthentication }}</clientAuthentication>
+                    <useJsse>{{ wxconfig_https_port.useJsse }}</useJsse>
+                    <keystoreAlias>{{ wxconfig_https_port.keystoreAlias }}</keystoreAlias>
+                    <keyAlias>{{ wxconfig_https_port.keyAlias }}</keyAlias>
+                    <truststoreAlias>{{ wxconfig_https_port.truststoreAlias }}</truststoreAlias>
+                </security>
+            </https>
+            {% endfor %}
+        </ports>
+    </autoConfig>
+</config>

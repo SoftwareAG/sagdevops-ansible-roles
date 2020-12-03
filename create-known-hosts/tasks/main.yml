@@ -1,0 +1,40 @@
+---
+
+  - name: set initial facts
+    set_fact:
+      ssh_known_hosts_file: "{{ ssh_known_hosts_file_default }}"
+    when: ssh_known_hosts_file == "default"
+
+  - name: Make sure the {{ ssh_known_hosts_dir }} is there before we create the file
+    file:
+      path: "{{ ssh_known_hosts_dir }}"
+      state: directory
+      mode: '0700'
+
+  - name: set full path
+    set_fact:
+      ssh_known_hosts_file_full: "{{ ssh_known_hosts_dir }}/{{ ssh_known_hosts_file }}"
+
+  - name: clear the {{ ssh_known_hosts_file_full }} first
+    file:
+      path: "{{ ssh_known_hosts_file_full }}"
+      state: absent
+
+  - name: touch {{ ssh_known_hosts_file_full }} file first
+    file:
+      path: "{{ ssh_known_hosts_file_full }}"
+      state: touch
+
+  - name: For each host, scan for its ssh public key
+    shell: "{{ ssh_known_hosts_command }} -H {{ hostvars[item].ansible_host }},`dig +short {{ hostvars[item].ansible_host }}` >> {{ ssh_known_hosts_file_full }}"
+    with_items: "{{ ssh_known_hosts }}"
+    register: ssh_known_host_results
+    ignore_errors: yes
+
+## not sure why but it throws : Host parameter does not match hashed host field in supplied key -- to be investigated?
+  # - name: Add/update the public key in the known_hosts file
+  #   known_hosts:
+  #     name: "{{ item.item }}"
+  #     key: "{{ item.stdout }}"
+  #     path: 
+  #   with_items: "{{ ssh_known_host_results.results }}"

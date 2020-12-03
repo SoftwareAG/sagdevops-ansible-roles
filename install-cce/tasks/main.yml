@@ -1,0 +1,71 @@
+---
+
+### here we could create the steps to re-install cce if force = true
+  - name: set facts
+    set_fact:
+      install_cce: false
+
+  - name: Check if CCE install was already done
+    stat: 
+      path: "/home/{{ cce_owner }}/provision_ccserver.status.success"
+    register: stat_cceInstallAlreadyDone
+
+  - name: set facts
+    set_fact:
+      install_cce: true
+    when: stat_cceInstallAlreadyDone.stat.exists == true
+
+  - name: Install CCE only if /home/{{ cce_owner }}/provision_ccserver.status.success does not exist.
+    block:
+      - name: Write global params
+        blockinfile:
+          path: "/home/{{ cce_owner }}/.setenv_cce_globals.sh"
+          create: yes
+          mode: 0600
+          owner: "{{ cce_owner }}"
+          group: "{{ cce_group }}"
+          block: |
+            export RUN_AS_USER={{ cce_owner }}
+            export INSTALL_DIR={{ cce_install_dir }}
+            export CC_BOOTSTRAPPER_VERSION={{ cce_version }}
+            export CC_BOOTSTRAPPER_VERSION_FIX={{ cce_version_fix }}
+            export CC_BOOTSTRAPPER_PLATFORM={{ cce_platform }}
+
+      - name: Copy secrets file to target
+        copy:
+          src: "{{ item }}"
+          dest: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
+          mode: '0600'
+          remote_src: no
+        with_fileglob:
+          - "{{ cce_provisioning_secrets_localpath }}"
+
+      - name: Run CCE installation with user {{ cce_owner }}
+        command: "/bin/bash scripts/provision_ccserver.sh {{ cce_owner }}"
+        async: 1000
+        poll: 0
+        args:
+          chdir: "{{ cce_provisioning_code_path }}"
+          creates: "/home/{{ cce_owner }}/provision_ccserver.status.success"
+        register: provision_ccserver_sleeper
+        when: stat_cceInstallAlreadyDone.stat.exists == false
+
+      - name: Check status of CCE installation command
+        async_status:
+          jid: "{{ provision_ccserver_sleeper.ansible_job_id }}"
+        register: job_result
+        until: job_result.finished
+        retries: 200
+        delay: 20
+
+      - name: Copy command result to the server
+        copy:
+          content: "{{ job_result.stdout }}"
+          dest: "/home/{{ cce_owner }}/provision_ccserver_{{ inventory_hostname }}.out"
+
+      - name: clear the sensitive file post configure
+        file:
+          path: "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
+          state: absent
+
+    when: stat_cceInstallAlreadyDone.stat.exists == false

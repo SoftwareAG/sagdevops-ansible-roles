@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running service command {{ product_command | default('undefined') }} for product {{ product_name | default('undefined') }} and instance name {{ product_instance_name | default('undefined') }}"
+
+- name: fail if product_name not specified
+  fail: 
+    msg: "product_name not specified...cannot do anything."
+  when: product_name is not defined or product_name == ""
+
+- name: Include tasks
+  include_tasks: "product_{{ product_name }}.yaml"

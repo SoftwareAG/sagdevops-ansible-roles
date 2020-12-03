@@ -1,0 +1,7 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/connx"
+    webmethods_script_start: "./jdbcserver START"
+    webmethods_script_stop: "./jdbcserver STOP"

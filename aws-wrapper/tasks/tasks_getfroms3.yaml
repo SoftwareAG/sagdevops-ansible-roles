@@ -1,0 +1,4 @@
+---
+
+  - name: Include tasks for the right s3 implementation
+    include_tasks: "tasks_getfroms3_{{ getfroms3_implementation }}.yaml"

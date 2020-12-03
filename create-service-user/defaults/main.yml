@@ -1,0 +1,9 @@
+---
+
+## user creation
+username:
+userid:
+groupname:
+groupid:
+generate_ssh_key: no
+authorized_sshkey_path:

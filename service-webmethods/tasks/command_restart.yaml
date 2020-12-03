@@ -1,0 +1,28 @@
+---
+
+### Needs:
+### - service_name
+
+- name: fail if service_name not specified
+  fail: 
+    msg: "service_name not specified...cannot create."
+  when: service_name is not defined or service_name == ""
+
+- name: get service facts
+  service_facts:
+
+- name: Format service name to {{ service_name }}.service for service_facts lookup
+  set_fact:
+    service_name_index: "{{ service_name }}.service"
+
+- name: fail if service is not found
+  fail: 
+    msg: "service {{ service_name }} not found..."
+  when: fail_service_notfound|bool and ansible_facts.services[service_name_index] is not defined
+
+- name: Update service state
+  service: 
+    name: "{{ service_name }}"
+    state: "restarted"
+    enabled: true
+  when: ansible_facts.services[service_name_index] is defined

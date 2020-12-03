@@ -1,0 +1,10 @@
+---
+
+- name: Write the content to target
+  template:
+    src: install_script_apiportal.txt.j2
+    dest: "{{ provision_installer_script_filepath }}"
+    backup: yes
+    owner: "{{ provision_installer_files_owner }}"
+    group: "{{ provision_installer_files_group }}"
+    mode: 0600

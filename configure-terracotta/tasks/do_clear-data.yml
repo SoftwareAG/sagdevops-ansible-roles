@@ -1,0 +1,6 @@
+---
+
+- name: Clear the data folder
+  file:
+    state: absent
+    path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"

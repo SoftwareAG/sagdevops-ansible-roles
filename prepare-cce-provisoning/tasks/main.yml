@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running service command {{ cce_prep_type | default('undefined') }}"
+
+- name: fail if cce_prep_type not specified
+  fail: 
+    msg: "cce_prep_type not specified...cannot do anything."
+  when: cce_prep_type is not defined or cce_prep_type == ""
+
+- name: Include tasks
+  include_tasks: "prep_{{ cce_prep_type }}.yml"

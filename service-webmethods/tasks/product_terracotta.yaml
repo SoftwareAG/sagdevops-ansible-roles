@@ -1,0 +1,15 @@
+---
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/bin/tsa-service"
+    service_name: "sag1tsa{{ product_version_full }}"
+    service_pidfile: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/TSA.pid"
+    service_params:
+      LimitMEMLOCK: "infinity"
+      RemainAfterExit: "no"
+      Restart: "on-failure"
+      RestartSec: 90
+    unit_params:
+      After: "network-online.target"
+      Requires: "network-online.target"

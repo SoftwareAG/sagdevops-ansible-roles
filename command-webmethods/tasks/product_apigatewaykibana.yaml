@@ -1,0 +1,8 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin"
+    webmethods_script_start: "./kibana"
+    webmethods_script_stop: "/bin/kill"
+    webmethods_script_stop_params: "-1 -- $MAINPID"

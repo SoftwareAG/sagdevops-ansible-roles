@@ -1,0 +1,9 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/UniversalMessaging/server/{{ product_instance_name }}/bin"
+    webmethods_script_start: "./nserverdaemon"
+    webmethods_script_start_params: "start"
+    webmethods_script_stop: "./nserverdaemon"
+    webmethods_script_stop_params: "stop"

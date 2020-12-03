@@ -1,0 +1,20 @@
+---
+
+  - name: "Update config file {{ custom_wrapper_file }} with common jvm params"
+    lineinfile:
+      path: "{{ custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict:
+      wrapper.java.additional.400: "-XX:+PrintAdaptiveSizePolicy"
+      wrapper.java.additional.401: "-XX:+PrintGC"
+      wrapper.java.additional.402: "-XX:+PrintGCCause"
+      wrapper.java.additional.403: "-XX:+PrintGCDetails"
+      wrapper.java.additional.404: "-XX:+PrintGCTimeStamps"
+      wrapper.java.additional.405: "-XX:+PrintTenuringDistribution"
+      wrapper.java.additional.406: "-XX:+UseGCLogFileRotation"
+      wrapper.java.additional.407: "-XX:GCLogFileSize=10M"
+      wrapper.java.additional.408: "-XX:NumberOfGCLogFiles=5"
+      wrapper.java.additional.409: "-Xloggc:%OSGI_INSTALL_AREA%/logs/gc.log"
+      wrapper.java.additional.410: "-verbose:gc"

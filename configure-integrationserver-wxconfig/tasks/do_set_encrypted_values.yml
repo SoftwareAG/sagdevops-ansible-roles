@@ -1,0 +1,21 @@
+---
+
+  - name: Install the packages in IS only if the list is not empty
+    block:
+
+      - name: fail if wxconfig_target_package_name not specified
+        fail: 
+          msg: "wxconfig_target_package_name not specified...cannot create."
+        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+
+      - name: fail if wxconfig_encrypted_groupname not specified
+        fail: 
+          msg: "wxconfig_encrypted_groupname not specified...cannot create."
+        when: wxconfig_encrypted_groupname is not defined or wxconfig_encrypted_groupname == ""
+
+      - name: Populate wxconfig encrypted values file if the wxconfig_encrypted_params is defined and non empty
+        template:
+          src: WxConfigEncVal_template.txt.j2
+          dest: "{{ wxconfig_encrypted_values_dir }}/WxConfigEncVal_{{ wxconfig_encrypted_groupname }}.txt"
+
+    when: wxconfig_encrypted_params is defined and wxconfig_encrypted_params.keys()|length > 0

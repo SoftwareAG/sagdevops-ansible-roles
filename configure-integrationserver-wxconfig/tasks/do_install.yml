@@ -1,0 +1,63 @@
+---
+
+  - name: Check if wxconfig is installed already
+    stat: 
+      path: "{{ runtime_instance_package_home }}/WxConfig/manifest.rel"
+    register: stat_wxconfig_installed
+
+  - name: Package installed status
+    debug:
+      var: stat_wxconfig_installed.stat.exists
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_install_changed: false
+    when: configure_integrationserver_wxconfig_install_changed is not defined
+
+  - name: Install wxconfig if it's not already there
+    block:
+
+      - name: Create the wxconfig config dir on the machine if it does not exist
+        file:
+          path: "{{ wxconfig_configs_dir }}"
+          state: directory
+
+      - name: getting the wxconfig license from s3 to apply on integration server
+        include_role:
+          name: aws-wrapper
+        vars:
+          command: "getfroms3"
+          getfroms3_bucket_name: "{{ wxconfig_license_remote_s3.bucket_name | default('', true) }}"
+          getfroms3_bucket_path: "{{ wxconfig_license_remote_s3.bucket_path | default('', true) }}"
+          getfroms3_local_path: "{{ wxconfig_configs_dir }}/WxConfig_v1.9.license"
+
+      - name: getting the wxconfig packages from s3 to apply on integration server
+        include_role:
+          name: aws-wrapper
+        vars:
+          command: "getfroms3"
+          getfroms3_bucket_name: "{{ wxconfig_package_remote_s3.bucket_name | default('', true) }}"
+          getfroms3_bucket_path: "{{ wxconfig_package_remote_s3.bucket_path | default('', true) }}"
+          getfroms3_local_path: "{{ runtime_instance_package_home }}/WxConfig.zip"
+
+      - name: Create the extracted dir on the remote machine if it doesn't exist
+        file:
+          path: "{{ runtime_instance_package_home }}/WxConfig"
+          state: directory
+
+      - name: Unarchive the packages on the remote machine
+        unarchive:
+          src: "{{ runtime_instance_package_home }}/WxConfig.zip"
+          dest: "{{ runtime_instance_package_home }}/WxConfig"
+          remote_src: yes
+
+      - name: Delete the archive once extracted
+        file:
+          path: "{{ runtime_instance_package_home }}/WxConfig.zip"
+          state: absent
+
+      - name: Set changed flag to true
+        set_fact: 
+          configure_integrationserver_wxconfig_install_changed: true
+
+    when: stat_wxconfig_installed.stat.exists == false or wxconfig_install_force == true

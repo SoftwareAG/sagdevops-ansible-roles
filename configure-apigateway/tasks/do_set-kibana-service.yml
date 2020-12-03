@@ -1,0 +1,45 @@
+---
+
+  ## get the hosts of the elasticsearch / internal data store nodes
+  ## in the format that's expected: "protocol://host1:port1,protocol://host2:port2"
+  - import_role:
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ external_elasticsearch_inventory_pattern }}"
+      inventory_hosts_property: "ansible_host"
+      inventory_hosts_clear_first: true
+      inventory_hosts_add_prefix: "{{ external_elasticsearch_protocol }}"
+      inventory_hosts_add_suffix: ":{{ external_elasticsearch_port }}"
+
+  - name: Set elasticsearch_hosts_list facts
+    set_fact:
+      elasticsearch_hosts_list: "{{ output_inventory_hosts }}"
+
+  - name: Must run as root - Set service for kibana if the elasticsearch_hosts_list was set (TODO - we should do a better check than checking on external_elasticsearch_hosts )
+    block:
+
+        - import_role:
+            name: service-webmethods
+          vars:
+            product_command: "create"
+            product_name: "apigatewaykibana"
+            product_instance_name: "default"
+            force_create: false
+            service_user: "{{ webmethods_user }}"
+            service_group: "{{ webmethods_group }}"
+
+        - import_role:
+            name: service-webmethods
+          vars:
+            product_command: "restart"
+            product_name: "apigatewaykibana"
+            product_instance_name: "default"
+
+        - name: Wait for kibana port to become open on the host
+          wait_for:
+            host: "localhost"
+            port: "{{ apigateway_kibana_port }}"
+            delay: 5
+            timeout: 300
+
+    when: elasticsearch_hosts_list is defined and (elasticsearch_hosts_list|length > 0)

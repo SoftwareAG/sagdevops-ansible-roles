@@ -1,0 +1,11 @@
+---
+
+inventory_action: first_level_lookup
+
+inventory_pattern: ""
+inventory_hosts_property: ""
+inventory_hosts_property_2ndlevel: ""
+
+inventory_hosts_clear_first: true
+inventory_hosts_add_prefix: ""
+inventory_hosts_add_suffix: ""

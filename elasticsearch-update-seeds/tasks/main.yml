@@ -1,0 +1,39 @@
+---
+
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_hosts_clear_first: true
+  
+  - name: Set all_hostnames facts
+    set_fact:
+      all_hosts_computed: "{{ get_inventory_hosts }}"
+
+  - name: Get content of elastic search config
+    shell: "cat {{ elasticsearch_basepath }}/config/elasticsearch.yml"
+    register: result_config
+  
+  - name: Print the raw elasticsearch config
+    debug:
+      var: result_config.stdout_lines
+
+  - set_fact:
+      elasticsearch_config: "{{ result_config.stdout | from_yaml }}"
+
+  - name: Print elasticsearch_config seeds
+    debug:
+      msg: "Looking at item: {{ elasticsearch_config['discovery.seed_hosts'] }}"
+
+  - name: Change elasticsearch discovery.seed_hosts value to the list of hosts
+    set_fact:
+      elasticsearch_config_updated: "{{ elasticsearch_config|combine({'discovery.seed_hosts': all_hosts_computed}, recursive=True) }}"
+
+  - name: Echo the updated var to the screen.
+    debug: 
+      var: elasticsearch_config_updated
+ 
+  - name: Write the updated content back to a YAML file.
+    template:
+      src: elasticsearch.yml.j2
+      dest: "{{ elasticsearch_basepath }}/config/elasticsearch.yml"
+      backup: yes

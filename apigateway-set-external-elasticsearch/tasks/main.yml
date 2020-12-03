@@ -1,0 +1,102 @@
+---
+
+  ## get an inventory list for the pg.gateway.elasticsearch.hosts which requires host1:port,host2:port,host3:port
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ elasticsearch_inventory_pattern }}"
+      inventory_hosts_property: "{{ elasticsearch_inventory_hosts_property }}"
+      inventory_hosts_add_prefix: ""
+      inventory_hosts_add_suffix: ":{{ elasticsearch_port }}"
+      inventory_hosts_clear_first: true
+
+  - name: fail if elasticsearch hosts could not be found from inventory_pattern
+    fail: 
+      msg: "Inventory {{ inventory_pattern }} didn't yield a valid list of elastic search hosts...cannot do anything."
+    when: get_inventory_hosts is not defined or (get_inventory_hosts|length == 0)
+
+  - name: Set all_hostnames facts
+    set_fact:
+      pg_gateway_elasticsearch_hosts: "{{ get_inventory_hosts | join(',') }}"
+
+## apigateway elastic search connectivity setup
+  - name: set initial facts
+    set_fact:
+      apigateway_elasticsearch_configs_toupdate:
+        "pg.gateway.elasticsearch.autostart": "false"
+        "pg.gateway.elasticsearch.hosts": "{{ pg_gateway_elasticsearch_hosts }}"
+
+  - name: "Update config file {{ apigateway_elasticsearch_config_file }}"
+    lineinfile:
+      path: "{{ apigateway_elasticsearch_config_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: '{{ apigateway_elasticsearch_configs_toupdate }}'
+    when: apigateway_elasticsearch_configs_toupdate is defined
+
+## apigateway KIBANA elastic search connectivity setup
+
+  ## get an inventory list for the kibana_elasticsearch_hosts which requires http://host1:port,http://host2:port,http://host3:port
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ elasticsearch_inventory_pattern }}"
+      inventory_hosts_property: "{{ elasticsearch_inventory_hosts_property }}"
+      inventory_hosts_add_prefix: "http://"
+      inventory_hosts_add_suffix: ":{{ elasticsearch_port }}"
+      inventory_hosts_clear_first: true
+
+  - name: Set all_hostnames facts
+    set_fact:
+      kibana_elasticsearch_hosts: "{{ get_inventory_hosts }}"
+
+#### first update: uiconfiguration_config_file
+  - name: set initial facts
+    set_fact:
+      apigateway_kibana_elasticsearch_configs_toupdate:
+        "apigw.kibana.autostart": "false"
+        "apigw.es.url": "{{ pg_gateway_elasticsearch_hosts }}"
+
+  - name: "Update config file {{ apigateway_uiconfiguration_config_file }}"
+    lineinfile:
+      path: "{{ apigateway_uiconfiguration_config_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: '{{ apigateway_kibana_elasticsearch_configs_toupdate }}'
+    when: apigateway_kibana_elasticsearch_configs_toupdate is defined
+
+#### second update: kibana yml file
+  - name: Get content of elastic search config
+    shell: "cat {{ apigateway_kibana_config_file }}"
+    register: kibana_config_yml
+  
+  - name: Print the raw elasticsearch config
+    debug:
+      var: kibana_config_yml.stdout_lines
+
+  - set_fact:
+      kibana_config: "{{ kibana_config_yml.stdout | from_yaml }}"
+
+  - name: Print the ingested kibana_config
+    debug:
+      var: kibana_config
+
+  - name: Print elasticsearch.hosts from the config
+    debug:
+      msg: "Looking at item: {{ kibana_config['elasticsearch.hosts'] }}"
+
+  - name: Change kibana elasticsearch.hosts value to the list of hosts
+    set_fact:
+      content_yml: "{{ kibana_config | combine({'elasticsearch.hosts': kibana_elasticsearch_hosts}, recursive=True) }}"
+
+  - name: Print the updated content
+    debug: 
+      var: content_yml
+ 
+  - name: Write the updated content back to the same YAML file.
+    template:
+      src: content.yml.j2
+      dest: "{{ apigateway_kibana_config_file }}"
+      backup: yes

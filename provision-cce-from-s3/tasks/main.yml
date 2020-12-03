@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running with action {{ provision_action | default('undefined') }}"
+
+- name: fail if provision_action not specified
+  fail: 
+    msg: "provision_action not specified...cannot do anything."
+  when: provision_action is not defined or provision_action == ""
+
+- name: "Include tasks in command_{{ provision_action }}.yml"
+  include_tasks: "command_{{ provision_action }}.yml"

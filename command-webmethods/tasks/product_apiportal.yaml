@@ -1,0 +1,27 @@
+---
+
+- name: fail if acc params webmethods_apiportal_acc_host not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_host missing...cannot do anything."
+  when: webmethods_apiportal_acc_host is not defined or webmethods_apiportal_acc_host == ""
+
+- name: fail if acc params webmethods_apiportal_acc_port not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_port missing...cannot do anything."
+  when: webmethods_apiportal_acc_port is not defined or webmethods_apiportal_acc_port == ""
+
+- name: fail if acc params webmethods_apiportal_acc_user not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_user missing...cannot do anything."
+  when: webmethods_apiportal_acc_user is not defined or webmethods_apiportal_acc_user == ""
+
+- name: fail if acc params webmethods_apiportal_acc_password not specified
+  fail: 
+    msg: "acc params webmethods_apiportal_acc_password missing...cannot do anything."
+  when: webmethods_apiportal_acc_password is not defined or webmethods_apiportal_acc_password == ""
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc/"
+    webmethods_script_start: "./acc.sh -h {{webmethods_apiportal_acc_host}} -u {{webmethods_apiportal_acc_user}} -pwd {{webmethods_apiportal_acc_password}} -p {{webmethods_apiportal_acc_port}} startall"
+    webmethods_script_stop: "./acc.sh -h {{webmethods_apiportal_acc_host}} -u {{webmethods_apiportal_acc_user}} -pwd {{webmethods_apiportal_acc_password}} -p {{webmethods_apiportal_acc_port}} stopall"

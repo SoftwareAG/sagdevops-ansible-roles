@@ -1,0 +1,31 @@
+{
+    "id": "Administrator",
+    "loginId": "Administrator",
+    "firstName": "Administrator",
+    "language": "",
+    "password": "",
+    "type": "local",
+    "allowDigestAuth": false,
+    "active": true,
+    "systemDefined": true,
+    "emailAddresses": [],
+    "groups": [
+        {
+            "id": "Administrators",
+            "name": "Administrators"
+        },
+        {
+            "id": "API-Gateway-Administrators",
+            "name": "API-Gateway-Administrators"
+        },
+        {
+            "id": "Everybody",
+            "name": "Everybody"
+        }
+    ],
+    "groupIds": [
+        "Administrators",
+        "API-Gateway-Administrators",
+        "Everybody"
+    ]
+}

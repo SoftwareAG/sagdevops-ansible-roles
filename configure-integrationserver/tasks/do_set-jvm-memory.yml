@@ -1,0 +1,21 @@
+---
+
+  - name: "Update config file {{ custom_wrapper_file }} with is_jvm_heap_min param if defined"
+    lineinfile:
+      path: "{{ custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict:
+      "wrapper.java.initmemory": "{{ is_jvm_heap_min }}"
+    when: is_jvm_heap_min is defined and is_jvm_heap_min != ""
+
+  - name: "Update config file {{ custom_wrapper_file }} with is_jvm_heap_max param if defined"
+    lineinfile:
+      path: "{{ custom_wrapper_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict:
+      "wrapper.java.maxmemory": "{{ is_jvm_heap_max }}"
+    when: is_jvm_heap_max is defined and is_jvm_heap_max != ""

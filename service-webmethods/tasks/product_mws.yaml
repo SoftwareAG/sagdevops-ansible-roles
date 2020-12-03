@@ -1,0 +1,11 @@
+---
+
+## example service script : sagmws103_default_1
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/profiles/MWS_{{ product_instance_name }}/bin/sagmws{{ product_version_full }}_{{ product_instance_name }}_1"
+    service_name: "sagmws{{ product_version_full }}_{{ product_instance_name }}_1"
+    service_params:
+      RemainAfterExit: "no"
+      Restart: "on-failure"
+      RestartSec: 90

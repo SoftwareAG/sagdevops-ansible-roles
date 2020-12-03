@@ -1,0 +1,136 @@
+---
+
+  - name: Print variables
+    debug:
+      msg:
+      - "getfroms3_bucket_name: {{ getfroms3_bucket_name | default('undefined',true) }}"
+      - "getfroms3_bucket_path: {{ getfroms3_bucket_path | default('undefined',true) }}"
+      - "getfroms3_local_path: {{ getfroms3_local_path | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_ifnotexist: {{ getfroms3_local_path_create_dir_ifnotexist | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_owner_user: {{ getfroms3_local_path_create_dir_owner_user | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_owner_group: {{ getfroms3_local_path_create_dir_owner_group | default('undefined',true) }}"
+      - "getfroms3_local_path_create_dir_permission: {{ getfroms3_local_path_create_dir_permission | default('undefined',true) }}"
+      - "getfroms3_local_path_owner_user: {{ getfroms3_local_path_owner_user | default('undefined',true) }}"
+      - "getfroms3_local_path_owner_group: {{ getfroms3_local_path_owner_group | default('undefined',true) }}"
+      - "getfroms3_local_path_permission: {{ getfroms3_local_path_permission | default('undefined',true) }}"
+      - "getfroms3_force_download: {{ getfroms3_force_download | default('undefined',true) }}"
+      
+  - name: fail if getfroms3_bucket_name not specified
+    fail: 
+      msg: "getfroms3_bucket_name not specified...can't do anything"
+    when: getfroms3_bucket_name is not defined or getfroms3_bucket_name == ""
+
+  - name: Check if getfroms3_local_path exists already
+    stat: 
+      path: "{{ getfroms3_local_path }}"
+    register: stat_s3download_exists
+
+  - name: Does download artifact alreay exist?
+    debug:
+      var: stat_s3download_exists.stat.exists
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      aws_wrapper_getfroms3_changed: false
+    when: aws_wrapper_getfroms3_changed is not defined
+
+  - name: Get download artifact if not already there or redownload is forced
+    block:
+
+      - name: Print variables
+        debug:
+          msg: "Local path directory: {{ getfroms3_local_path | dirname }}"
+
+      - name: Create the local path dir on the machine if it does not exist
+        file:
+          path: "{{ getfroms3_local_path | dirname }}"
+          state: directory
+        when: getfroms3_local_path_create_dir_ifnotexist|bool == true
+
+      - name: Check if local path dir on the machine exists
+        stat: 
+          path: "{{ getfroms3_local_path | dirname }}"
+        register: stat_s3download_localpath_dir
+
+      - name: fail if local path dir on the machine does not exist
+        fail: 
+          msg: "local path dir on the machine does not exist...can't do anything"
+        when: stat_s3download_localpath_dir.stat.exists == false
+
+      - name: Fix owner on local path dir
+        file: 
+          path: "{{ getfroms3_local_path | dirname }}"
+          state: directory
+          owner: "{{ getfroms3_local_path_create_dir_owner_user }}"
+        when: getfroms3_local_path_create_dir_owner_user is defined and getfroms3_local_path_create_dir_owner_user != ""
+      
+      - name: Fix group on local path dir
+        file: 
+          path: "{{ getfroms3_local_path | dirname }}"
+          state: directory
+          group: "{{ getfroms3_local_path_create_dir_owner_group }}"
+        when: getfroms3_local_path_create_dir_owner_group is defined and getfroms3_local_path_create_dir_owner_group != ""
+
+      - name: Fix permission on local path dir
+        file: 
+          path: "{{ getfroms3_local_path | dirname }}"
+          state: directory
+          mode: "{{ getfroms3_local_path_create_dir_permission }}"
+        when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
+        
+      - name: run AWS CLI S3 CP command
+        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_bucket_path }} {{ getfroms3_local_path }}"
+        args:
+          chdir: "{{ ansible_env.HOME }}"
+        async: "{{ getfroms3_async }}"
+        poll: "{{ getfroms3_poll }}"
+        register: getfroms3_sleeper
+
+      - name: Check status of AWS CLI S3 CP command
+        async_status:
+          jid: "{{ getfroms3_sleeper.ansible_job_id }}"
+        register: job_result
+        until: job_result.finished
+        retries: "{{ getfroms3_async_retries }}"
+        delay: "{{ getfroms3_async_delay }}"
+
+      - name: Print the job_result to the console.
+        debug:
+          msg: "{{ job_result.stdout_lines | last }}"
+
+      - name: Check if getfroms3_local_path still does not exist
+        stat: 
+          path: "{{ getfroms3_local_path }}"
+        register: stat_s3justdownloaded_exists
+
+      - name: fail if file getfroms3_local_path does not exist
+        fail: 
+          msg: "File at {{ getfroms3_local_path }} still does not exist...check download parameters"
+        when: stat_s3justdownloaded_exists.stat.exists == false
+
+      - name: Fix owner on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          owner: "{{ getfroms3_local_path_owner_user }}"
+        when: getfroms3_local_path_owner_user is defined and getfroms3_local_path_owner_user != ""
+      
+      - name: Fix group on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          group: "{{ getfroms3_local_path_owner_group }}"
+        when: getfroms3_local_path_owner_group is defined and getfroms3_local_path_owner_group != ""
+
+      - name: Fix permission on fetched file
+        file: 
+          path: "{{ getfroms3_local_path }}"
+          state: file
+          mode: "{{ getfroms3_local_path_permission }}"
+        when: getfroms3_local_path_permission is defined and getfroms3_local_path_permission != ""
+
+      - name: Set changed flag to true
+        set_fact: 
+          aws_wrapper_getfroms3_changed: true
+
+    when: stat_s3download_exists.stat.exists == false or getfroms3_force_download|bool == true

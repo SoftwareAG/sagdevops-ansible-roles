@@ -1,0 +1,10 @@
+---
+
+  - name: "Update config file {{ ids_install_ids_jvm_options_file }} with ids_jvm_params params if defined"
+    lineinfile:
+      path: "{{ ids_install_ids_jvm_options_file }}"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}{{ item.value.separator | default('',true) }}{{ item.value.value | default('',true) }}"
+    with_dict: "{{ ids_jvm_params }}"
+    when: ids_jvm_params is defined and (ids_jvm_params|length > 0)

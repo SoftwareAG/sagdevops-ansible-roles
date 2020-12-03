@@ -1,0 +1,27 @@
+---
+
+tc_config_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/conf"
+tc_config_file: "{{ tc_config_path }}/tc-config.xml"
+tc_custom_wrapper_file: "{{ tc_config_path }}/custom_wrapper.conf"
+
+## global JVM settings
+tc_jvm_heap_min: 1024
+tc_jvm_heap_max: 2048
+tc_jvm_params: {}
+
+# list of tc host names accessible from the network
+tc_inventory_pattern: ""
+
+tc_common_data_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/data"
+tc_common_logs_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/logs"
+tc_common_index_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/index"
+tc_common_data_backup_path: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/work/terracotta/backups"
+tc_common_tsa_port: "9510"
+tc_common_jmx_port: "9520"
+tc_common_tsa_group_port: "9530"
+tc_common_management_port: "9540"
+tc_common_datastorage_size: "10G"
+tc_common_offheap_size: "2G"
+tc_common_hybrid_enabled: true
+tc_common_restartable_enabled: true
+tc_common_garbage_collection: 900

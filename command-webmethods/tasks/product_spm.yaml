@@ -1,0 +1,12 @@
+---
+
+# - include: "command_native.yml"
+#   var:
+#     webmethods_script_start: "{{ webmethods_install_dir }}/profiles/SPM/bin/startup.sh"
+#     webmethods_script_stop: "{{ webmethods_install_dir }}/profiles/SPM/bin/shutdown.sh"
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/profiles/SPM/bin"
+    webmethods_script_start: "./startup.sh"
+    webmethods_script_stop: "./shutdown.sh"

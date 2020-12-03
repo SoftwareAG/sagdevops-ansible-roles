@@ -1,0 +1,7 @@
+---
+
+- include_tasks: command_native.yaml
+  vars:
+    webmethods_script_dir: "{{ webmethods_install_dir }}/Terracotta/server/wrapper/bin"
+    webmethods_script_start: "./startup.sh"
+    webmethods_script_stop: "./shutdown.sh"

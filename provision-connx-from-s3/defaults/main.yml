@@ -1,0 +1,9 @@
+---
+
+## global settings
+webmethods_s3repo_bucket_name: ""
+webmethods_s3repo_bucket_prefix: ""
+webmethods_localrepo_target_dir: ""
+webmethods_install_target_dir: ""
+webmethods_localrepo_target_dir_owner_user: ""
+webmethods_localrepo_target_dir_owner_group: ""

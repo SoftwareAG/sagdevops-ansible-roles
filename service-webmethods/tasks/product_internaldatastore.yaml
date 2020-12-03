@@ -1,0 +1,18 @@
+---
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/InternalDataStore/bin/el_initd"
+    service_name: "sag1cel{{ product_version_full }}"
+    service_params:
+      RemainAfterExit: "no"
+      Restart: "on-failure"
+      RestartSec: 90
+      LimitAS: "infinity"
+      LimitFSIZE: "infinity"
+      LimitMEMLOCK: "infinity"
+      LimitNOFILE: "{{ limits_openfiles }}"
+      LimitNPROC: "{{ limits_processes }}"
+    unit_params:
+      After: "network-online.target"
+      Requires: "network-online.target"

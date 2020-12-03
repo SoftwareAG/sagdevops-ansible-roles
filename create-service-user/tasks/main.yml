@@ -1,0 +1,48 @@
+---
+
+- name: Ensure base group
+  group:
+    gid: "{{groupid | default(omit)}}"
+    name: "{{ groupname }}"
+    state: present
+
+- name: Ensure base user
+  user:
+    uid: "{{userid | default(omit)}}"
+    name: "{{ username }}"
+    group: "{{ groupname }}"
+    state: present
+    shell: /bin/bash
+    home: "/home/{{ username }}"
+    createhome: yes
+    append: yes
+    generate_ssh_key: "{{ generate_ssh_key }}"
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+  register: created_user
+
+- name: Set authorized key taken from file
+  authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ lookup('file', '{{ item }}') }}"
+  with_fileglob:
+    - "{{ authorized_sshkey_path | default('/nonexistant') }}"
+ 
+- name: Create .aws directory
+  file:
+    path: "/home/{{ username }}/.aws"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ groupname }}"
+    mode: 0700
+  when: aws_access_key is defined and aws_access_key != ""
+ 
+- name:  Write the aws config
+  template:
+    src: aws_credentials.j2
+    dest: "/home/{{ username }}/.aws/credentials"
+    owner: "{{ username }}"
+    group: "{{ groupname }}"
+    mode: 0600
+  when: aws_access_key is defined and aws_access_key != ""

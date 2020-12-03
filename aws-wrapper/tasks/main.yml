@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running AWS command {{ command | default('undefined') }}"
+
+- name: fail if command not specified
+  fail: 
+    msg: "command not specified...cannot do anything."
+  when: command is not defined or command == ""
+
+- name: Include tasks
+  include_tasks: "tasks_{{ command }}.yaml"

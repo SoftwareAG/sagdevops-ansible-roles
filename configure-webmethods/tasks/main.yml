@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running with action {{ generic_configs_action | default('undefined') }}"
+
+- name: fail if generic_configs_action not specified
+  fail: 
+    msg: "generic_configs_action not specified...cannot do anything."
+  when: generic_configs_action is not defined or generic_configs_action == ""
+
+- name: Include tasks
+  include_tasks: "do_{{ generic_configs_action }}.yml"

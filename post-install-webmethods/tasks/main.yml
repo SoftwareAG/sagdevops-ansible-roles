@@ -1,0 +1,16 @@
+---
+
+- name: Check if default wM post install as root script is present
+  stat: 
+    path: "{{ postinstall_scriptfile }}"
+  register: stat_afterInstallAsRootExecFile
+
+- name: "Run afterInstallAsRoot script {{ postinstall_scriptfile }} if present"
+  command: "{{ postinstall_scriptfile }}"
+  when: stat_afterInstallAsRootExecFile.stat.exists
+
+- name: touch to mark that it's been run
+  file:
+    path: "{{ postinstall_scriptfile }}.done.{{ansible_date_time.iso8601_basic_short}}"
+    state: touch
+  when: stat_afterInstallAsRootExecFile.stat.exists

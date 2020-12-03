@@ -1,0 +1,19 @@
+---
+
+  - name: fail if wxconfig_target_package_name not specified
+    fail: 
+      msg: "wxconfig_target_package_name not specified...cannot create."
+    when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+
+  - name: Create main wxconfig controller file if not there already
+    file:
+      path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+      state: touch
+
+  - name: Enable this new config in the main controller file
+    lineinfile:
+      path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: "{{ wxconfig_global_configs }}"

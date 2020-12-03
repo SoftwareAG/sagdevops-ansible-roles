@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running get-inventory-hosts with action {{ inventory_action | default('undefined') }}"
+
+- name: fail if inventory_action not specified
+  fail: 
+    msg: "inventory_action not specified...cannot do anything."
+  when: inventory_action is not defined or inventory_action == ""
+
+- name: Include tasks
+  include_tasks: "do_{{ inventory_action }}.yml"

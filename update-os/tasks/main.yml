@@ -1,0 +1,34 @@
+---
+
+- name: Change various sysctl-settings, look at the sysctl-vars file for documentation
+  sysctl:
+    name: '{{ item.key }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  with_dict: '{{ sysctl_config }}'
+  register: updatessysctl
+
+- name: Add or modify fsize hard limits
+  pam_limits:
+    domain: '{{ item.domain }}'
+    limit_type: '{{ item.type }}'
+    limit_item: '{{ item.item }}'
+    value: '{{ item.value }}'
+    comment: '{{ item.comment }}'
+  with_items: '{{ limits_configs }}'
+  register: updateslimits
+
+- name: restart dependent services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items: '{{ restart_services }}'
+  when: force_restart_services or updatessysctl.changed or updateslimits.changed
+
+- name: reboot if any of the settings were changed
+  reboot:
+    reboot_timeout: 600
+  when: allow_reboot and (updatessysctl.changed or updateslimits.changed)

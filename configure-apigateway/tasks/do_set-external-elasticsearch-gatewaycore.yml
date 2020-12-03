@@ -1,0 +1,36 @@
+---
+
+  ## get the hosts of the elasticsearch / internal data store nodes
+  ## in the format that's expected: "host1:port,host2:port,host3:port"
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ external_elasticsearch_inventory_pattern }}"
+      inventory_hosts_property: "ansible_host"
+      inventory_hosts_clear_first: true
+      inventory_hosts_add_prefix: ""
+      inventory_hosts_add_suffix: ":{{ external_elasticsearch_port }}"
+  
+  - name: Set elasticsearch_hosts_list facts
+    set_fact:
+      elasticsearch_hosts_list: "{{ output_inventory_hosts }}"
+
+  - name: Set external internaldatastore url in the right file if host list is not empty
+    block:
+
+      - name: "Update config file {{ apigateway_elasticsearch_config_file }}"
+        lineinfile:
+          path: "{{ apigateway_elasticsearch_config_file }}"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        with_dict:
+          pg.gateway.elasticsearch.autostart: "false"
+          pg.gateway.elasticsearch.hosts: "{{ elasticsearch_hosts_list | join(',') }}"
+
+      - name: Re-Clear the elasticsearch_hosts_list list
+        set_fact:
+          elasticsearch_hosts_list: []
+          output_inventory_hosts: []
+
+    when: elasticsearch_hosts_list is defined and (elasticsearch_hosts_list|length > 0)

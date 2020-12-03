@@ -1,0 +1,3 @@
+---
+
+webmethods_apiportal_acc_exec_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc"

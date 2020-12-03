@@ -1,0 +1,9 @@
+---
+
+  - name: Include tasks for RHEL only
+    include_tasks: "setup-rhel.yml"
+    when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+  - name: Include tasks for Centos only
+    include_tasks: "setup-centos.yml"
+    when: ansible_distribution == 'CentOS'

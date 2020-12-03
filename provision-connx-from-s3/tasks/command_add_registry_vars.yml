@@ -1,0 +1,9 @@
+---
+
+- name: "Update user login script"
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - "export CONNXREGISTRY=/opt/softwareag/connx/connxreg.db"
+    - "export CONNXREGISTRY64=/opt/softwareag/connx/connxreg64.db"

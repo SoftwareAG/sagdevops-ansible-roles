@@ -1,0 +1,57 @@
+---
+
+  ## get IPs for the cluster
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ ids_coordinators_inventory_pattern }}"
+      inventory_action: second_level_lookup
+      inventory_hosts_property: ansible_default_ipv4
+      inventory_hosts_property_2ndlevel: address
+      inventory_hosts_clear_first: true
+      inventory_hosts_add_prefix: ""
+      inventory_hosts_add_suffix: ":{{ ids_transport_tcp_port }}"
+
+  - name: Set ids_discovery_seed_hosts facts
+    set_fact:
+      ids_discovery_seed_hosts: "{{ output_inventory_hosts }}"
+
+  ## get FQDNs for the cluster
+  - import_role: 
+      name: get-inventory-hosts
+    vars:
+      inventory_pattern: "{{ ids_coordinators_inventory_pattern }}"
+      inventory_action: first_level_lookup
+      inventory_hosts_property: "ansible_fqdn"
+      inventory_hosts_property_2ndlevel: ""
+      inventory_hosts_clear_first: true
+      inventory_hosts_add_prefix: ""
+      inventory_hosts_add_suffix: ""
+
+  - name: Set ids_cluster_initial_master_nodes facts
+    set_fact:
+      ids_cluster_initial_master_nodes: "{{ output_inventory_hosts }}"
+
+  - name: Set node role for the coordinator node
+    set_fact:
+      ids_node_master: true
+      ids_node_data: "{{ ids_node_data | default(false, true)}}"
+      ids_node_ingest: "{{ ids_node_ingest | default(false, true)}}"
+
+  - name: Write the config for a InternalDataStore cluster
+    template:
+      src: "elasticsearch_coordinator.yml.j2" 
+      dest: "{{ ids_install_elasticsearch_file }}"
+      backup: yes
+      owner: "{{ webmethods_user }}"
+      group: "{{ webmethods_group }}"
+      mode: 0644
+
+  - name: clear facts
+    set_fact:
+      output_inventory_hosts: []
+      ids_discovery_seed_hosts: []
+      ids_cluster_initial_master_nodes: []
+      ids_node_master: ""
+      ids_node_data: ""
+      ids_node_ingest: ""

@@ -1,0 +1,18 @@
+---
+
+provision_installer_exec_filepath_local:
+provision_installer_dir:
+provision_installer_exec_filename: ""
+
+provision_installer_script_filepath_local:
+provision_installer_script_filename: "SoftwareAGInstallerScript.txt"
+
+provision_installer_image_filepath_local:
+provision_installer_image_filename: ""
+
+provision_installer_license_filepath_local:
+provision_installer_license_filename: ""
+
+provision_installer_product_dir:
+provision_installer_files_owner:
+provision_installer_files_group:

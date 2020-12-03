@@ -1,0 +1,13 @@
+---
+
+- name: Install necessary packages (RHEL)
+  package: 
+    name: '{{ item }}'
+    state: present
+  with_items: "{{mandatory_packages}}"
+
+- name: Install extra packages if any (RHEL)
+  package: 
+    name: '{{ item }}'
+    state: present
+  with_items: "{{extra_packages}}"

@@ -1,0 +1,30 @@
+---
+
+- include_tasks: "command_createcustom.yaml"
+  vars:
+    service_name: "sag1kibanaapigw{{ product_version_full }}"
+    full_unit_params:
+      Description: "APIGW Kibana"
+      After: "multi-user.target network-online.target"
+      Requires: "network-online.target"
+    full_service_params:
+      Type: "simple"
+      User: "{{ service_user }}"
+      Group: "{{ service_group }}"
+      WorkingDirectory: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/"
+      PIDFile: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/kibana.pid"
+      ExecStart: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/bin/kibana"
+      ExecStop: "/bin/kill -- $MAINPID"
+      ExecReload: "/bin/kill -1 -- $MAINPID"
+      TimeoutStopSec: 5
+      KillMode: "process"
+      Restart: "on-failure"
+      RestartSec: 90
+    full_install_params:
+      WantedBy: multi-user.target
+  when: product_command == "create"
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_name: "sag1kibanaapigw{{ product_version_full }}"
+  when: product_command != "create"

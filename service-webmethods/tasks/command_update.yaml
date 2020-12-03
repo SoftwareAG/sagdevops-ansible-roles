@@ -1,0 +1,75 @@
+---
+
+### Needs:
+### - service_name
+### - service_params
+### - service_envs
+### - unit_params
+
+  - name: fail if service_name not specified
+    fail: 
+      msg: "service_name not specified...cannot create."
+    when: service_name is not defined or service_name == ""
+
+  - name: get service facts
+    service_facts:
+
+  - name: Format service name to {{ service_name }}.service for service_facts lookup
+    set_fact:
+      service_name_index: "{{ service_name }}.service"
+
+  - name: fail if service is not found
+    fail:
+      msg: "service {{ service_name }} not found..."
+    when: fail_service_notfound|bool and ansible_facts.services[service_name_index] is not defined
+
+  - name: Perform service overrides if service exists
+    block:
+      - name: create systemd override directory
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d
+          state: directory
+
+      ### - service_params
+      - name: Populate systemd override_service if the service_params is defined and non empty
+        template:
+          src: override_service_params.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
+        when: service_params is defined and service_params.keys()|length > 0
+      
+      - name: delete override_service file if service_params is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_service.conf
+          state: absent
+        when: service_params is not defined or service_params.keys()|length == 0
+
+      ### - service_envs
+      - name: Populate systemd override_service_envs if the service_envs is defined and non empty
+        template:
+          src: override_service_envs.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_service_envs.conf
+        when: service_envs is defined and service_envs.keys()|length > 0
+      
+      - name: delete override_service_envs file if service_envs is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_service_envs.conf
+          state: absent
+        when: service_envs is not defined or service_envs.keys()|length == 0
+
+      ### - unit_paramss
+      - name: Populate systemd override_unit if the unit_params is defined and non empty
+        template:
+          src: override_unit.j2
+          dest: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
+        when: unit_params is defined and unit_params.keys()|length > 0
+
+      - name: delete override_unit file if unit_params is un-defined or empty
+        file:
+          path: /etc/systemd/system/{{ service_name }}.service.d/override_unit.conf
+          state: absent
+        when: unit_params is not defined or unit_params.keys()|length == 0
+
+      - name: force systemd to reread configs after modification
+        systemd: daemon_reload=yes
+        
+    when: ansible_facts.services[service_name_index] is defined and ansible_facts.services[service_name_index].source == "systemd"

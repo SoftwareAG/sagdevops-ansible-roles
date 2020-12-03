@@ -1,0 +1,21 @@
+---
+
+# /bin/sh $SAGROOT/common/bin/daemon.sh -f $THISDIR/saginm -n inm -i $CS_INSTANCE -K 20 -S 80
+
+- include_tasks: "command_{{ product_command }}.yaml"
+  vars:
+    service_exec_filepath: "{{ webmethods_install_dir }}/CentraSite/bin/saginm"
+    service_name: "sag1inm"
+    service_runlevel_kill: 20
+    service_runlevel_start: 80
+    service_params:
+      RemainAfterExit: "no"
+      Restart: "on-failure"
+      RestartSec: 90
+      TimeoutStartSec: 330
+      TimeoutStopSec: 330
+      LimitNOFILE: "{{ limits_openfiles }}"
+      LimitNPROC: "{{ limits_processes }}"
+    unit_params:
+      After: "network-online.target"
+      Requires: "network-online.target"

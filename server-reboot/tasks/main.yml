@@ -1,0 +1,5 @@
+---
+
+- name: Reboot the machine
+  reboot:
+    reboot_timeout: "{{ server_reboot_timeout }}"

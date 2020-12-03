@@ -1,0 +1,9 @@
+---
+
+ssh_known_hosts_command: "ssh-keyscan -t rsa -T 2"
+ssh_known_hosts_dir_default: "{{ ansible_env.HOME }}/.ssh"
+ssh_known_hosts_file_default: "{{ ssh_known_hosts_dir_default }}/known_hosts"
+
+ssh_known_hosts_dir: "{{ ansible_env.HOME }}/.ssh"
+ssh_known_hosts_file: known_hosts
+ssh_known_hosts: "{{ groups['all_linux'] }}"
