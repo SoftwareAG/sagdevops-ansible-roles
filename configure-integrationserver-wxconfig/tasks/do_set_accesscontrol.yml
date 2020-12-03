@@ -1,0 +1,35 @@
+---
+
+  - name: Install the wxconfig configs in IS target package only if value variable is not empty
+    block:
+
+      - name: fail if wxconfig_target_package_name not specified
+        fail: 
+          msg: "wxconfig_target_package_name not specified...cannot create."
+        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+
+      - name: Check if main wxconfig controller file is there already
+        stat: 
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+        register: stat_wxconfig_enabled
+
+      - name: fail if wxconfig is not enabled via the controller file
+        fail: 
+          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
+        when: stat_wxconfig_enabled.stat.exists == false
+
+      - name: Populate wxconfig file
+        template:
+          src: as-accessControl-template.xml
+          dest: "{{ wxconfig_target_package_config_path }}/as-accessControl.xml"
+
+      - name: Enable this new config in the main controller file
+        lineinfile:
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+          regexp: '^{{ item }}'
+          insertafter: '^#{{ item }}'
+          line: "{{ item }}"
+        with_items:
+          "wx.config.incl=as-accessControl.xml"
+
+    when: (wxconfig_groups_list is defined and wxconfig_groups_list|length > 0) or (wxconfig_acl_list is defined and wxconfig_acl_list|length > 0) or (wxconfig_service_acl_mapping_list is defined and wxconfig_service_acl_mapping_list|length > 0)
