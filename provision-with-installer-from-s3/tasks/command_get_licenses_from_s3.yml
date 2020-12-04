@@ -67,20 +67,20 @@
       - name: copy a license file inside the zip into a custom target
         block:
 
-        - name: check if license is inside the zip file
-          stat: 
-            path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
-          register: check_license_copysrc_inzip
+          - name: check if license is inside the zip file
+            stat: 
+              path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+            register: check_license_copysrc_inzip
 
-        - name: Copy the license in the zip to a destination of choice
-          copy:
-            src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
-            dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
-            owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-            group: "{{ webmethods_install_localtarget_files_owner_group }}"
-            mode: "{{ webmethods_install_localtarget_files_permissions }}"
-            remote_src: yes
-          when: check_license_copysrc_inzip.stat.exists == true and webmethods_localrepo_license_inzip_filepath_copy_dest is defined and webmethods_localrepo_license_inzip_filepath_copy_dest != ""
+          - name: Copy the license in the zip to a destination of choice
+            copy:
+              src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+              dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
+              owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+              group: "{{ webmethods_install_localtarget_files_owner_group }}"
+              mode: "{{ webmethods_install_localtarget_files_permissions }}"
+              remote_src: yes
+            when: check_license_copysrc_inzip.stat.exists == true and webmethods_localrepo_license_inzip_filepath_copy_dest is defined and webmethods_localrepo_license_inzip_filepath_copy_dest != ""
 
         when: webmethods_localrepo_license_inzip_filepath_copy_src is defined and webmethods_localrepo_license_inzip_filepath_copy_src != ""
 
