@@ -73,7 +73,7 @@
           path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src | default('nothing',true) }}"
         register: check_license_copysrc_inzip
 
-      - name: Check variable for copying a license out of the zip file
+      - name: Check value of variable to check if license is inside the zip file
         debug:
           var: check_license_copysrc_inzip
 
