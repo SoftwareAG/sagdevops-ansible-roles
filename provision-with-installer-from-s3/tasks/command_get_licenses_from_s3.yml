@@ -85,7 +85,7 @@
       - name: Copy the license in the zip to a destination of choice
         copy:
           src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
-          dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
+          dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest | default('',true) }}"
           owner: "{{ webmethods_install_localtarget_files_owner_user }}"
           group: "{{ webmethods_install_localtarget_files_owner_group }}"
           mode: "{{ webmethods_install_localtarget_files_permissions }}"
