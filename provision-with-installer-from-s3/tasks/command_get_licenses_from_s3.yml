@@ -34,12 +34,12 @@
       path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
     register: check_licenses_zip_downloaded
 
+  - name: Set extracted_zir_dir_path facts
+    set_fact:
+      extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
+
   - name: Install / extract license zip files if they were downloaded
     block:
-
-      - name: Set all_hostnames facts
-        set_fact:
-          extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
 
       - name: Create the extracted dir on the machine if it does not exist
         file:
@@ -64,32 +64,32 @@
           group: "{{ webmethods_install_localtarget_files_owner_group }}"
           recurse: yes
 
-      - name: Check variable for copying a license out of the zip file
-        debug:
-          var: webmethods_localrepo_license_inzip_filepath_copy_src
-
-      - name: copy a license file inside the zip into a custom target
-        block:
-        
-          - name: check if license is inside the zip file
-            stat: 
-              path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
-            register: check_license_copysrc_inzip
-
-          - name: Copy the license in the zip to a destination of choice
-            copy:
-              src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
-              dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
-              owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-              group: "{{ webmethods_install_localtarget_files_owner_group }}"
-              mode: "{{ webmethods_install_localtarget_files_permissions }}"
-              remote_src: yes
-            when: check_license_copysrc_inzip.stat.exists == true and webmethods_localrepo_license_inzip_filepath_copy_dest is defined and webmethods_localrepo_license_inzip_filepath_copy_dest != ""
-
-        when: webmethods_localrepo_license_inzip_filepath_copy_src is defined and webmethods_localrepo_license_inzip_filepath_copy_src != ""
-
       - name: Set changed flag to true
         set_fact:
           configure_integrationserver_install_package_changed: true
-  
+
     when: check_licenses_zip_downloaded.stat.exists == true
+
+  - name: Check variable for copying a license out of the zip file
+    debug:
+      var: webmethods_localrepo_license_inzip_filepath_copy_src
+
+  - name: copy a license file from the zip file into a custom target
+    block:
+      
+      - name: check if license is inside the zip file
+        stat: 
+          path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+        register: check_license_copysrc_inzip
+
+      - name: Copy the license in the zip to a destination of choice
+        copy:
+          src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+          dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest }}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          mode: "{{ webmethods_install_localtarget_files_permissions }}"
+          remote_src: yes
+        when: check_license_copysrc_inzip.stat.exists == true and webmethods_localrepo_license_inzip_filepath_copy_dest is defined and webmethods_localrepo_license_inzip_filepath_copy_dest != ""
+
+    when: webmethods_localrepo_license_inzip_filepath_copy_src is defined and webmethods_localrepo_license_inzip_filepath_copy_src != ""
