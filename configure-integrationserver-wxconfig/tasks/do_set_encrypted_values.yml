@@ -1,5 +1,10 @@
 ---
 
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_set_encrypted_values_changed: false
+    when: configure_integrationserver_wxconfig_set_encrypted_values_changed is not defined
+
   - name: Install the packages in IS only if the list is not empty
     block:
 
@@ -17,5 +22,11 @@
         template:
           src: WxConfigEncVal_template.txt.j2
           dest: "{{ wxconfig_encrypted_values_dir }}/WxConfigEncVal_{{ wxconfig_encrypted_groupname }}.txt"
+        register: "result_wxconfig_content_operation"
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_integrationserver_wxconfig_set_encrypted_values_changed: true
+        when: result_wxconfig_content_operation.changed == true
 
     when: wxconfig_encrypted_params is defined and wxconfig_encrypted_params.keys()|length > 0

@@ -1,5 +1,10 @@
 ---
 
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_enable_package_changed: false
+    when: configure_integrationserver_wxconfig_enable_package_changed is not defined
+
   - name: fail if wxconfig_target_package_name not specified
     fail: 
       msg: "wxconfig_target_package_name not specified...cannot create."
@@ -16,4 +21,10 @@
       regexp: '^{{ item.key }}'
       insertafter: '^#{{ item.key }}'
       line: "{{ item.key }}={{ item.value }}"
+    register: "result_wxconfig_controller_operation"
     with_dict: "{{ wxconfig_global_configs }}"
+
+  - name: Set changed flag to true if any mutating operation did change
+    set_fact: 
+      configure_integrationserver_wxconfig_enable_package_changed: true
+    when: result_wxconfig_controller_operation.changed == true

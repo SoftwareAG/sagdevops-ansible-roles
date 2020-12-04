@@ -1,5 +1,10 @@
 ---
 
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_set_extended_settings_changed: false
+    when: configure_integrationserver_wxconfig_set_extended_settings_changed is not defined
+
   - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
 
@@ -22,6 +27,7 @@
         template:
           src: as-extendedSettings-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-extendedSettings.xml"
+        register: "result_wxconfig_content_operation"
 
       - name: Enable this new config in the main controller file
         lineinfile:
@@ -29,7 +35,13 @@
           regexp: '^{{ item }}'
           insertafter: '^#{{ item }}'
           line: "{{ item }}"
+        register: "result_wxconfig_controller_operation"
         with_items:
-          "wx.config.incl=as-extendedSettings.xml"
+          - "wx.config.incl=as-extendedSettings.xml"
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_integrationserver_wxconfig_set_extended_settings_changed: true
+        when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
     when: wxconfig_extended_settings_list is defined and wxconfig_extended_settings_list|length > 0
