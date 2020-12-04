@@ -64,9 +64,13 @@
           group: "{{ webmethods_install_localtarget_files_owner_group }}"
           recurse: yes
 
+      - name: Check variable for copying a license out of the zip file
+        debug:
+          var: webmethods_localrepo_license_inzip_filepath_copy_src
+
       - name: copy a license file inside the zip into a custom target
         block:
-
+        
           - name: check if license is inside the zip file
             stat: 
               path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
