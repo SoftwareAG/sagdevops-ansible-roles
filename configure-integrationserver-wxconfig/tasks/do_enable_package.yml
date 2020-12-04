@@ -28,3 +28,7 @@
     set_fact: 
       configure_integrationserver_wxconfig_enable_package_changed: true
     when: result_wxconfig_controller_operation.changed == true
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_enable_package_changed

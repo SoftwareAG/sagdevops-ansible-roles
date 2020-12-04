@@ -46,3 +46,7 @@
         when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
     when: (wxconfig_groups_list is defined and wxconfig_groups_list|length > 0) or (wxconfig_acl_list is defined and wxconfig_acl_list|length > 0) or (wxconfig_service_acl_mapping_list is defined and wxconfig_service_acl_mapping_list|length > 0)
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_set_accesscontrol_changed

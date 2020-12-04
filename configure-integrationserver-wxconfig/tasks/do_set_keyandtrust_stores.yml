@@ -45,3 +45,7 @@
         when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
     when: wxconfig_keytruststore_list is defined and wxconfig_keytruststore_list|length > 0
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_set_keyandtrust_stores_changed

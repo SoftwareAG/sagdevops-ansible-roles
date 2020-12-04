@@ -30,3 +30,7 @@
         when: result_wxconfig_content_operation.changed == true
 
     when: wxconfig_encrypted_params is defined and wxconfig_encrypted_params.keys()|length > 0
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_set_encrypted_values_changed

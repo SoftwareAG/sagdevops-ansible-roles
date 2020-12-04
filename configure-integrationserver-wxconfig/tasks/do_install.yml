@@ -61,3 +61,7 @@
           configure_integrationserver_wxconfig_install_changed: true
 
     when: stat_wxconfig_installed.stat.exists == false or wxconfig_install_force == true
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_install_changed
