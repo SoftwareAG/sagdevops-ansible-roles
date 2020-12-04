@@ -1,5 +1,11 @@
 ---
 
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_set_accesscontrol_changed: false
+    when: configure_integrationserver_wxconfig_set_accesscontrol_changed is not defined
+
   - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
 
@@ -22,6 +28,11 @@
         template:
           src: as-accessControl-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-accessControl.xml"
+        register: "result_configupdate_operation"
+
+      - name: Result of config update
+        debug:
+          var: result_configupdate_operation
 
       - name: Enable this new config in the main controller file
         lineinfile:
@@ -29,7 +40,12 @@
           regexp: '^{{ item }}'
           insertafter: '^#{{ item }}'
           line: "{{ item }}"
+        register: "result_wxconfig_controller_operation"
         with_items:
           "wx.config.incl=as-accessControl.xml"
+
+      - name: Result of config controller update
+        debug:
+          var: result_wxconfig_controller_operation
 
     when: (wxconfig_groups_list is defined and wxconfig_groups_list|length > 0) or (wxconfig_acl_list is defined and wxconfig_acl_list|length > 0) or (wxconfig_service_acl_mapping_list is defined and wxconfig_service_acl_mapping_list|length > 0)
