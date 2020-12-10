@@ -41,7 +41,7 @@
                         require    : Require Client Certificates
                         idProvider : Use Identity Provider
                     -->
-                    <clientAuthentication>{{ wxconfig_https_port.clientAuthentication }}</clientAuthentication>
+                    <clientAuthentication>{{ wxconfig_https_port.clientAuthentication | default('none',true) }}</clientAuthentication>
                     <useJsse>{{ wxconfig_https_port.useJsse }}</useJsse>
                     <keystoreAlias>{{ wxconfig_https_port.keystoreAlias }}</keystoreAlias>
                     <keyAlias>{{ wxconfig_https_port.keyAlias }}</keyAlias>
