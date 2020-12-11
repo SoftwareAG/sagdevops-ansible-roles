@@ -10,9 +10,9 @@
       path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker"
     register: previous_run_marker
 
-  - name: Marker file
+  - name: Print the previous marker file
     debug:
-      var: previous_run_marker.stat.exists
+      var: previous_run_marker
 
   - name: Set force_change flag to false if not defined
     set_fact: 
@@ -36,6 +36,10 @@
         stat:
           path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker_test"
         register: new_run_marker
+
+      - name: Print the new marker file
+        debug:
+          var: new_run_marker
 
       - set_fact:
           configure_apigateway_set_ui_ssl_force_changed: "{{ new_run_marker.stat.md5 != previous_run_marker.stat.md5 }}"
