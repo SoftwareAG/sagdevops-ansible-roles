@@ -25,7 +25,8 @@
       backup: no
       mode: 0600
       block: |
-        {{ webmethods_apigateway_ui_props_https_keystore_path + webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+        {{ webmethods_apigateway_ui_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+        {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
 
   - name: Print the changed var
     debug:
