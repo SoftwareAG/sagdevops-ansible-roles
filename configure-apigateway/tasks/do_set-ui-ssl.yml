@@ -5,6 +5,8 @@
       configure_apigateway_set_ui_ssl_changed: false
     when: configure_apigateway_set_ui_ssl_changed is not defined
 
+#    no_log: yes
+
   - name: "Update GW UI config file with custom SSL certs"
     lineinfile:
       path: "{{ apigateway_ui_props_configs_dir }}/com.softwareag.catalina.connector.https.pid-apigateway.properties"
@@ -13,11 +15,14 @@
       line: "{{ item.key }}={{ item.value }}"
     when: item.value is defined and item.value != ""
     register: "result_set_ssl"
-    no_log: yes
     with_dict:
       "keystoreFile": "{{ webmethods_apigateway_ui_props_https_keystore_path }}"
       "@secure.keystorePass": "{{ webmethods_apigateway_ui_props_https_keystore_password }}"
-  
+
+  - name: Print the changed var
+    debug:
+      var: result_set_ssl
+
   - name: Set changed flag to true if any mutating operation did change
     set_fact: 
       configure_apigateway_set_ui_ssl_changed: true
