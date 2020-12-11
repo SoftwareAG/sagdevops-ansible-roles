@@ -5,37 +5,78 @@
       configure_apigateway_set_ui_ssl_changed: false
     when: configure_apigateway_set_ui_ssl_changed is not defined
 
-  - name: "Update GW UI config file with custom SSL certs"
-    lineinfile:
-      path: "{{ apigateway_ui_props_configs_dir }}/com.softwareag.catalina.connector.https.pid-apigateway.properties"
-      regexp: '^{{ item.key }}'
-      insertafter: '^#{{ item.key }}'
-      line: "{{ item.key }}={{ item.value }}"
-    no_log: yes
-    when: item.value is defined and item.value != ""
-    register: "result_set_ssl"
-    with_dict:
-      "keystoreFile": "{{ webmethods_apigateway_ui_props_https_keystore_path }}"
-      "@secure.keystorePass": "{{ webmethods_apigateway_ui_props_https_keystore_password }}"
-
-  - name: Generate changed marker and write it to file
-    blockinfile:
+  - name: check if marker file already there
+    stat: 
       path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker"
-      create: yes
-      backup: no
-      mode: 0600
-      block: |
-        {{ webmethods_apigateway_ui_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
-        {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+    register: previous_run_marker
 
-  - name: Print the changed var
+  - name: Marker file
     debug:
-      var: result_set_ssl
+      var: previous_run_marker.stat.exists
 
-  - name: Set changed flag to true if any mutating operation did change
+  - name: Set force_change flag to false if not defined
     set_fact: 
-      configure_apigateway_set_ui_ssl_changed: true
-    when: result_set_ssl is defined and result_set_ssl.changed == true
+      configure_apigateway_set_ui_ssl_force_changed: false
+    when: configure_apigateway_set_ui_ssl_force_changed is not defined
+
+  - name: Recalculate marker and check if settings are the same
+    block:
+
+      - name: Generate new marker based on current passed in values, and write it to a test file
+        blockinfile:
+          path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker_test"
+          create: yes
+          backup: no
+          mode: 0600
+          block: |
+            {{ webmethods_apigateway_ui_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+            {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+      
+      - name: Get md5 from the new test file
+        stat:
+          path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker_test"
+        register: new_run_marker
+
+      - set_fact:
+          configure_apigateway_set_ui_ssl_force_changed: "{{ new_run_marker.stat.md5 != previous_run_marker.stat.md5 }}"
+
+    when: previous_run_marker.stat.exists
+
+  - name: Print the force_change var
+    debug:
+      var: configure_apigateway_set_ui_ssl_force_changed
+
+  - name: Set new ssl settings only if values are new
+    block:
+
+      - name: "Update GW UI config file with custom SSL certs"
+        lineinfile:
+          path: "{{ apigateway_ui_props_configs_dir }}/com.softwareag.catalina.connector.https.pid-apigateway.properties"
+          regexp: '^{{ item.key }}'
+          insertafter: '^#{{ item.key }}'
+          line: "{{ item.key }}={{ item.value }}"
+        no_log: yes
+        when: item.value is defined and item.value != ""
+        register: "result_set_ssl"
+        with_dict:
+          "keystoreFile": "{{ webmethods_apigateway_ui_props_https_keystore_path }}"
+          "@secure.keystorePass": "{{ webmethods_apigateway_ui_props_https_keystore_password }}"
+
+      - name: Generate changed marker and write it to file
+        blockinfile:
+          path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker"
+          create: yes
+          backup: no
+          mode: 0600
+          block: |
+            {{ webmethods_apigateway_ui_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+            {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+
+      - name: Set changed flag to true
+        set_fact: 
+          configure_apigateway_set_ui_ssl_changed: true
+
+    when: configure_apigateway_set_ui_ssl_force_changed | bool
 
   - name: Print the changed var
     debug:
