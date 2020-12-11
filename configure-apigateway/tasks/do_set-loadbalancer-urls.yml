@@ -1,0 +1,25 @@
+---
+
+  - debug: var=webmethods_apigateway_loadbalancers_http_urls
+  - debug: var=webmethods_apigateway_loadbalancers_https_urls
+  - debug: var=webmethods_apigateway_loadbalancers_websocket_urls
+  - debug: var=webmethods_apigateway_loadbalancers_webapp_url
+
+  - name: Update load balancer urls
+    uri:
+      url: "{{ apigateway_rest_configurations_loadBalancer }}"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ lookup('template', 'apigateway_restapi_loadbalancer.json.j2') }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: rest_response
+
+  - name: Print response
+    debug:
+      var: rest_response.json
