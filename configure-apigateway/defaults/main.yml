@@ -6,12 +6,22 @@ runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_insta
 runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
 custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
 runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
+webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
 apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
 apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
-apigateway_uiconfiguration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
-webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
+apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
+apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
 
+####################################
+## gateway SSL certs
+####################################
+
+webmethods_apigateway_ui_props_https_keystore_path:
+webmethods_apigateway_ui_props_https_keystore_password:
+
+####################################
 ## gateway rest apis
+####################################
 apigateway_rest_base_uri: "http://localhost:5555"
 apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
 
