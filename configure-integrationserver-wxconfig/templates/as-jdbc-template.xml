@@ -2,14 +2,17 @@
 <config>
     <autoConfig>
         <jdbc>
+        {% if wxconfig_jdbc.poolalias_list is defined %}
             <poolAliasList>
-                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc_poolalias_list %}
+                {% for wxconfig_jdbc_poolalias in wxconfig_jdbc.poolalias_list %}
                 <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_jdbc_poolalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_poolalias.destroyOnShutdown }}">
+                    {% if wxconfig_jdbc_poolalias.functionalalias_depends_list is defined %}
                     <depends>
-                        {% for functional_alias in wxconfig_jdbc_poolalias.functional_aliases_mapping %}
-                        <functionalAlias alias="{{ functional_alias }}" />
+                        {% for functionalalias_depend in wxconfig_jdbc_poolalias.functionalalias_depends_list %}
+                        <functionalAlias alias="{{ functionalalias_depend }}" />
                         {% endfor %}
                     </depends>
+                    {% endif %}  
                     <description>{{ wxconfig_jdbc_poolalias.description }}</description>
                     <driverAlias>{{ wxconfig_jdbc_poolalias.driverAlias }}</driverAlias>
                     <databaseUrl>{{ wxconfig_jdbc_poolalias.databaseUrl }}</databaseUrl>
@@ -23,26 +26,56 @@
                         <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout>                        <!-- in milliseconds -->
                     </connections>
                     <diagnostics>
-                        <spy enable="false">
-                            <attributes></attributes>
+                        {% if wxconfig_jdbc_poolalias.diagnostics_spy_enabled is defined %}
+                        <spy enable="{{ wxconfig_jdbc_poolalias.diagnostics_spy_enabled }}">
+                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_spy_attributes }}</attributes>
                         </spy>
-                        <snoop enable="false">
-                            <attributes></attributes>
+                        {% endif %}
+                        {% if wxconfig_jdbc_poolalias.diagnostics_snoop_enabled is defined %}
+                        <snoop enable="{{ wxconfig_jdbc_poolalias.diagnostics_snoop_enabled }}">
+                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_snoop_attributes }}</attributes>
                         </snoop>
+                        {% endif %}
                     </diagnostics>
                 </poolAlias>
                 {% endfor %}
             </poolAliasList>
+        {% endif %}  
+
+        {% if wxconfig_jdbc.functionalalias_list is defined %}
             <functionalAliasList>
-                <functionalAlias alias="ISCoreAudit" updateIfExists="false" destroyOnShutdown="false">
-                    <pool>local</pool>
-                    <description>My own alias</description>
-                    <enableFailFastMode>false</enableFailFastMode>                    <!-- default=false -->
-                    <enableAutoCommit>false</enableAutoCommit>                    <!-- optional; default = false  -->
-                    <enableCaching>false</enableCaching>                    <!-- optional; default = false  -->
-                    <isolationLevel>-1</isolationLevel>                    <!-- default = -1  -->
+                {% for wxconfig_jdbc_functionalalias in wxconfig_jdbc.functionalalias_list %}
+                <functionalAlias alias="{{ wxconfig_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_jdbc_functionalalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_functionalalias.destroyOnShutdown }}">
+                    <pool>{{ wxconfig_jdbc_functionalalias.poolalias }}</pool>
+                    <description>{{ wxconfig_jdbc_functionalalias.description }}</description>
+                    
+                    {% if wxconfig_jdbc_functionalalias.enableFailFastMode is defined %}
+                    <enableFailFastMode>{{ wxconfig_jdbc_functionalalias.enableFailFastMode }}</enableFailFastMode>
+                    {% else %}
+                    <!-- enableFailFastMode - default=false -->
+                    {% endif %}
+                    
+                    {% if wxconfig_jdbc_functionalalias.enableAutoCommit is defined %}
+                    <enableAutoCommit>{{ wxconfig_jdbc_functionalalias.enableAutoCommit }}</enableAutoCommit>
+                    {% else %}
+                    <!-- enableAutoCommit - optional; default = false  -->
+                    {% endif %}
+
+                    {% if wxconfig_jdbc_functionalalias.enableCaching is defined %}
+                    <enableCaching>{{ wxconfig_jdbc_functionalalias.enableCaching }}</enableCaching>
+                    {% else %}
+                    <!-- enableCaching - optional; default = false  -->
+                    {% endif %}
+                    
+                    {% if wxconfig_jdbc_functionalalias.isolationLevel is defined %}
+                    <isolationLevel>{{ wxconfig_jdbc_functionalalias.isolationLevel }}</isolationLevel>
+                    {% else %}
+                    <!-- isolationLevel - default = -1  -->
+                    {% endif %}
                 </functionalAlias>
+                {% endfor %}
             </functionalAliasList>
+        {% endif %}
         </jdbc>
     </autoConfig>
 </config>
