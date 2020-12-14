@@ -96,6 +96,10 @@
             {{ webmethods_apigateway_ui_props_https_truststore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         no_log: yes
 
+      - name: Pause for 5 seconds to give a bit of time for the password encryptions to happen
+        pause:
+          seconds: "5"
+
       - name: Set changed flag to true
         set_fact: 
           configure_apigateway_set_ui_ssl_changed: true
