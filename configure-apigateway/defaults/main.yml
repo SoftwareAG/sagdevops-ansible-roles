@@ -77,21 +77,21 @@ webmethods_apigateway_ui_props_https_keystore_password:
 webmethods_apigateway_ui_props_https_truststore_path:
 webmethods_apigateway_ui_props_https_truststore_password:
 
-## api portal registration
+## api portal registration - format
 webmethods_apigateway_portalgateway:
-  id: "<string>"
-  refId: "<string>"
-  gatewayName: "<string>"
-  gatewayDescription: "<string>"
-  gatewayUsername: "<string>"
-  gatewayPassword: "<string>"
-  gatewayURL: "<string>"
-  version: "<string>"
-  stageName: "<string>"
-  published: "<boolean>"
-  externalPortal: 
-    endpointTenant: "<string>"
-    endpointURL: "<string>"
-    endpointUsername: "<string>"
-    endpointPassword: "<string>"
-    type: "<string>"
+  # id: "<string>"
+  # refId: "<string>"
+  # gatewayName: "<string>"
+  # gatewayDescription: "<string>"
+  # gatewayUsername: "<string>"
+  # gatewayPassword: "<string>"
+  # gatewayURL: "<string>"
+  # version: "<string>"
+  # stageName: "<string>"
+  # published: "<boolean>"
+  # externalPortal: 
+  #   endpointTenant: "<string>"
+  #   endpointURL: "<string>"
+  #   endpointUsername: "<string>"
+  #   endpointPassword: "<string>"
+  #   type: "<string>"
