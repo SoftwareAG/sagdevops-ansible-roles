@@ -40,8 +40,11 @@
       status_code: "200"
       body_format: json
       timeout: 30
-    register: mutate_portalgateway_response
+    register: mutate_update_portalgateway_response
     when: portalgateway_id is defined and portalgateway_id != ""
+
+  - name: Response for new mutated Portal Gateway
+    debug: var=mutate_update_portalgateway_response
 
   - name: Create a new portal gateway
     uri:
@@ -56,8 +59,8 @@
       status_code: "200"
       body_format: json
       timeout: 30
-    register: mutate_portalgateway_response
+    register: mutate_createnew_portalgateway_response
     when: portalgateway_id is not defined or portalgateway_id == ""
 
   - name: Response for new mutated Portal Gateway
-    debug: var=mutate_portalgateway_response
+    debug: var=mutate_createnew_portalgateway_response
