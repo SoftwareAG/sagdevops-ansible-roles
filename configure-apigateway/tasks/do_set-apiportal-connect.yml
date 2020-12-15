@@ -24,9 +24,6 @@
   - name: Current portal gateway ID
     debug: var=portalgateway_id
 
-  - name: Portal Gateway Data to update
-    debug: var=webmethods_apigateway_portalgateway
-
   - name: Update an existing portal gateways
     uri:
       url: "{{ apigateway_rest_configurations_apiportal_connect }}/{{ portalgateway_id }}"
