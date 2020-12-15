@@ -1,4 +1,7 @@
 ---
+## need to check if stage name exists...and create or update accordingly...
+## TODO: Unable to create stage as name DEV already exists
+
 
   - name: API Gateway promotion stages
     debug: var=webmethods_apigateway_promotions_stages
