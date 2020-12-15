@@ -34,6 +34,7 @@ apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_
 apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi }}/cache"
 apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
 apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
+apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_configurations_baseapi }}/portalGateways"
 
 ####################################
 ## default config values
@@ -73,3 +74,22 @@ webmethods_apigateway_ui_props_https_keystore_path:
 webmethods_apigateway_ui_props_https_keystore_password:
 webmethods_apigateway_ui_props_https_truststore_path:
 webmethods_apigateway_ui_props_https_truststore_password:
+
+## api portal registration
+webmethods_apigateway_portalgateway:
+  id: "<string>"
+  refId: "<string>"
+  gatewayName: "<string>"
+  gatewayDescription: "<string>"
+  gatewayUsername: "<string>"
+  gatewayPassword: "<string>"
+  gatewayURL: "<string>"
+  version: "<string>"
+  stageName: "<string>"
+  published: "<boolean>"
+  externalPortal: 
+    endpointTenant: "<string>"
+    endpointURL: "<string>"
+    endpointUsername: "<string>"
+    endpointPassword: "<string>"
+    type: "<string>"
