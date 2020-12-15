@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <autoConfig>
+    {% if wxconfig_jdbc is defined %}
         <jdbc>
         {% if wxconfig_jdbc.poolalias_list is defined %}
             <poolAliasList>
@@ -40,7 +41,7 @@
                 </poolAlias>
                 {% endfor %}
             </poolAliasList>
-        {% endif %}  
+        {% endif %}
 
         {% if wxconfig_jdbc.functionalalias_list is defined %}
             <functionalAliasList>
@@ -77,5 +78,6 @@
             </functionalAliasList>
         {% endif %}
         </jdbc>
+    {% endif %}
     </autoConfig>
 </config>

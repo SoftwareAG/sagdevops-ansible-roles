@@ -30,7 +30,7 @@ wxconfig_encrypted_groupname:
 wxconfig_encrypted_params: {}
 
 ## jdbc settings
-wxconfig_jdbc_poolalias_list: []
+wxconfig_jdbc: {}
 
 ## certs settings
 wxconfig_keytruststore_list: []

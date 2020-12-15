@@ -5,7 +5,7 @@
       configure_integrationserver_wxconfig_set_jdbc_pools_changed: false
     when: configure_integrationserver_wxconfig_set_jdbc_pools_changed is not defined
 
-  - name: Install the wxconfig configs in IS target package only if the list is not empty
+  - name: Install the wxconfig configs in IS target package only if wxconfig_jdbc is defined
     block:
 
       - name: fail if wxconfig_target_package_name not specified
@@ -23,7 +23,7 @@
           msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
         when: stat_wxconfig_enabled.stat.exists == false
 
-      - name: Populate wxconfig file if the wxconfig_jdbc_poolalias_list is defined and non empty
+      - name: Populate wxconfig file if the wxconfig_jdbc is defined and non empty
         template:
           src: as-jdbc-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-jdbc.xml"
@@ -44,7 +44,7 @@
           configure_integrationserver_wxconfig_set_jdbc_pools_changed: true
         when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
-    when: wxconfig_jdbc_poolalias_list is defined and wxconfig_jdbc_poolalias_list|length > 0
+    when: wxconfig_jdbc is defined
 
   - name: Print the changed var
     debug:
