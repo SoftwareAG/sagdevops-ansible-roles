@@ -16,7 +16,7 @@
       status_code: "200"
       body_format: json
       timeout: 30
-    no_log: yes
+    # no_log: yes
     register: mutate_promotions_stages
     with_items: "{{ webmethods_apigateway_promotions_stages }}"
 
