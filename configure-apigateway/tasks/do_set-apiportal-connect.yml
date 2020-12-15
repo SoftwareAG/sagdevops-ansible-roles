@@ -57,7 +57,7 @@
       body_format: json
       timeout: 30
     register: mutate_portalgateway_response
-    when: portalgateway_id is defined and portalgateway_id != ""
+    when: portalgateway_id is not defined or portalgateway_id == ""
 
   - name: Response for new mutated Portal Gateway
     debug: var=mutate_portalgateway_response
