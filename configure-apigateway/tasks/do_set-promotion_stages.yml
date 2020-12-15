@@ -1,0 +1,24 @@
+---
+
+  - name: API Gateway promotion stages
+    debug: var=webmethods_apigateway_promotions_stages
+
+  - name: Add promotion stages
+    uri:
+      url: "{{ apigateway_rest_promotionmgt_stages }}"
+      method: POST
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ item | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    no_log: yes
+    register: mutate_promotions_stages
+    with_items: "{{ webmethods_apigateway_promotions_stages }}"
+
+  - name: Response for new mutated Portal Gateway
+    debug: var=mutate_promotions_stages

@@ -38,6 +38,11 @@ apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configur
 # portal gateways
 apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"
 
+# Promotion Management
+apigateway_rest_promotionmgt_promotions: "{{ apigateway_rest_base_path }}/promotion"
+apigateway_rest_promotionmgt_stages: "{{ apigateway_rest_base_path }}/stages"
+apigateway_rest_promotionmgt_rollbacks: "{{ apigateway_rest_base_path }}/rollback"
+
 ####################################
 ## default config values
 ####################################
@@ -95,3 +100,19 @@ webmethods_apigateway_portalgateway:
   #   endpointUsername: "<string>"
   #   endpointPassword: "<string>"
   #   type: "<string>"
+
+webmethods_apigateway_promotions_stages:
+  # - name: "<string>"
+  #   description: "<string>"
+  #   url: "<string>"
+  #   username: "<string>"
+  #   password: "<string>"
+  #   keystoreAlias: "<string>"
+  #   keyAlias: "<string>"
+  # - name: "<string>"
+  #   description: "<string>"
+  #   url: "<string>"
+  #   username: "<string>"
+  #   password: "<string>"
+  #   keystoreAlias: "<string>"
+  #   keyAlias: "<string>"
