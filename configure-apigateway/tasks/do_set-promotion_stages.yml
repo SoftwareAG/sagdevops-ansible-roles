@@ -29,41 +29,43 @@
   - name: Parsed all current promotion stage ids
     debug: var=promotionmgt_stage_ids
 
-  # - name: Delete all stages
-  #   uri:
-  #     url: "{{ apigateway_rest_configurations_apiportal_connect }}/{{ portalgateway_id }}"
-  #     method: PUT
-  #     user: "{{ apigateway_rest_login_username }}"
-  #     password: "{{ apigateway_rest_login_password }}"
-  #     return_content: yes
-  #     body: "{{ webmethods_apigateway_portalgateway | default({}) | to_json }}"
-  #     force_basic_auth: yes
-  #     validate_certs: false
-  #     status_code: "200"
-  #     body_format: json
-  #     timeout: 30
-  #   no_log: yes
-  #   register: mutate_update_portalgateway_response
-  #   when: portalgateway_id is defined and portalgateway_id != ""
+  - name: Delete all stages by ids
+    uri:
+      url: "{{ apigateway_rest_promotionmgt_stages }}/{{ item }}"
+      method: DELETE
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_portalgateway | default({}) | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: delete_all_promotionmgt_stages
+    with_items: "{{ promotionmgt_stage_ids | default('[]',true) }}"
 
+  - name: Response for delete all stages
+    debug: var=delete_all_promotionmgt_stages
 
+## TODO: we should check that it was deleted fine...and fail otherwise??
 
-  # - name: Add promotion stages
-  #   uri:
-  #     url: "{{ apigateway_rest_promotionmgt_stages }}"
-  #     method: POST
-  #     user: "{{ apigateway_rest_login_username }}"
-  #     password: "{{ apigateway_rest_login_password }}"
-  #     return_content: yes
-  #     body: "{{ item | to_json }}"
-  #     force_basic_auth: yes
-  #     validate_certs: false
-  #     status_code: "200"
-  #     body_format: json
-  #     timeout: 30
-  #   # no_log: yes
-  #   register: mutate_promotions_stages
-  #   with_items: "{{ webmethods_apigateway_promotions_stages }}"
+  - name: Add new promotion stages as defined by the variable
+    uri:
+      url: "{{ apigateway_rest_promotionmgt_stages }}"
+      method: POST
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ item | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    # no_log: yes
+    register: create_all_promotionmgt_stages
+    with_items: "{{ webmethods_apigateway_promotions_stages }}"
 
-  # - name: Response for new mutated Portal Gateway
-  #   debug: var=mutate_promotions_stages
+  - name: Response for the just added new stages
+    debug: var=create_all_promotionmgt_stages
