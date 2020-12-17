@@ -25,10 +25,13 @@
   - name: Parse response and extract id fields
     set_fact:
       promotionmgt_stage_ids_string: "{{ lookup('template', 'apigateway_restapi_get_promotion_stages_ids.json.j2') }}"
-      promotionmgt_stage_ids: "{{ promotionmgt_stage_ids_string | from_json }}"
 
   - name: Parsed all current promotion stage ids
     debug: var=promotionmgt_stage_ids_string
+
+  - name: Parse response and extract id fields
+    set_fact:
+      promotionmgt_stage_ids: "{{ promotionmgt_stage_ids_string | from_json }}"
 
   - name: Parsed all current promotion stage ids
     debug: var=promotionmgt_stage_ids
