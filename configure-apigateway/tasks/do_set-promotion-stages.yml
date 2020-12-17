@@ -14,7 +14,7 @@
       return_content: yes
       force_basic_auth: yes
       validate_certs: false
-      status_code: "200"
+      status_code: [200]
       body_format: json
       timeout: 30
     register: get_all_promotionmgt_stages
@@ -39,7 +39,7 @@
       body: "{{ webmethods_apigateway_portalgateway | default({}) | to_json }}"
       force_basic_auth: yes
       validate_certs: false
-      status_code: "200"
+      status_code: [200]
       body_format: json
       timeout: 30
     register: delete_all_promotionmgt_stages
@@ -60,7 +60,7 @@
       body: "{{ item | to_json }}"
       force_basic_auth: yes
       validate_certs: false
-      status_code: "200"
+      status_code: [200, 201]
       body_format: json
       timeout: 30
     # no_log: yes
