@@ -61,7 +61,7 @@
       timeout: 30
     no_log: yes
     register: create_all_promotionmgt_stages
-    with_items: "{{ webmethods_apigateway_promotions_stages }}"
+    with_items: "{{ webmethods_apigateway_promotions_stages | default('[]',true) }}"
 
   - name: Response for the just added new stages
     debug: var=create_all_promotionmgt_stages
