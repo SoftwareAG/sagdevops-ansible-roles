@@ -1,0 +1,7 @@
+---
+
+  - name: Include tasks
+    include_tasks: "do_set-license.yml"
+    vars:
+      webmethods_target_license_path: "{{ webmethods_integrationserver_exx_license_path }}"
+      webmethods_license_inzip_path: "{{ webmethods_integrationserver_exx_license_inzip_src_path }}"
