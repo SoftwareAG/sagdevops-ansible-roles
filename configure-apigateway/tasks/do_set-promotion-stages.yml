@@ -1,9 +1,4 @@
 ---
-## need to check if stage name exists...and create or update accordingly...
-## TODO: Unable to create stage as name DEV already exists
-
-  - name: API Gateway new promotion stages
-    debug: var=webmethods_apigateway_promotions_stages
 
   - name: Get all current API Gateway promotion stages
     uri:
@@ -48,8 +43,9 @@
   - name: Response for delete all stages
     debug: var=delete_all_promotionmgt_stages
 
-## TODO: we should check that it was deleted fine...and fail otherwise??
+  ## TODO: we should check that it was deleted fine...and fail otherwise??
 
+  ## put no_log in order to not expose the passwords in the request
   - name: Add new promotion stages as defined by the variable
     uri:
       url: "{{ apigateway_rest_promotionmgt_stages }}"
@@ -63,7 +59,7 @@
       status_code: [200, 201]
       body_format: json
       timeout: 30
-    # no_log: yes
+    no_log: yes
     register: create_all_promotionmgt_stages
     with_items: "{{ webmethods_apigateway_promotions_stages }}"
 
