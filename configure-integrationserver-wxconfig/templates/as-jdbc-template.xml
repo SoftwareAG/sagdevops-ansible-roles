@@ -13,7 +13,7 @@
                         <functionalAlias alias="{{ functionalalias_depend }}" />
                         {% endfor %}
                     </depends>
-                    {% endif %}  
+                    {% endif %}
                     <description>{{ wxconfig_jdbc_poolalias.description }}</description>
                     <driverAlias>{{ wxconfig_jdbc_poolalias.driverAlias }}</driverAlias>
                     <databaseUrl>{{ wxconfig_jdbc_poolalias.databaseUrl }}</databaseUrl>
@@ -27,16 +27,12 @@
                         <idleTimeout>{{ wxconfig_jdbc_poolalias.idleTimeout_millis }}</idleTimeout>                        <!-- in milliseconds -->
                     </connections>
                     <diagnostics>
-                        {% if wxconfig_jdbc_poolalias.diagnostics_spy_enabled is defined %}
-                        <spy enable="{{ wxconfig_jdbc_poolalias.diagnostics_spy_enabled }}">
-                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_spy_attributes }}</attributes>
+                        <spy enable="{{ wxconfig_jdbc_poolalias.diagnostics_spy_enabled | default('false',true) }}">
+                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_spy_attributes | default('',true) }}</attributes>
                         </spy>
-                        {% endif %}
-                        {% if wxconfig_jdbc_poolalias.diagnostics_snoop_enabled is defined %}
-                        <snoop enable="{{ wxconfig_jdbc_poolalias.diagnostics_snoop_enabled }}">
-                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_snoop_attributes }}</attributes>
+                        <snoop enable="{{ wxconfig_jdbc_poolalias.diagnostics_snoop_enabled | default('false',true) }}">
+                            <attributes>{{ wxconfig_jdbc_poolalias.diagnostics_snoop_attributes | default('',true) }}</attributes>
                         </snoop>
-                        {% endif %}
                     </diagnostics>
                 </poolAlias>
                 {% endfor %}
@@ -49,13 +45,13 @@
                 <functionalAlias alias="{{ wxconfig_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_jdbc_functionalalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_functionalalias.destroyOnShutdown }}">
                     <pool>{{ wxconfig_jdbc_functionalalias.poolalias }}</pool>
                     <description>{{ wxconfig_jdbc_functionalalias.description }}</description>
-                    
+
                     {% if wxconfig_jdbc_functionalalias.enableFailFastMode is defined %}
                     <enableFailFastMode>{{ wxconfig_jdbc_functionalalias.enableFailFastMode }}</enableFailFastMode>
                     {% else %}
                     <!-- enableFailFastMode - default=false -->
                     {% endif %}
-                    
+
                     {% if wxconfig_jdbc_functionalalias.enableAutoCommit is defined %}
                     <enableAutoCommit>{{ wxconfig_jdbc_functionalalias.enableAutoCommit }}</enableAutoCommit>
                     {% else %}
@@ -67,7 +63,7 @@
                     {% else %}
                     <!-- enableCaching - optional; default = false  -->
                     {% endif %}
-                    
+
                     {% if wxconfig_jdbc_functionalalias.isolationLevel is defined %}
                     <isolationLevel>{{ wxconfig_jdbc_functionalalias.isolationLevel }}</isolationLevel>
                     {% else %}
