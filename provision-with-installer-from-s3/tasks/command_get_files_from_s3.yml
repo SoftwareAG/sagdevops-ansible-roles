@@ -1,6 +1,5 @@
 ---
 
-
   - name: fail if webmethods_localrepo_target_dir not specified
     fail: 
       msg: "webmethods_localrepo_target_dir not specified...can't do anything"
@@ -23,21 +22,6 @@
       getfroms3_local_path_create_dir_owner_group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
       getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
     when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
-    with_items:
-      - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
-        local_path: "{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_sum_filename }}"
-        local_path: "{{ webmethods_localrepo_sum_filename | default('softwareagupdatemanager-linux.bin', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_products_image_filename }}"
-        local_path: "{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_products_autoscript_filename }}"
-        local_path: "{{ webmethods_localrepo_products_autoscript_filename | default('installer.script', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_fixes_image_filename }}"
-        local_path: "{{ webmethods_localrepo_fixes_image_filename | default('sum_image.zip', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_fixes_autoscript_filename }}"
-        local_path: "{{ webmethods_localrepo_fixes_autoscript_filename | default('sum.script', true) }}"
+    with_items: "{{ webmethods_provisioning_files_download_descritors | default([],true) }}"
     loop_control:
       loop_var: outer_item
-
-  - name: "Include tasks to fetch the license files"
-    include_tasks: "command_get_licenses_from_s3.yml"

@@ -1,33 +1,12 @@
 ---
 
-
   - name: fail if webmethods_localrepo_target_dir not specified
     fail: 
       msg: "webmethods_localrepo_target_dir not specified...can't do anything"
     when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
-  - name: Downloading all required files from S3
-    include_role:
-      name: aws-wrapper
-    vars:
-      command: "getfroms3"
-      getfroms3_bucket_name: "{{ webmethods_s3repo_bucket_name }}"
-      getfroms3_bucket_path: "{{ webmethods_s3repo_bucket_prefix }}/{{ outer_item.bucket_path }}"
-      getfroms3_local_path: "{{ webmethods_localrepo_target_dir }}/{{ outer_item.local_path }}"
-      getfroms3_force_download: "{{ webmethods_s3repo_force_redownload | default(false,true) }}"
-      getfroms3_local_path_owner_user: "{{ webmethods_install_localtarget_files_owner_user }}"
-      getfroms3_local_path_owner_group: "{{ webmethods_install_localtarget_files_owner_group }}"
-      getfroms3_local_path_permission: "{{ webmethods_install_localtarget_files_permissions }}"
-      getfroms3_local_path_create_dir_ifnotexist: "{{ webmethods_install_localtarget_create_dir_ifnotexist }}"
-      getfroms3_local_path_create_dir_owner_user: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
-      getfroms3_local_path_create_dir_owner_group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
-      getfroms3_local_path_create_dir_permission: "{{ webmethods_install_localtarget_create_dir_permission }}"
-    when: outer_item.bucket_path is defined and outer_item.bucket_path != "" and outer_item.local_path is defined and outer_item.local_path != ""
-    with_items:
-      - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
-        local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
-    loop_control:
-      loop_var: outer_item
+  - name: "Include tasks to fetch the license files from s3"
+    include_tasks: "command_get_files_from_s3.yml"
 
   - name: check if license zip file was downloaded
     stat: 
