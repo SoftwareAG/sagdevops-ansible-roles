@@ -5,6 +5,7 @@
     msg:
       - "userid = {{ userid | default('undefined',true) }}"
       - "username = {{ username | default('undefined',true) }}"
+      - "user_description = {{ user_description | default('undefined',true) }}"
       - "groupid = {{ groupid | default('undefined',true) }}"
       - "groupname = {{ groupname | default('undefined',true) }}"
       - "authorized_sshkey_path = {{ authorized_sshkey_path | default('undefined',true) }}"
@@ -20,7 +21,7 @@
     uid: "{{userid | default(omit)}}"
     name: "{{ username }}"
     group: "{{ groupname }}"
-    comment: "SAG User"
+    comment: "{{ user_description }}"
     state: present
     shell: /bin/bash
     home: "/home/{{ username }}"

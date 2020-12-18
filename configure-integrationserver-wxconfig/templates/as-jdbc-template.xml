@@ -7,7 +7,7 @@
             <poolAliasList>
                 {% for wxconfig_jdbc_poolalias in wxconfig_jdbc.poolalias_list %}
                 <poolAlias alias="{{ wxconfig_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_jdbc_poolalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_poolalias.destroyOnShutdown }}">
-                    {% if wxconfig_jdbc_poolalias.functionalalias_depends_list is defined %}
+                    {% if wxconfig_jdbc_poolalias.functionalalias_depends_list is defined and wxconfig_jdbc_poolalias.functionalalias_depends_list|length > 0 %}
                     <depends>
                         {% for functionalalias_depend in wxconfig_jdbc_poolalias.functionalalias_depends_list %}
                         <functionalAlias alias="{{ functionalalias_depend }}" />
@@ -39,40 +39,45 @@
             </poolAliasList>
         {% endif %}
 
-        {% if wxconfig_jdbc.functionalalias_list is defined %}
             <functionalAliasList>
-                {% for wxconfig_jdbc_functionalalias in wxconfig_jdbc.functionalalias_list %}
-                <functionalAlias alias="{{ wxconfig_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_jdbc_functionalalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_functionalalias.destroyOnShutdown }}">
-                    <pool>{{ wxconfig_jdbc_functionalalias.poolalias }}</pool>
-                    <description>{{ wxconfig_jdbc_functionalalias.description }}</description>
+                {% if wxconfig_jdbc.functionalalias_list is defined and wxconfig_jdbc.functionalalias_list|length > 0 %}
+                    {% for wxconfig_jdbc_functionalalias in wxconfig_jdbc.functionalalias_list %}
+                    <functionalAlias alias="{{ wxconfig_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_jdbc_functionalalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_jdbc_functionalalias.destroyOnShutdown }}">
+                        <pool>{{ wxconfig_jdbc_functionalalias.poolalias }}</pool>
+                        <description>{{ wxconfig_jdbc_functionalalias.description }}</description>
 
-                    {% if wxconfig_jdbc_functionalalias.enableFailFastMode is defined %}
-                    <enableFailFastMode>{{ wxconfig_jdbc_functionalalias.enableFailFastMode }}</enableFailFastMode>
-                    {% else %}
-                    <!-- enableFailFastMode - default=false -->
-                    {% endif %}
+                        {% if wxconfig_jdbc_functionalalias.enableFailFastMode is defined %}
+                        <enableFailFastMode>{{ wxconfig_jdbc_functionalalias.enableFailFastMode }}</enableFailFastMode>
+                        {% else %}
+                        <!-- enableFailFastMode - default=false -->
+                        {% endif %}
 
-                    {% if wxconfig_jdbc_functionalalias.enableAutoCommit is defined %}
-                    <enableAutoCommit>{{ wxconfig_jdbc_functionalalias.enableAutoCommit }}</enableAutoCommit>
-                    {% else %}
-                    <!-- enableAutoCommit - optional; default = false  -->
-                    {% endif %}
+                        {% if wxconfig_jdbc_functionalalias.enableAutoCommit is defined %}
+                        <enableAutoCommit>{{ wxconfig_jdbc_functionalalias.enableAutoCommit }}</enableAutoCommit>
+                        {% else %}
+                        <!-- enableAutoCommit - optional; default = false  -->
+                        {% endif %}
 
-                    {% if wxconfig_jdbc_functionalalias.enableCaching is defined %}
-                    <enableCaching>{{ wxconfig_jdbc_functionalalias.enableCaching }}</enableCaching>
-                    {% else %}
-                    <!-- enableCaching - optional; default = false  -->
-                    {% endif %}
+                        {% if wxconfig_jdbc_functionalalias.enableCaching is defined %}
+                        <enableCaching>{{ wxconfig_jdbc_functionalalias.enableCaching }}</enableCaching>
+                        {% else %}
+                        <!-- enableCaching - optional; default = false  -->
+                        {% endif %}
 
-                    {% if wxconfig_jdbc_functionalalias.isolationLevel is defined %}
-                    <isolationLevel>{{ wxconfig_jdbc_functionalalias.isolationLevel }}</isolationLevel>
-                    {% else %}
-                    <!-- isolationLevel - default = -1  -->
-                    {% endif %}
+                        {% if wxconfig_jdbc_functionalalias.isolationLevel is defined %}
+                        <isolationLevel>{{ wxconfig_jdbc_functionalalias.isolationLevel }}</isolationLevel>
+                        {% else %}
+                        <!-- isolationLevel - default = -1  -->
+                        {% endif %}
+                    </functionalAlias>
+                    {% endfor %}
+                {% else %}
+                <functionalAlias alias="DefaultAlias" updateIfExists="true" destroyOnShutdown="true">
+                    <pool>local</pool>
+                    <description>default</description>
                 </functionalAlias>
-                {% endfor %}
+                {% endif %}
             </functionalAliasList>
-        {% endif %}
         </jdbc>
     {% endif %}
     </autoConfig>
