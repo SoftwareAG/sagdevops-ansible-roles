@@ -27,11 +27,6 @@
   - import_role: 
       name: command-apiportal
     vars:
-      webmethods_apiportal_acc_command: startall
-
-  - import_role: 
-      name: command-apiportal
-    vars:
       webmethods_apiportal_acc_command: "stop loadbalancer_{{ runnable_suffix }}"
 
   - import_role: 

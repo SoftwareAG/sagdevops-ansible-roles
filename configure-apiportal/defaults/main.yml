@@ -1,14 +1,31 @@
 ---
 
-webmethods_apiportal_postgresdata_dir: "{{ webmethods_install_dir }}/API_Portal/server/bin/work/work_postgres_s/pgworkdata"
+webmethods_apiportal_work_dir: "{{ webmethods_install_dir }}/API_Portal/server/bin/work"
+webmethods_apiportal_postgresdata_dir: "{{ webmethods_apiportal_work_dir }}/work_postgres_s/pgworkdata"
+webmethods_apiportal_tools_dir: "{{ webmethods_apiportal_work_dir }}/work_apiportalbundle_l/tools/bin"
 webmethods_apiportal_acc_exec_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc"
 webmethods_apiportal_acc_host:
 webmethods_apiportal_acc_port:
 webmethods_apiportal_acc_user:
 webmethods_apiportal_acc_password:
-
 webmethods_apiportal_acc_command:
 
 ### large, medium, small
 webmethods_apiportal_acc_install_size:
 webmethods_apiportal_loadbalancer_fqdn:
+
+### ssl cert
+webmethods_apiportal_ssl_zip_path:
+
+### tenant management
+webmethods_apiportal_tenantmgmt_server: "localhost:18101"
+webmethods_apiportal_tenantmgmt_tenant: "default"
+webmethods_apiportal_tenantmgmt_editor_user:
+webmethods_apiportal_tenantmgmt_editor_password:
+
+
+
+-u system -p manager
+
+
+./y-tenantmgmt.sh --server "{{ webmethods_apiportal_tenantmgmt_server }}" --tenant "{{ webmethods_apiportal_tenantmgmt_tenant }}" changePassword -u {{ webmethods_apiportal_tenantmgmt_editor_user }} -p {{ webmethods_apiportal_tenantmgmt_editor_password }} -au superuser -ap test123
