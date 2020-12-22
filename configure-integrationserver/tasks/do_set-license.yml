@@ -1,5 +1,8 @@
 ---
 
+  - debug: var=webmethods_target_license_path
+  - debug: var=webmethods_license_inzip_path
+
   - name: Check if license file is there at target location
     stat:
       path: "{{ webmethods_target_license_path }}"

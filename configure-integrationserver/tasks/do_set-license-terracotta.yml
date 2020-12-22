@@ -1,6 +1,6 @@
 ---
 
-  - name: Include tasks
+  - name: Include generic set license tasks
     include_tasks: "do_set-license.yml"
     vars:
       webmethods_target_license_path: "{{ webmethods_integrationserver_terracotta_license_path }}"
