@@ -22,10 +22,3 @@ webmethods_apiportal_tenantmgmt_server: "localhost:18101"
 webmethods_apiportal_tenantmgmt_tenant: "default"
 webmethods_apiportal_tenantmgmt_editor_user:
 webmethods_apiportal_tenantmgmt_editor_password:
-
-
-
--u system -p manager
-
-
-./y-tenantmgmt.sh --server "{{ webmethods_apiportal_tenantmgmt_server }}" --tenant "{{ webmethods_apiportal_tenantmgmt_tenant }}" changePassword -u {{ webmethods_apiportal_tenantmgmt_editor_user }} -p {{ webmethods_apiportal_tenantmgmt_editor_password }} -au superuser -ap test123
