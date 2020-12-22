@@ -8,6 +8,8 @@
       path: "{{ webmethods_target_license_path }}"
     register: stat_license_exists
 
+  - debug: var=stat_license_exists
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_set_license_changed: false
