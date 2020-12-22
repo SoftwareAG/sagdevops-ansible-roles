@@ -13,9 +13,13 @@
       path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
     register: check_licenses_zip_downloaded
 
+  - debug: var=check_licenses_zip_downloaded
+
   - name: Set extracted_zir_dir_path facts
     set_fact:
       extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
+
+  - debug: var=extracted_zir_dir_path
 
   - name: Install / extract license zip files if they were downloaded
     block:

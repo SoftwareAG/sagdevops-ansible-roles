@@ -5,6 +5,8 @@
       msg: "webmethods_localrepo_target_dir not specified...can't do anything"
     when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
+  - debug: var=webmethods_provisioning_files_download_descritors
+
   - name: Downloading all required files from S3
     include_role:
       name: aws-wrapper
