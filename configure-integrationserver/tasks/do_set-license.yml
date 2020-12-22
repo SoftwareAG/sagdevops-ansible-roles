@@ -21,7 +21,10 @@
           name: provision-with-installer-from-s3
         vars:
           provision_action: get_licenses_from_s3
-          webmethods_localrepo_license_zip_filename: "licenses.zip"
+          webmethods_provisioning_files_download_descritors:
+            - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
+              local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+          webmethods_localrepo_license_zip_filename: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
           webmethods_localrepo_license_inzip_filepath_copy_src: "{{ webmethods_license_inzip_path }}"
           webmethods_localrepo_license_inzip_filepath_copy_dest: "{{ webmethods_target_license_path }}"
 

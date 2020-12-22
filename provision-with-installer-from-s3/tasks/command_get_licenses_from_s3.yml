@@ -10,7 +10,7 @@
 
   - name: check if license zip file was downloaded
     stat: 
-      path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+      path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename }}"
     register: check_licenses_zip_downloaded
 
   - name: fail if license zip file was not downloaded
@@ -23,7 +23,7 @@
 
       - name: Set extracted_zir_dir_path facts
         set_fact:
-          extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
+          extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | basename | splitext)[0] }}"
 
       - debug: var=extracted_zir_dir_path
 
@@ -37,7 +37,7 @@
 
       - name: Unarchive the zip on the remote machine
         unarchive:
-          src: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+          src: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename }}"
           dest: "{{ extracted_zir_dir_path}}"
           owner: "{{ webmethods_install_localtarget_files_owner_user }}"
           group: "{{ webmethods_install_localtarget_files_owner_group }}"
