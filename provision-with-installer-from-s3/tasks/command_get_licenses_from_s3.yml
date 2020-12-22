@@ -61,9 +61,9 @@
 
       - name: Check value of variable to check if license is inside the zip file
         debug:
-          var: check_license_copysrc_inzip
+          var: check_license_copysrc_inzip.stat.exists
 
-      - name: Copy the license in the zip to a destination of choice
+      - name: Copy the license in the zip to a destination of choice, only if the in-zip path source destination exists
         copy:
           src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
           dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest | default('',true) }}"
