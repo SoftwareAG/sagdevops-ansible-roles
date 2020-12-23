@@ -28,18 +28,26 @@
         when: runnable_suffix is not defined or runnable_suffix == ""
 
       - import_role: 
-          name: command-apiportal
+          name: java-keytool
         vars:
-          webmethods_apiportal_acc_command: "stop loadbalancer_{{ runnable_suffix }}"
+          command: list
+          java_home: "{{ webmethods_apiportal_java_home }}"
+          java_keystore_path: /opt/softwareag/certs/SAGKeystore.jks
+          java_keystore_password: "{{ webmethods_secrets_keystore_password }}"
 
-      - import_role: 
-          name: command-apiportal
-        vars:
-          webmethods_apiportal_acc_command: "enhance loadbalancer_{{ runnable_suffix }} with sslCertificate local file {{ webmethods_apiportal_ssl_zip_path }}"
+      # - import_role: 
+      #     name: command-apiportal
+      #   vars:
+      #     webmethods_apiportal_acc_command: "stop loadbalancer_{{ runnable_suffix }}"
 
-      - import_role: 
-          name: command-apiportal
-        vars:
-          webmethods_apiportal_acc_command: "start loadbalancer_{{ runnable_suffix }}"
+      # - import_role: 
+      #     name: command-apiportal
+      #   vars:
+      #     webmethods_apiportal_acc_command: "enhance loadbalancer_{{ runnable_suffix }} with sslCertificate local file {{ webmethods_apiportal_ssl_zip_path }}"
+
+      # - import_role: 
+      #     name: command-apiportal
+      #   vars:
+      #     webmethods_apiportal_acc_command: "start loadbalancer_{{ runnable_suffix }}"
     
     when: webmethods_apiportal_ssl_zip_path is defined and webmethods_apiportal_ssl_zip_path != ""

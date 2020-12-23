@@ -1,0 +1,51 @@
+---
+   
+  - name: Print java keytool var
+    debug: var=java_keytool_exec
+
+  - name: Print java keystore_path var
+    debug: var=keystore_path
+
+  - name: fail if java_keytool_exec not specified
+    fail: 
+      msg: "java_keytool_exec not specified...cannot do anything."
+    when: java_keytool_exec is not defined or java_keytool_exec == ""
+
+  - name: fail if java_keystore_path not specified
+    fail: 
+      msg: "java_keystore_path not specified...cannot do anything."
+    when: java_keystore_path is not defined or java_keystore_path == ""
+
+  - name: Clear the command params
+    set_fact:
+      install_command: ['{{ java_keytool_exec }}']
+
+  - name: append commad params
+    set_fact:
+      install_command: "{{ install_command }} + [ ' -list -v' ]"
+
+  - name: append keystore_path param
+    set_fact:
+      install_command: "{{ install_command }} + [ '-keystore' ] + [ '{{ java_keystore_path }}' ]"
+    when: java_keystore_path is defined and java_keystore_path != ""
+
+  - name: append storetype param
+    set_fact:
+      install_command: "{{ install_command }} + [ '-storetype' ] + [ '{{ java_keystore_type }}' ]"
+    when: java_keystore_type is defined and java_keystore_type != ""
+
+  - name: append storepass param
+    set_fact:
+      install_command: "{{ install_command }} + [ '-storepass' ] + [ '{{ java_keystore_password }}' ]"
+    no_log: yes
+    when: java_keystore_password is defined and java_keystore_password != ""
+
+  - name: execute command - list aliases in keystore
+    command:
+      argv: "{{ install_command }}"
+    register: cmd_result
+    no_log: yes
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines }}"
