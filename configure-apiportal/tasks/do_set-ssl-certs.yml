@@ -46,7 +46,7 @@
       - import_role: 
           name: java-certs
         vars:
-          command: convert-jks-to-httpd-certs.yaml
+          command: convert-jks-to-httpd-certs
           java_home: "{{ webmethods_apiportal_java_home }}"
           jks_input_file_path: "{{ webmethods_keystore_local_path }}"
           jks_input_file_password: "{{ webmethods_secrets_keystore_password }}"
