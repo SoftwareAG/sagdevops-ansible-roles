@@ -46,6 +46,11 @@
     vars:
       input_file_path: "{{ httpd_certs_output_dir }}/server_cert.der"
       output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_crt_file }}"
+  
+  - name: cleanup intermediary der file
+    file:
+      path: "{{ httpd_certs_output_dir }}/server_cert.der"
+      state: absent
 
   - name: export key from jks
     include_tasks: "do_keystore-export-key-p12.yaml"
@@ -63,3 +68,8 @@
       input_file_path: "{{ httpd_certs_output_dir }}/server_key.p12"
       input_file_password: "{{ jks_input_file_password }}"
       output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_key_file }}"
+
+  - name: cleanup intermediary p12 file
+    file:
+      path: "{{ httpd_certs_output_dir }}/server_key.p12"
+      state: absent

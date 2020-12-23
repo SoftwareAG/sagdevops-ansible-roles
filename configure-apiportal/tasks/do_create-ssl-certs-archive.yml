@@ -47,3 +47,11 @@
         - "{{ webmethods_keystore_local_path | dirname }}/server.key"
       dest: "{{ webmethods_apiportal_ssl_zip_path }}"
       format: zip
+
+  - name: cleanup intermediary files
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - "{{ webmethods_keystore_local_path | dirname }}/server.crt"
+      - "{{ webmethods_keystore_local_path | dirname }}/server.key"
