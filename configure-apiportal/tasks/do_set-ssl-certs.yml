@@ -36,7 +36,8 @@
             - openssl
             - zip
 
-      - import_role: 
+      - name: Check the source key store to make sure it all works
+        import_role: 
           name: java-certs
         vars:
           command: list-keystore
@@ -44,7 +45,8 @@
           java_keystore_path: "{{ webmethods_keystore_local_path }}"
           java_keystore_password: "{{ webmethods_secrets_keystore_password }}"
   
-      - import_role: 
+      - name: convert from the JKS keystore to the CRT/KEY files that HTTPD expects for SSL
+        import_role: 
           name: java-certs
         vars:
           command: convert-jks-to-httpd-certs
@@ -55,7 +57,19 @@
           httpd_certs_output_dir: "/opt/softwareag/certs"
           httpd_certs_output_crt_file: "server.crt"
           httpd_certs_output_key_file: "server.key"
-          
+      
+      - name: Create a zip archive of the newly created CRT/KEY files
+        archive:
+          path:
+            - /opt/softwareag/certs/server.crt
+            - /opt/softwareag/certs/server.key
+          dest: /opt/softwareag/certs/apiportal_ssl_certs.zip
+          format: zip
+        register: apiportal_ssl_certs
+
+      - name: Print archive file
+        debug: var=apiportal_ssl_certs
+
       # - import_role: 
       #     name: command-apiportal
       #   vars:
