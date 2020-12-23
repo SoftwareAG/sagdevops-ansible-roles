@@ -48,4 +48,4 @@
 
   - name: Print the cmd_result to the console.
     debug:
-      msg: "{{ cmd_result.stdout_lines }}"
+      msg: "{{ job_result.stdout_lines | join('\n') }}"
