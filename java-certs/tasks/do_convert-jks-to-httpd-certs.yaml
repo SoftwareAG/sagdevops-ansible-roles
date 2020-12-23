@@ -61,4 +61,5 @@
     include_tasks: "do_convert-p12-to-pem.yaml"
     vars:
       input_file_path: "{{ httpd_certs_output_dir }}/server_key.p12"
+      input_file_password: "{{ jks_input_file_password }}"
       output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_key_file }}"

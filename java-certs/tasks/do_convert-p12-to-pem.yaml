@@ -29,6 +29,11 @@
       command_to_exec: "{{ command_to_exec }} + [ '-in' ] + [ '{{ input_file_path }}' ]"
     when: input_file_path is defined and input_file_path != ""
 
+  - name: append input file password
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-passin' ] + [ 'pass:{{ input_file_password }}' ]"
+    when: input_file_password is defined and input_file_password != ""
+
   - name: append output file
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-out' ] + [ '{{ output_file_path }}' ]"
