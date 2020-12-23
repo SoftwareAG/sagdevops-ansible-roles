@@ -1,0 +1,49 @@
+---
+
+
+  - name: Print webmethods_apiportal_ssl_zip_path var
+    debug: var=webmethods_apiportal_ssl_zip_path
+
+  - name: fail if webmethods_apiportal_ssl_zip_path not specified
+    fail: 
+      msg: "webmethods_apiportal_ssl_zip_path not specified...cannot do anything."
+    when: webmethods_apiportal_ssl_zip_path is not defined or webmethods_apiportal_ssl_zip_path == ""
+
+  - name: installing needed package to convert the JKS into the expected format 
+    import_role: 
+      name: manage-packages
+    vars:
+      extra_packages: []
+      mandatory_packages:
+        - openssl
+        - zip
+
+  - name: Check the source key store to make sure it all works
+    import_role: 
+      name: java-certs
+    vars:
+      command: list-keystore
+      java_home: "{{ webmethods_apiportal_java_home }}"
+      java_keystore_path: "{{ webmethods_keystore_local_path }}"
+      java_keystore_password: "{{ webmethods_secrets_keystore_password }}"
+  
+  - name: convert from the JKS keystore to the CRT/KEY files that HTTPD expects for SSL
+    import_role: 
+      name: java-certs
+    vars:
+      command: convert-jks-to-httpd-certs
+      java_home: "{{ webmethods_apiportal_java_home }}"
+      jks_input_file_path: "{{ webmethods_keystore_local_path }}"
+      jks_input_file_password: "{{ webmethods_secrets_keystore_password }}"
+      jks_input_file_alias: "{{ webmethods_keystore_keyalias }}"
+      httpd_certs_output_dir: "{{ webmethods_keystore_local_path | dirname }}"
+      httpd_certs_output_crt_file: "server.crt"
+      httpd_certs_output_key_file: "server.key"
+  
+  - name: Create a zip archive of the newly created CRT/KEY files
+    archive:
+      path:
+        - "{{ webmethods_keystore_local_path | dirname }}/server.crt"
+        - "{{ webmethods_keystore_local_path | dirname }}/server.key"
+      dest: "{{ webmethods_apiportal_ssl_zip_path }}"
+      format: zip
