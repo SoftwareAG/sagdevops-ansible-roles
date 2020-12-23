@@ -22,7 +22,7 @@
 
   - name: append commad params
     set_fact:
-      install_command: "{{ install_command }} + [ ' -list -v' ]"
+      install_command: "{{ install_command }} + [ '-list' ] + [ '-v' ]"
 
   - name: append keystore_path param
     set_fact:
