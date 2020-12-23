@@ -52,8 +52,8 @@
           jks_input_file_password: "{{ webmethods_secrets_keystore_password }}"
           jks_input_file_alias: "{{ webmethods_keystore_keyalias }}"
           httpd_certs_output_dir: "/opt/softwareag/certs"
-          httpd_certs_crt_output_file_path: "/opt/softwareag/certs/server.crt"
-          httpd_certs_key_output_file_path: "/opt/softwareag/certs/server.key"
+          httpd_certs_output_crt_file: "server.crt"
+          httpd_certs_output_key_file: "server.key"
           
       # - import_role: 
       #     name: command-apiportal
