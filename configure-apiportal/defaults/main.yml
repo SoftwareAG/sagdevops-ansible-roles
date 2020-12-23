@@ -17,6 +17,7 @@ webmethods_apiportal_loadbalancer_fqdn:
 
 ### ssl cert
 webmethods_apiportal_ssl_zip_path: ""
+webmethods_apiportal_ssl_cleanup_intermediary: true
 
 ### tenant management
 webmethods_apiportal_tenantmgmt_server: "localhost:18101"

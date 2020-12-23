@@ -51,6 +51,7 @@
     file:
       path: "{{ httpd_certs_output_dir }}/server_cert.der"
       state: absent
+    when: cleanup_intermediary_files | bool
 
   - name: export key from jks
     include_tasks: "do_keystore-export-key-p12.yaml"
@@ -73,3 +74,4 @@
     file:
       path: "{{ httpd_certs_output_dir }}/server_key.p12"
       state: absent
+    when: cleanup_intermediary_files | bool

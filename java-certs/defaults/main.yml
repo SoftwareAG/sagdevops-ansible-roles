@@ -10,3 +10,5 @@ java_keystore_password:
 
 java_keystore_export_dir:
 java_keystore_export_file:
+
+cleanup_intermediary_files: true
