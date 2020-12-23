@@ -1,0 +1,49 @@
+---
+   
+  - name: Print input_file_path var
+    debug: var=input_file_path
+
+  - name: Print output_file_path var
+    debug: var=output_file_path
+
+  - name: fail if input_file_path not specified
+    fail: 
+      msg: "input_file_path not specified...cannot do anything."
+    when: input_file_path is not defined or input_file_path == ""
+
+  - name: fail if output_file_path not specified
+    fail: 
+      msg: "output_file_path not specified...cannot do anything."
+    when: output_file_path is not defined or output_file_path == ""
+
+  - name: Clear the command params
+    set_fact:
+      command_to_exec: ['openssl']
+
+  - name: append command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ 'pkcs12' ] + [ '-nodes' ] + [ '-nocerts' ]"
+
+  - name: append input file
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-in' ] + [ '{{ input_file_path }}' ]"
+    when: input_file_path is defined and input_file_path != ""
+
+  - name: append output file
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-out' ] + [ '{{ output_file_path }}' ]"
+    when: output_file_path is defined and output_file_path != ""
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+    register: cmd_result
+    no_log: yes
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"

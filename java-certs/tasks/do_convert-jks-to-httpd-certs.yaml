@@ -1,0 +1,53 @@
+---
+
+  - name: Print jks_input_file_path var
+    debug: var=jks_input_file_path
+
+  - name: Print httpd_certs_crt_output_file_path var
+    debug: var=httpd_certs_crt_output_file_path
+
+  - name: Print httpd_certs_key_output_file_path var
+    debug: var=httpd_certs_key_output_file_path
+
+  - name: fail if jks_input_file_path not specified
+    fail: 
+      msg: "jks_input_file_path not specified...cannot do anything."
+    when: jks_input_file_path is not defined or jks_input_file_path == ""
+
+  - name: fail if httpd_certs_crt_output_file_path not specified
+    fail: 
+      msg: "httpd_certs_crt_output_file_path not specified...cannot do anything."
+    when: httpd_certs_crt_output_file_path is not defined or httpd_certs_crt_output_file_path == ""
+
+  - name: fail if httpd_certs_key_output_file_path not specified
+    fail: 
+      msg: "httpd_certs_key_output_file_path not specified...cannot do anything."
+    when: httpd_certs_key_output_file_path is not defined or httpd_certs_key_output_file_path == ""
+
+  - name: export cert from jks
+    include_tasks: "do_keystore_export_cert_der.yaml"
+    vars:
+      keystore_file_path: "{{ jks_input_file_path }}"
+      keystore_file_password: "{{ jks_input_file_password }}"
+      keystore_file_alias: "{{ jks_input_file_alias }}"
+      output_file_name: "server_cert.der"
+
+  - name: convert der to pem
+    include_tasks: "do_convert_der_to_pem"
+    vars:
+      httpd_certs_crt_output_file_path: "server_cert.der"
+      output_file_path: "{{ httpd_certs_crt_output_file_path }}"
+
+  - name: export key from jks
+    include_tasks: "do_keystore_export_key_p12.yaml"
+    vars:
+      keystore_file_path: "{{ jks_input_file_path }}"
+      keystore_file_password: "{{ jks_input_file_password }}"
+      keystore_file_alias: "{{ jks_input_file_alias }}"
+      output_file_name: "server_key.p12"
+
+  - name: convert p12 key to pem
+    include_tasks: "do_convert_p12_to_pem.yaml"
+    vars:
+      httpd_certs_crt_output_file_path: "server_key.p12"
+      output_file_path: "{{ httpd_certs_key_output_file_path }}"
