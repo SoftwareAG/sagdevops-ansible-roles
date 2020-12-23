@@ -1,5 +1,6 @@
 ---
 
+hide_passwords: no
 java_home:
 java_keytool_exec: "{{ java_home }}/bin/keytool"
 java_keystore_path:
