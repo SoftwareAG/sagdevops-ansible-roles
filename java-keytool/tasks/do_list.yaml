@@ -44,7 +44,7 @@
     command:
       argv: "{{ install_command }}"
     register: cmd_result
-    no_log: yes
+    # no_log: yes
 
   - name: Print the cmd_result to the console.
     debug:
