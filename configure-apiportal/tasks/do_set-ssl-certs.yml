@@ -28,9 +28,9 @@
         when: runnable_suffix is not defined or runnable_suffix == ""
 
       - import_role: 
-          name: java-keytool
+          name: java-certs
         vars:
-          command: list
+          command: list-keystore
           java_home: "{{ webmethods_apiportal_java_home }}"
           java_keystore_path: /opt/softwareag/certs/SAGKeystore.jks
           java_keystore_password: "{{ webmethods_secrets_keystore_password }}"
