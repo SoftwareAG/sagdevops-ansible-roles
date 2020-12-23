@@ -12,13 +12,13 @@
 
 - name: Ensure base group
   group:
-    gid: "{{ groupid | default(omit)}}"
+    gid: "{{ groupid | default(omit) }}"
     name: "{{ groupname }}"
     state: present
 
 - name: Ensure base user
   user:
-    uid: "{{ userid | default(omit)}}"
+    uid: "{{ userid | default(omit) }}"
     name: "{{ username }}"
     group: "{{ groupname }}"
     comment: "{{ user_description | default(omit) }}"
