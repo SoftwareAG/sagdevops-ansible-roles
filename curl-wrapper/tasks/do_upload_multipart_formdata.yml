@@ -1,0 +1,37 @@
+---
+
+  - name: Clear the CURL command params
+    set_fact:
+      command_to_exec: ['curl']
+
+  - name: append command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type: multipart/form-data' ]"
+
+  - name: append auth param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ curl_wrapper_basicauth_user }}:{{ curl_wrapper_basicauth_password }}' ]"
+    no_log: "{{ hide_passwords }}"
+    
+  - name: append all form-data params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-F' ] + [ '{{ item.key }}={{ item.value }}' ]"
+    with_dict: "{{ curl_wrapper_multipart_formdata_fields }}"
+
+  - name: append target URI
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ curl_wrapper_target_uri }}' ]"
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+    register: cmd_result
+    no_log: "{{ hide_passwords }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"

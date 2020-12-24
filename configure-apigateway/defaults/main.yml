@@ -82,6 +82,26 @@ webmethods_apigateway_ui_props_https_keystore_password:
 webmethods_apigateway_ui_props_https_truststore_path:
 webmethods_apigateway_ui_props_https_truststore_password:
 
+## api gateway truststore format
+webmethods_apigateway_truststore_new:
+  # keyStoreName: "<string>"
+  # keyStoreType: "<string>"
+  # keyStoreProvider: "<string>"
+  # keyStorePassword: "<string>"
+  # uploadFileName: "<string>"
+  # keyStoreDescription: "<string>"
+  # fileContent: "@<file_path>"
+
+## api gateway truststore format
+webmethods_apigateway_keystore_new:
+  # keyStoreName: "<string>"
+  # keyStoreType: "<string>"
+  # keyStoreProvider: "<string>"
+  # keyStorePassword: "<string>"
+  # uploadFileName: "<string>"
+  # keyStoreDescription: "<string>"
+  # fileContentPath: "<string>"
+
 ## api portal registration - format
 webmethods_apigateway_portalgateway:
   # id: "<string>"
