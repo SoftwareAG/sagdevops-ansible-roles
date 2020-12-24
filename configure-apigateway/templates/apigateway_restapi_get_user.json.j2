@@ -1,0 +1,13 @@
+{%- if get_users is defined and get_users.json is defined  -%}
+    {%- if get_users.json.users is defined -%}
+        {%- if get_users.json.users|length > 0 -%}
+            {{ get_users.json.users[0] }}
+        {%- else -%}
+            {}
+        {%- endif -%}
+    {%- else -%}
+        {}
+    {%- endif -%}
+{%- else -%}
+    {}
+{%- endif -%}
