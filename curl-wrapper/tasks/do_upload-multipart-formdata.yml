@@ -34,8 +34,9 @@
   - name: execute command
     command:
       argv: "{{ command_to_exec }}"
-    register: "{{ cmd_result_var | default('cmd_result',true) }}"
+    register: cmd_result
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
-  # - name: Print the cmd_result to the console.
-  #   debug:
-  #     msg: "{{ cmd_result.stdout_lines | join('\n') }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"
