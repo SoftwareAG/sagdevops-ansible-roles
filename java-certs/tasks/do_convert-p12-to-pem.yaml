@@ -47,7 +47,7 @@
     command:
       argv: "{{ command_to_exec }}"
     register: cmd_result
-    no_log: "{{ hide_passwords }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: Print the cmd_result to the console.
     debug:
