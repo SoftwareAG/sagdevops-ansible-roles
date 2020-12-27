@@ -11,6 +11,7 @@ apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAP
 apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
 apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
 apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
+enable_no_log: true
 
 ####################################
 ## gateway rest apis
