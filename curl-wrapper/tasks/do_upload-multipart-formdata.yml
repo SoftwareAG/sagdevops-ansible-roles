@@ -6,7 +6,12 @@
 
   - name: append command params
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type: multipart/form-data' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type:multipart/form-data' ]"
+
+  - name: append all form-data params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-H' ] + [ '{{ item.key }}:{{ item.value }}' ]"
+    with_dict: "{{ curl_wrapper_headers_fields }}"
 
   - name: append auth param
     set_fact:
