@@ -1,7 +1,7 @@
-{%- if get_users is defined and get_users.json is defined  -%}
-    {%- if get_users.json.users is defined -%}
-        {%- if get_users.json.users|length > 0 -%}
-            {{ get_users.json.users[0] }}
+{%- if get_current_user is defined and get_current_user.json is defined  -%}
+    {%- if get_current_user.json.users is defined -%}
+        {%- if get_current_user.json.users|length > 0 -%}
+            {{ get_current_user.json.users[0] }}
         {%- else -%}
             {}
         {%- endif -%}
