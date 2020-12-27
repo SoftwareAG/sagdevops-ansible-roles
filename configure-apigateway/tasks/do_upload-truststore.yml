@@ -27,12 +27,12 @@
   - name: If new truststore data does not exist, then URI is the generic one
     set_fact:
       curl_wrapper_target_uri: "{{ apigateway_rest_is_truststore }}"
-    when: not webmethods_apigateway_truststore_new.keyStoreName in get_all_truststore_names
+    when: not webmethods_apigateway_truststore.keyStoreName in get_all_truststore_names
 
   - name: If new truststore data already exists, then URI contains the name of the trsustore
     set_fact:
-      curl_wrapper_target_uri: "{{ apigateway_rest_is_truststore }}/{{ webmethods_apigateway_truststore_new.keyStoreName }}"
-    when: webmethods_apigateway_truststore_new.keyStoreName in get_all_truststore_names
+      curl_wrapper_target_uri: "{{ apigateway_rest_is_truststore }}/{{ webmethods_apigateway_truststore.keyStoreName }}"
+    when: webmethods_apigateway_truststore.keyStoreName in get_all_truststore_names
 
   - name: CURL URI
     debug: var=curl_wrapper_target_uri
@@ -44,4 +44,4 @@
       command: upload_multipart_formdata
       curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
       curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
-      curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore_new }}"
+      curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"

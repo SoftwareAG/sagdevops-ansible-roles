@@ -83,7 +83,7 @@ webmethods_apigateway_ui_props_https_truststore_path:
 webmethods_apigateway_ui_props_https_truststore_password:
 
 ## api gateway truststore format
-webmethods_apigateway_truststore_new:
+webmethods_apigateway_truststore:
   # keyStoreName: "<string>"
   # keyStoreType: "<string>"
   # keyStoreProvider: "<string>"
@@ -93,7 +93,7 @@ webmethods_apigateway_truststore_new:
   # fileContent: "@<file_path>"
 
 ## api gateway truststore format
-webmethods_apigateway_keystore_new:
+webmethods_apigateway_keystore:
   # keyStoreName: "<string>"
   # keyStoreType: "<string>"
   # keyStoreProvider: "<string>"
