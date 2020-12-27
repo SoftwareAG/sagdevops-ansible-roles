@@ -41,7 +41,7 @@
     import_role:
       name: curl-wrapper
     vars:
-      command: upload_multipart_formdata
+      command: upload-multipart-formdata
       curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
       curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
       curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"

@@ -10,4 +10,4 @@
   when: command is not defined or command == ""
 
 - name: Include tasks
-  include_tasks: "do_{{ command }}.yaml"
+  include_tasks: "do_{{ command }}.yml"
