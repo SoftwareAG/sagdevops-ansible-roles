@@ -40,7 +40,7 @@
       status_code: [200, 201]
       body_format: json
       timeout: 30
-    no_log: "{{ enable_no_log | default(true,true) }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
     register: mutate_update_portalgateway_response
     when: portalgateway_id is defined and portalgateway_id != ""
 
@@ -60,7 +60,7 @@
       status_code: [200, 201]
       body_format: json
       timeout: 30
-    no_log: "{{ enable_no_log | default(true,true) }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
     register: mutate_createnew_portalgateway_response
     when: portalgateway_id is not defined or portalgateway_id == ""
 

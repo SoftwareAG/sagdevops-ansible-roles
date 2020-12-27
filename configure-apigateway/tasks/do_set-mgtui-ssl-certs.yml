@@ -46,7 +46,7 @@
         {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         {{ webmethods_apigateway_ui_props_https_truststore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         {{ webmethods_apigateway_ui_props_https_truststore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
-    no_log: "{{ enable_no_log | default(true,true) }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: Get md5 from the new test file
     stat:
@@ -74,7 +74,7 @@
           regexp: '^{{ item.key }}'
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"
-        no_log: "{{ enable_no_log | default(true,true) }}"
+        no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
         when: item.value is defined and item.value != ""
         register: "result_set_ssl"
         with_dict:
@@ -94,7 +94,7 @@
             {{ webmethods_apigateway_ui_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
             {{ webmethods_apigateway_ui_props_https_truststore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
             {{ webmethods_apigateway_ui_props_https_truststore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
-        no_log: "{{ enable_no_log | default(true,true) }}"
+        no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
       - name: Pause for 5 seconds to give a bit of time for the password encryptions to happen
         pause:
