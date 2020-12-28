@@ -3,7 +3,7 @@
   - name: Port to update
     debug: var=webmethods_apigateway_port
 
-  - name: Parse response and extract unique ids in the format <protocol>-<portAlias>-<port>
+  - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
 
