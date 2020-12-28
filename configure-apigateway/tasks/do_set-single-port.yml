@@ -52,6 +52,9 @@
   - name: API Gateway port object to save
     debug: var=webmethods_apigateway_port_tosave
 
+  - name: API Gateway port object to save
+    debug: var=webmethods_apigateway_port_method
+
   - name: Save api gateway port
     uri:
       url: "{{ apigateway_rest_is_ports }}"
