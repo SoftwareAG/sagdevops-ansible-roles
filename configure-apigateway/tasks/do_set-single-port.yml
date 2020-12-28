@@ -39,7 +39,7 @@
       webmethods_apigateway_port_method: POST
     when: get_existing_port.json.uniqueID is not defined
 
-  - name: Response for current API Gateway port based on listenerkey
+  - name: API Gateway port object to save
     debug: var=webmethods_apigateway_port_tosave
 
   - name: Save api gateway port
