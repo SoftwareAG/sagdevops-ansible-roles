@@ -7,7 +7,7 @@
     include_role:
       name: configure-apigateway
     vars:
-      command: set-single-port
+      configs_action: set-single-port
     with_items: "{{ webmethods_apigateway_ports_list }}"
     loop_control:
       loop_var: webmethods_apigateway_port
