@@ -70,6 +70,11 @@
   - name: Response for the saved object
     debug: var=webmethods_apigateway_port_saved
 
+  - name: fail if json response does not contain the port unique id
+    fail: 
+      msg: "json response does not contain the port unique id...something wrong must have happened"
+    when: webmethods_apigateway_port_saved.json.uniqueID is not defined
+
   - name: Save access mode for the port
     uri:
       url: "{{ apigateway_rest_is_ports }}/{{ webmethods_apigateway_port_listenerkey }}/accessMode"
