@@ -69,3 +69,41 @@
 
   - name: Response for the saved object
     debug: var=webmethods_apigateway_port_saved
+
+  - name: Save access mode for the port
+    uri:
+      url: "{{ apigateway_rest_is_ports }}/{{ webmethods_apigateway_port_listenerkey }}/accessMode"
+      method: "POST"
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port.access_mode | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_accessmode_saved
+    when: webmethods_apigateway_port.access_mode is defined
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_accessmode_saved
+
+  - name: Save IP access mode for the port
+    uri:
+      url: "{{ apigateway_rest_is_ports }}/{{ webmethods_apigateway_port_listenerkey }}/ipAccessMode"
+      method: "POST"
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port.ip_access_mode | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_ipaccessmode_saved
+    when: webmethods_apigateway_port.ip_access_mode is defined
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_ipaccessmode_saved
