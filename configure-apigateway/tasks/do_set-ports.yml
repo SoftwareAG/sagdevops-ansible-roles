@@ -1,5 +1,4 @@
 ---
----
 
   - name: Ports to update
     debug: var=webmethods_apigateway_ports_list
