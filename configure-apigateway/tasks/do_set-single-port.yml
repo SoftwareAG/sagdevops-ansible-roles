@@ -1,0 +1,56 @@
+---
+
+  - name: Port to update
+    debug: var=webmethods_apigateway_port
+
+  - name: Parse response and extract unique ids in the format <protocol>-<portAlias>-<port>
+    set_fact:
+      webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
+
+  - name: Response for All Current ports
+    debug: var=webmethods_apigateway_port_listenerkey
+
+  - name: Get current API Gateway port based on listenerkey
+    uri:
+      url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey }}"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: get_existing_port
+
+  - name: Response for current API Gateway port based on listenerkey
+    debug: var=get_existing_port
+
+  - name: If current API Gateway port exists, update it
+    set_fact:
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port | combine( get_existing_port, recursive=True) }}"
+    when: get_existing_port.json.uniqueID is defined
+
+  - name: If current API Gateway port does not exists, add it
+    set_fact:
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port }}"
+    when: get_existing_port.json.uniqueID is not defined
+
+  - name: Add new promotion stages as defined by the variable
+    uri:
+      url: "{{ apigateway_rest_is_ports }}"
+      method: POST
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port_tosave | default({}) | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_saved
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_saved

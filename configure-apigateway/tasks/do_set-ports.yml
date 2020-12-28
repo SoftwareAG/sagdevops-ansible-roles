@@ -1,0 +1,14 @@
+---
+---
+
+  - name: Ports to update
+    debug: var=webmethods_apigateway_ports_list
+
+  - name: Update ports
+    include_role:
+      name: configure-apigateway
+    vars:
+      command: set-single-port
+    with_items: "{{ webmethods_apigateway_ports_list }}"
+    loop_control:
+      loop_var: webmethods_apigateway_port

@@ -28,6 +28,15 @@ apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
 apigateway_rest_is_keystore: "{{ apigateway_rest_is_baseapi }}/keystore"
 apigateway_rest_is_truststore: "{{ apigateway_rest_is_baseapi }}/truststore"
 
+# ports
+apigateway_rest_is_ports: "{{ apigateway_rest_base_path }}/ports"
+
+#listenerKey="<protocol | upper case><Listener | case sensitive>@<port>"
+# Request URL: https://apigateway105-ui-ssainfra-devops.clouddemo.saggov.com/apigatewayui/apigateway/ports?listenerKey=HTTPSListener@6444&pkg=WmRoot
+# >> do the request... 
+# >>> if unqieuID is not there, the port does not exist and it's a new one...
+# >>> if unqieuID is there, the port does exist and it's an update
+
 # configurations
 apigateway_rest_configurations_baseapi: "{{ apigateway_rest_base_path }}/configurations"
 apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_baseapi }}/loadBalancer"
@@ -42,6 +51,12 @@ apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path 
 apigateway_rest_promotionmgt_promotions: "{{ apigateway_rest_base_path }}/promotion"
 apigateway_rest_promotionmgt_stages: "{{ apigateway_rest_base_path }}/stages"
 apigateway_rest_promotionmgt_rollbacks: "{{ apigateway_rest_base_path }}/rollback"
+
+#POST:
+# {"factoryKey":"webMethods/HTTPS","listenerKey":null,"oldPkg":null,"listenerType":null,"ssl":"true","certChain":"","enable":"no","port":"5443","portAlias":"SAGSecurePort","portDescription":null,"pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":null,"useJSSE":"true","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
+# PUT:
+# {"factoryKey":"webMethods/HTTP","listenerKey":"HTTPSListener@5443","oldPkg":"WmRoot","listenerType":"Regular","ssl":"true","certChain":"","enable":"no","port":5443,"portAlias":"SAGSecurePort","portDescription":"Integration Server HTTPS port: 5443","pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":"0","useJSSE":"yes","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
+
 
 ####################################
 ## default config values
@@ -136,3 +151,42 @@ webmethods_apigateway_promotions_stages:
   #   password: "<string>"
   #   keystoreAlias: "<string>"
   #   keyAlias: "<string>"
+
+webmethods_apigateway_https_ports_system_defaults:
+  factoryKey: webMethods/HTTPS
+  ssl: 'true'
+  pkg: WmRoot
+  listenerType: Regular
+
+webmethods_apigateway_https_ports_list:
+  # - factoryKey: webMethods/HTTPS
+  #   listenerKey:
+  #   oldPkg:
+  #   listenerType:
+  #   ssl: 'true'
+  #   certChain: ''
+  #   enable: 'no'
+  #   port: '5443'
+  #   portAlias: SAGSecurePort
+  #   portDescription:
+  #   pkg: WmRoot
+  #   bindAddress:
+  #   maxQueue: '200'
+  #   keepAliveTimeout: '20000'
+  #   threadPool: 'true'
+  #   minThread: '1'
+  #   maxThread: '5'
+  #   threadPriority: '5'
+  #   curDelay:
+  #   useJSSE: 'true'
+  #   clientAuth: none
+  #   idProvider: ''
+  #   krbJaasContext:
+  #   krbClientPrincipal:
+  #   krbClientPassword:
+  #   retype_krbClientPassword:
+  #   krbServicePrincipalForm: username
+  #   krbServicePrincipal:
+  #   keyStore: "{{ (webmethods_keystore_local_path | basename| splitext)[0] }}"
+  #   alias: 
+  #   trustStore: 

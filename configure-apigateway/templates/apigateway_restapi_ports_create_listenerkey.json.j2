@@ -1,0 +1,6 @@
+{%- if webmethods_apigateway_port is defined  -%}
+    {{ webmethods_apigateway_port.protocol }}Listener@{{ webmethods_apigateway_port.port }}
+    {%- if webmethods_apigateway_port.bindAddress is defined and webmethods_apigateway_port.bindAddress != "0.0.0.0" -%}
+    @{{ webmethods_apigateway_port.bindAddress }}
+    {%- endif -%}
+{%- endif -%}
