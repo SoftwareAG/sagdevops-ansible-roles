@@ -152,11 +152,17 @@ webmethods_apigateway_promotions_stages:
   #   keystoreAlias: "<string>"
   #   keyAlias: "<string>"
 
-webmethods_apigateway_https_ports_system_defaults:
-  factoryKey: webMethods/HTTPS
-  ssl: 'true'
-  pkg: WmRoot
-  listenerType: Regular
+webmethods_apigateway_ports_system_defaults:
+  HTTPS:
+    factoryKey: webMethods/HTTPS
+    ssl: 'true'
+    pkg: WmRoot
+    listenerType: Regular
+  HTTP:
+    factoryKey: webMethods/HTTP
+    ssl: 'false'
+    pkg: WmRoot
+    listenerType: Regular
 
 webmethods_apigateway_https_ports_list:
   # - factoryKey: webMethods/HTTPS
