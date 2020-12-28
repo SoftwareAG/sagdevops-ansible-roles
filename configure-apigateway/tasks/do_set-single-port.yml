@@ -45,7 +45,7 @@
 
   - name: If current API Gateway port does not exists, add it
     set_fact:
-      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.protocol],recursive=True) }}"
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.port_detail.protocol],recursive=True) }}"
       webmethods_apigateway_port_method: POST
     when: get_existing_port.json.uniqueID is not defined
 
