@@ -29,7 +29,7 @@
 
   - name: If current API Gateway port exists, update it
     set_fact:
-      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port | combine( get_existing_port, recursive=True) }}"
+      webmethods_apigateway_port_tosave: "{{ get_existing_port.json | combine(webmethods_apigateway_port,recursive=True) }}"
       webmethods_apigateway_port_method: PUT
     when: get_existing_port.json.uniqueID is defined
 
