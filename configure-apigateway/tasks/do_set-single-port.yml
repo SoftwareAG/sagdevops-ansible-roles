@@ -30,17 +30,22 @@
   - name: If current API Gateway port exists, update it
     set_fact:
       webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port | combine( get_existing_port, recursive=True) }}"
+      webmethods_apigateway_port_method: PUT
     when: get_existing_port.json.uniqueID is defined
 
   - name: If current API Gateway port does not exists, add it
     set_fact:
       webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port }}"
+      webmethods_apigateway_port_method: POST
     when: get_existing_port.json.uniqueID is not defined
 
-  - name: Add new promotion stages as defined by the variable
+  - name: Response for current API Gateway port based on listenerkey
+    debug: var=webmethods_apigateway_port_tosave
+
+  - name: Save api gateway port
     uri:
       url: "{{ apigateway_rest_is_ports }}"
-      method: POST
+      method: "{{ webmethods_apigateway_port_method }}"
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
