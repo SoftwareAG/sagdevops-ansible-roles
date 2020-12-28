@@ -3,12 +3,22 @@
   - name: Port to update
     debug: var=webmethods_apigateway_port
 
+  - name: fail if webmethods_apigateway_port.port_detail not specified
+    fail: 
+      msg: "webmethods_apigateway_port.port_detail not specified...cannot do anything."
+    when: webmethods_apigateway_port.port_detail is not defined
+
   - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
-
+  
   - name: Response for All Current ports
     debug: var=webmethods_apigateway_port_listenerkey
+  
+  - name: fail if webmethods_apigateway_port_listenerkey is empty
+    fail: 
+      msg: "webmethods_apigateway_port_listenerkey is empty...cannot do anything."
+    when: webmethods_apigateway_port_listenerkey == ""
 
   - name: Get current API Gateway port based on listenerkey
     uri:
@@ -29,13 +39,13 @@
 
   - name: If current API Gateway port exists, update it
     set_fact:
-      webmethods_apigateway_port_tosave: "{{ get_existing_port.json | combine(webmethods_apigateway_port,recursive=True) }}"
+      webmethods_apigateway_port_tosave: "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
       webmethods_apigateway_port_method: PUT
     when: get_existing_port.json.uniqueID is defined
 
   - name: If current API Gateway port does not exists, add it
     set_fact:
-      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.protocol],recursive=True) }}"
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.protocol],recursive=True) }}"
       webmethods_apigateway_port_method: POST
     when: get_existing_port.json.uniqueID is not defined
 

@@ -30,6 +30,8 @@ apigateway_rest_is_truststore: "{{ apigateway_rest_is_baseapi }}/truststore"
 
 # ports
 apigateway_rest_is_ports: "{{ apigateway_rest_base_path }}/ports"
+apigateway_rest_is_ports_accessmode: "{{ apigateway_rest_is_ports }}/global/accessMode"
+apigateway_rest_is_ports_ipaccessmode: "{{ apigateway_rest_is_ports }}/global/ipAccessMode"
 
 #listenerKey="<protocol | upper case><Listener | case sensitive>@<port>"
 # Request URL: https://apigateway105-ui-ssainfra-devops.clouddemo.saggov.com/apigatewayui/apigateway/ports?listenerKey=HTTPSListener@6444&pkg=WmRoot
@@ -164,35 +166,45 @@ webmethods_apigateway_ports_system_defaults:
     pkg: WmRoot
     listenerType: Regular
 
-webmethods_apigateway_https_ports_list:
-  # - factoryKey: webMethods/HTTPS
-  #   listenerKey:
-  #   oldPkg:
-  #   listenerType:
-  #   ssl: 'true'
-  #   certChain: ''
-  #   enable: 'no'
-  #   port: '5443'
-  #   portAlias: SAGSecurePort
-  #   portDescription:
-  #   pkg: WmRoot
-  #   bindAddress:
-  #   maxQueue: '200'
-  #   keepAliveTimeout: '20000'
-  #   threadPool: 'true'
-  #   minThread: '1'
-  #   maxThread: '5'
-  #   threadPriority: '5'
-  #   curDelay:
-  #   useJSSE: 'true'
-  #   clientAuth: none
-  #   idProvider: ''
-  #   krbJaasContext:
-  #   krbClientPrincipal:
-  #   krbClientPassword:
-  #   retype_krbClientPassword:
-  #   krbServicePrincipalForm: username
-  #   krbServicePrincipal:
-  #   keyStore: "{{ (webmethods_keystore_local_path | basename| splitext)[0] }}"
-  #   alias: 
-  #   trustStore: 
+webmethods_apigateway_ports_list:
+  # - port_detail:
+  #     factoryKey: webMethods/HTTPS
+  #     listenerKey:
+  #     oldPkg:
+  #     listenerType:
+  #     ssl: 'true'
+  #     certChain: ''
+  #     enable: 'no'
+  #     port: '5443'
+  #     portAlias: SAGSecurePort
+  #     portDescription:
+  #     pkg: WmRoot
+  #     bindAddress:
+  #     maxQueue: '200'
+  #     keepAliveTimeout: '20000'
+  #     threadPool: 'true'
+  #     minThread: '1'
+  #     maxThread: '5'
+  #     threadPriority: '5'
+  #     curDelay:
+  #     useJSSE: 'true'
+  #     clientAuth: none
+  #     idProvider: ''
+  #     krbJaasContext:
+  #     krbClientPrincipal:
+  #     krbClientPassword:
+  #     retype_krbClientPassword:
+  #     krbServicePrincipalForm: username
+  #     krbServicePrincipal:
+  #     keyStore:
+  #     alias: 
+  #     trustStore:
+  #   access_mode:
+  #     accessMode: allow
+  #     pkg: WmRoot
+  #     port: ""
+  #     services: []
+  #   ip_access_mode:
+  #     ipAccessType: allow
+  #     pkg: WmRoot
+  #     hostsList: []

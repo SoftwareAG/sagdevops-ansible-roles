@@ -1,6 +1,6 @@
-{%- if webmethods_apigateway_port is defined  -%}
-    {{ webmethods_apigateway_port.protocol }}Listener@{{ webmethods_apigateway_port.port }}
-    {%- if webmethods_apigateway_port.bindAddress is defined -%}
-    @{{ webmethods_apigateway_port.bindAddress }}
+{%- if webmethods_apigateway_port.port_detail is defined  -%}
+    {{ webmethods_apigateway_port.port_detail.protocol }}Listener@{{ webmethods_apigateway_port.port_detail.port }}
+    {%- if webmethods_apigateway_port.port_detail.bindAddress is defined -%}
+    @{{ webmethods_apigateway_port.port_detail.bindAddress }}
     {%- endif -%}
 {%- endif -%}
