@@ -37,9 +37,11 @@
   - name: Response for current API Gateway port based on listenerkey
     debug: var=get_existing_port
 
+##      "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
+
   - name: If current API Gateway port exists, update it
     set_fact:
-      webmethods_apigateway_port_tosave: "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey},recursive=True) | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.port_detail.protocol],recursive=True) }}"
       webmethods_apigateway_port_method: PUT
     when: get_existing_port.json.uniqueID is defined
 
