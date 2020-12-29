@@ -45,3 +45,5 @@
       curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
       curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
       curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"
+      curl_wrapper_headers_fields:
+        "Accept": "application/json"
