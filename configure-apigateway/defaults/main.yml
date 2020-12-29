@@ -219,8 +219,6 @@ webmethods_apigateway_ports_list:
   #     pkg: WmRoot
   #     hostsList: []
 
-## extended settings
-webmethods_apigateway_extended_settings:
-  preferredSettings:
-    wattKeys: {}
-    extendedKeys: {}
+## extended settings - is runtime settings (note: this must be run on all the nodes)
+webmethods_apigateway_extended_settings_isruntime_watt_keys: {}
+webmethods_apigateway_extended_settings_coregateway_extended_keys: {}

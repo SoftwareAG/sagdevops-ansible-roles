@@ -1,0 +1,29 @@
+---
+
+  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys
+  
+  - name: Prepare request body content
+    set_fact:
+      webmethods_apigateway_extended_settings_request_body:
+        preferredSettings:
+          wattKeys: "{{ webmethods_apigateway_extended_settings_isruntime_watt_keys }}"
+          extendedKeys: {}
+
+  - name: Update extended settings
+    uri:
+      url: "{{ apigateway_rest_configurations_extendedsettings }}"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_extended_settings_request_body | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: rest_response
+
+  - name: Print response
+    debug:
+      var: rest_response.json

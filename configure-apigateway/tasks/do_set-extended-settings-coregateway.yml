@@ -1,7 +1,14 @@
 ---
 
-  - debug: var=webmethods_apigateway_extended_settings
+  - debug: var=webmethods_apigateway_extended_settings_coregateway_extended_keys
   
+  - name: Prepare request body content
+    set_fact:
+      webmethods_apigateway_extended_settings_request_body:
+        preferredSettings:
+          wattKeys: {}
+          extendedKeys: "{{ webmethods_apigateway_extended_settings_coregateway_extended_keys }}"
+
   - name: Update extended settings
     uri:
       url: "{{ apigateway_rest_configurations_extendedsettings }}"
@@ -9,7 +16,7 @@
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
-      body: "{{ webmethods_apigateway_extended_settings | default({}) | to_json }}"
+      body: "{{ webmethods_apigateway_extended_settings_request_body | to_json }}"
       force_basic_auth: yes
       validate_certs: false
       status_code: "200"
