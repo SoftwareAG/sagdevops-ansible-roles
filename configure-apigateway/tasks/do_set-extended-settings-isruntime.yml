@@ -9,6 +9,8 @@
           wattKeys: "{{ webmethods_apigateway_extended_settings_isruntime_watt_keys }}"
           extendedKeys: {}
 
+  - debug: var=webmethods_apigateway_extended_settings_request_body
+
   - name: Update extended settings
     uri:
       url: "{{ apigateway_rest_configurations_extendedsettings }}"
