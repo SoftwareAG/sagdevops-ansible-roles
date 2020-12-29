@@ -13,7 +13,7 @@ apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/
 apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
 
 ####################################
-## gateway rest apis
+## gateway rest apis URLs
 ####################################
 
 apigateway_rest_base_uri: "http://localhost:5555"
@@ -45,6 +45,7 @@ apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_
 apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi }}/cache"
 apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
 apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
+apigateway_rest_configurations_keytruststores: "{{ apigateway_rest_configurations_baseapi }}/keystore"
 
 # portal gateways
 apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"
@@ -118,6 +119,14 @@ webmethods_apigateway_keystore:
   # uploadFileName: "<string>"
   # keyStoreDescription: "<string>"
   # fileContentPath: "<string>"
+
+webmethods_apigateway_keytruststore_configuration:
+  # keystoreName: "<string>"
+  # signingAlias: "<string>"
+  # truststoreName: "<string>"
+  # outboundKeystoreName: "<string>"
+  # outboundKeyAlias: "<string>"
+  # outboundTruststoreName: "<string>"
 
 ## api portal registration - format
 webmethods_apigateway_portalgateway:
