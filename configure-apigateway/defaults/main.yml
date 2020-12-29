@@ -46,6 +46,7 @@ apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi
 apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
 apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
 apigateway_rest_configurations_keytruststores: "{{ apigateway_rest_configurations_baseapi }}/keystore"
+apigateway_rest_configurations_extendedsettings: "{{ apigateway_rest_configurations_baseapi }}/settings"
 
 # portal gateways
 apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"
@@ -217,3 +218,9 @@ webmethods_apigateway_ports_list:
   #     ipAccessType: allow
   #     pkg: WmRoot
   #     hostsList: []
+
+## extended settings
+webmethods_apigateway_extended_settings:
+  preferredSettings:
+    wattKeys: {}
+    extendedKeys: {}
