@@ -19,8 +19,12 @@ webmethods_apiportal_loadbalancer_fqdn:
 webmethods_apiportal_ssl_zip_path: ""
 webmethods_apiportal_ssl_cleanup_intermediary: true
 
-### tenant management
+### tenant management globals
 webmethods_apiportal_tenantmgmt_server: "localhost:18101"
 webmethods_apiportal_tenantmgmt_tenant: "default"
-webmethods_apiportal_tenantmgmt_editor_user:
-webmethods_apiportal_tenantmgmt_editor_password:
+webmethods_apiportal_tenantmgmt_runas_username:
+webmethods_apiportal_tenantmgmt_runas_password:
+
+##### tenant management - user password update
+webmethods_apiportal_tenantmgmt_changepassword_username:
+webmethods_apiportal_tenantmgmt_changepassword_newpassword:
