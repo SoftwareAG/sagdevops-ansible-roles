@@ -43,7 +43,7 @@
           path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
           state: absent
       
-      - name: check if package already installed
+      - name: check if package installed
         stat: 
           path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
         register: webmethods_package_just_installed

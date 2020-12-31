@@ -6,7 +6,7 @@
          by a backslash (\,) -->
     <wx.config.disableDelimiterParsing>true</wx.config.disableDelimiterParsing>
     <autoConfig>
-        {% for wxconfig_keytruststore in wxconfig_keytruststore_list %}
+        {% for wxconfig_keytruststore in wxconfig_params_keytruststore_list %}
         <keyTrustStore>
             <keyStore alias="{{ wxconfig_keytruststore.keyStore.alias }}" updateIfExists="{{ wxconfig_keytruststore.keyStore.updateIfExists }}" reloadOnStart="{{ wxconfig_keytruststore.keyStore.reloadOnStart }}" destroyOnShutdown="{{ wxconfig_keytruststore.keyStore.destroyOnShutdown }}">
                 <description>{{ wxconfig_keytruststore.keyStore.description }}</description>                <!-- optional -->

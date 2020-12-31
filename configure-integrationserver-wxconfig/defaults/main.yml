@@ -7,39 +7,35 @@ runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances
 runtime_instance_configs_home: "{{ runtime_instance_home }}/config"
 runtime_instance_package_home: "{{ runtime_instance_home }}/packages"
 wxconfig_configs_dir: "{{ runtime_instance_configs_home }}/WxConfig"
-wxconfig_target_package_path: "{{ runtime_instance_package_home }}/{{ wxconfig_target_package_name }}"
+wxconfig_target_package_path: "{{ runtime_instance_package_home }}/{{ wxconfig_params_target_package_name }}"
 wxconfig_target_package_config_path: "{{ wxconfig_target_package_path }}/config"
 wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
 
-## install settings
-wxconfig_install_force: false
-wxconfig_package_remote_s3:
-  bucket_name: ""
-  bucket_path: ""
+## group name represent the distinct ID for all the wxconfig files
+wxconfig_params_unique_groupname:
 
-wxconfig_license_remote_s3:
-  bucket_name: ""
-  bucket_path: ""
+## install settings
+wxconfig_params_packages: []
+wxconfig_params_licensing: {}
 
 ## global settings values
-wxconfig_global_configs: {}
-wxconfig_target_package_name:
+wxconfig_params_global_configs: {}
+wxconfig_params_target_package_name:
 
 ## encrypted values
-wxconfig_encrypted_groupname: 
-wxconfig_encrypted_params: {}
+wxconfig_params_encrypted_items: {}
 
 ## jdbc settings
-wxconfig_jdbc: {}
+wxconfig_params_jdbc: {}
 
 ## certs settings
-wxconfig_keytruststore_list: []
+wxconfig_params_keytruststore_list: []
 
 ## ports settings
-wxconfig_https_ports_list: []
+wxconfig_params_ports_https_list: []
 
 ## extended settings
-wxconfig_extended_settings_list: []
+wxconfig_params_extended_settings_list: []
 
 ## extended settings
-wxconfig_userpassword_list: []
+wxconfig_params_userpassword_list: []

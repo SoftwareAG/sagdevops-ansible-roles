@@ -2,7 +2,7 @@
 <config>
     <autoConfig>
         <ports>
-            {% for wxconfig_https_port in wxconfig_https_ports_list %}
+            {% for wxconfig_https_port in wxconfig_params_ports_https_list %}
             <https alias="{{ wxconfig_https_port.alias }}" updateIfExists="{{ wxconfig_https_port.updateIfExists }}" autoStart="{{ wxconfig_https_port.autoStart }}" autoShutdown="{{ wxconfig_https_port.autoShutdown }}" destroyOnShutdown="{{ wxconfig_https_port.destroyOnShutdown }}">
                 <package>{{ wxconfig_https_port.package }}</package>                <!-- optional -->
                 <description>{{ wxconfig_https_port.description }}</description>

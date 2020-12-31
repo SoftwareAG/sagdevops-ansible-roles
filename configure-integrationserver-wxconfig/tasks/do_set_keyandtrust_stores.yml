@@ -8,10 +8,10 @@
   - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
 
-      - name: fail if wxconfig_target_package_name not specified
+      - name: fail if wxconfig_params_target_package_name not specified
         fail: 
-          msg: "wxconfig_target_package_name not specified...cannot create."
-        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+          msg: "wxconfig_params_target_package_name not specified...cannot create."
+        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
 
       - name: Check if main wxconfig controller file is there already
         stat: 
@@ -20,10 +20,10 @@
 
       - name: fail if wxconfig is not enabled via the controller file
         fail: 
-          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
+          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_params_target_package_name }}...make sure to enable WxConfig for this package"
         when: stat_wxconfig_enabled.stat.exists == false
 
-      - name: Populate wxconfig file if the wxconfig_keytruststore_list is defined and non empty
+      - name: Populate wxconfig file if the wxconfig_params_keytruststore_list is defined and non empty
         template:
           src: as-keyTrustStore-template.xml
           dest: "{{ wxconfig_target_package_config_path }}/as-keyTrustStore.xml"
@@ -44,7 +44,7 @@
           configure_integrationserver_wxconfig_set_keyandtrust_stores_changed: true
         when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
-    when: wxconfig_keytruststore_list is defined and wxconfig_keytruststore_list|length > 0
+    when: wxconfig_params_keytruststore_list is defined and wxconfig_params_keytruststore_list|length > 0
 
   - name: Print the changed var
     debug:

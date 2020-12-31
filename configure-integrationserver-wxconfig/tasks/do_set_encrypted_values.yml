@@ -1,5 +1,7 @@
 ---
 
+## TODO configure_integrationserver_wxconfig_set_encrypted_values_changed --> because the encrypted values file gets renamed automatically, need to improve this to be able to use it
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_set_encrypted_values_changed: false
@@ -8,17 +10,17 @@
   - name: Install the packages in IS only if the list is not empty
     block:
 
-      - name: fail if wxconfig_target_package_name not specified
+      - name: fail if wxconfig_params_target_package_name not specified
         fail: 
-          msg: "wxconfig_target_package_name not specified...cannot create."
-        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+          msg: "wxconfig_params_target_package_name not specified...cannot create."
+        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
 
       - name: fail if wxconfig_encrypted_groupname not specified
         fail: 
           msg: "wxconfig_encrypted_groupname not specified...cannot create."
         when: wxconfig_encrypted_groupname is not defined or wxconfig_encrypted_groupname == ""
 
-      - name: Populate wxconfig encrypted values file if the wxconfig_encrypted_params is defined and non empty
+      - name: Populate wxconfig encrypted values file if the wxconfig_params_encrypted_items is defined and non empty
         template:
           src: WxConfigEncVal_template.txt.j2
           dest: "{{ wxconfig_encrypted_values_dir }}/WxConfigEncVal_{{ wxconfig_encrypted_groupname }}.txt"
@@ -29,7 +31,7 @@
           configure_integrationserver_wxconfig_set_encrypted_values_changed: true
         when: result_wxconfig_content_operation.changed == true
 
-    when: wxconfig_encrypted_params is defined and wxconfig_encrypted_params.keys()|length > 0
+    when: wxconfig_params_encrypted_items is defined and wxconfig_params_encrypted_items.keys()|length > 0
 
   - name: Print the changed var
     debug:

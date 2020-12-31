@@ -9,10 +9,10 @@
   - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
 
-      - name: fail if wxconfig_target_package_name not specified
+      - name: fail if wxconfig_params_target_package_name not specified
         fail: 
-          msg: "wxconfig_target_package_name not specified...cannot create."
-        when: wxconfig_target_package_name is not defined or wxconfig_target_package_name == ""
+          msg: "wxconfig_params_target_package_name not specified...cannot create."
+        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
 
       - name: Check if main wxconfig controller file is there already
         stat: 
@@ -21,7 +21,7 @@
 
       - name: fail if wxconfig is not enabled via the controller file
         fail: 
-          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_target_package_name }}...make sure to enable WxConfig for this package"
+          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_params_target_package_name }}...make sure to enable WxConfig for this package"
         when: stat_wxconfig_enabled.stat.exists == false
 
       - name: Populate wxconfig file

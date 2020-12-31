@@ -2,7 +2,7 @@
 <config>
     <autoConfig>
         <extendedSettings>
-            {% for wxconfig_extended_setting in wxconfig_extended_settings_list %}
+            {% for wxconfig_extended_setting in wxconfig_params_extended_settings_list %}
             
             {% if wxconfig_extended_setting.type == "add" %}
                 <setting operation="addUpdate" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" />
