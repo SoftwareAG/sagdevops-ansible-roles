@@ -3,7 +3,7 @@
     <accessControl>
 
     <!-- Integration Server groups-->
-    {% for wxconfig_group in wxconfig_groups_list %}
+    {% for wxconfig_group in wxconfig_params_groups_list %}
       <group name="{{ wxconfig_group.name }}" updateIfExists="{{ wxconfig_group.updateIfExists }}" deleteOnUnload="{{ wxconfig_group.deleteOnUnload }}">
         {% if wxconfig_group.members is defined %}
           {% for username in wxconfig_group.members %}
@@ -14,7 +14,7 @@
     {% endfor %}
 
     <!-- Integration Server ACLs -->
-    {% for wxconfig_acl in wxconfig_acl_list %}
+    {% for wxconfig_acl in wxconfig_params_acl_list %}
       <acl name="{{ wxconfig_acl.name }}" updateIfExists="{{ wxconfig_acl.updateIfExists }}" deleteOnUnload="{{ wxconfig_acl.deleteOnUnload }}">
         {% if wxconfig_acl.groups is defined %}
           {% for group in wxconfig_acl.groups %}
@@ -24,7 +24,7 @@
       </acl>
     {% endfor %}
 
-    {% for wxconfig_service_acl_mapping in wxconfig_service_acl_mapping_list %}
+    {% for wxconfig_service_acl_mapping in wxconfig_params_service_acl_mapping_list %}
       <service name="{{ wxconfig_service_acl_mapping.servicename }}">
         <!-- includeSubfolders is "true" by default -->
         <!-- Specific services can be excluded when an entire folder is processed -->

@@ -8,6 +8,11 @@
 
   - name: Install the wxconfig configs in IS target package only if value variable is not empty
     block:
+      
+      - name: fail if wxconfig_params_unique_groupname not specified
+        fail: 
+          msg: "wxconfig_params_unique_groupname not specified...cannot create."
+        when: wxconfig_params_unique_groupname is not defined or wxconfig_params_unique_groupname == ""
 
       - name: fail if wxconfig_params_target_package_name not specified
         fail: 
@@ -27,7 +32,7 @@
       - name: Populate wxconfig file
         template:
           src: as-accessControl-template.xml
-          dest: "{{ wxconfig_target_package_config_path }}/as-accessControl.xml"
+          dest: "{{ wxconfig_target_package_config_path }}/as-accessControl-{{ wxconfig_params_unique_groupname }}.xml"
         register: "result_wxconfig_content_operation"
 
       - name: Enable this new config in the main controller file
@@ -38,14 +43,14 @@
           line: "{{ item }}"
         register: "result_wxconfig_controller_operation"
         with_items:
-          - "wx.config.incl=as-accessControl.xml"
+          - "wx.config.incl=as-accessControl-{{ wxconfig_params_unique_groupname }}.xml"
 
       - name: Set changed flag to true if any mutating operation did change
         set_fact: 
           configure_integrationserver_wxconfig_set_accesscontrol_changed: true
         when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
 
-    when: (wxconfig_groups_list is defined and wxconfig_groups_list|length > 0) or (wxconfig_acl_list is defined and wxconfig_acl_list|length > 0) or (wxconfig_service_acl_mapping_list is defined and wxconfig_service_acl_mapping_list|length > 0)
+    when: (wxconfig_params_groups_list is defined and wxconfig_params_groups_list|length > 0) or (wxconfig_params_acl_list is defined and wxconfig_params_acl_list|length > 0) or (wxconfig_params_service_acl_mapping_list is defined and wxconfig_params_service_acl_mapping_list|length > 0)
 
   - name: Print the changed var
     debug:

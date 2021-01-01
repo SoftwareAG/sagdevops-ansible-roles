@@ -39,3 +39,8 @@ wxconfig_params_extended_settings_list: []
 
 ## extended settings
 wxconfig_params_userpassword_list: []
+
+## ACL settings
+wxconfig_params_groups_list: []
+wxconfig_params_acl_list: []
+wxconfig_params_service_acl_mapping_list: []
