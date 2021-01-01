@@ -10,11 +10,6 @@
   - name: Install the packages in IS only if the list is not empty
     block:
 
-      - name: fail if wxconfig_params_target_package_name not specified
-        fail: 
-          msg: "wxconfig_params_target_package_name not specified...cannot create."
-        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
-
       - name: fail if wxconfig_params_unique_groupname not specified
         fail: 
           msg: "wxconfig_params_unique_groupname not specified...cannot create."
