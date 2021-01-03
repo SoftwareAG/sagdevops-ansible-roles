@@ -1,0 +1,13 @@
+---
+
+- name: Print the params
+  debug:
+    msg: "Running configure-apiportal with action {{ configs_action | default('undefined') }}"
+
+- name: fail if configs_action not specified
+  fail: 
+    msg: "configs_action not specified...cannot do anything."
+  when: configs_action is not defined or configs_action == ""
+
+- name: Include tasks
+  include_tasks: "do_{{ configs_action }}.yml"
