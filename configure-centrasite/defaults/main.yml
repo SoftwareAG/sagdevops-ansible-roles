@@ -3,6 +3,7 @@
 configure_centrasite_params_home_dir: "{{ webmethods_install_dir }}/CentraSite"
 configure_centrasite_params_tools_dir: "{{ configure_centrasite_params_home_dir }}/utilities"
 configure_centrasite_params_tools_exec_command: "./CentraSiteCommand.sh"
+configure_centrasite_params_java_home: "{{ webmethods_install_dir }}/jvm/jvm"
 
 ##### internal repo user management
 configure_centrasite_params_internaluserrepo_dir: "{{ webmethods_install_dir }}/common/bin"
@@ -19,3 +20,32 @@ configure_centrasite_params_managementutils_runas_password:
 ##### management utils - user password update
 configure_centrasite_params_managementutils_changepassword_username:
 configure_centrasite_params_managementutils_changepassword_newpassword:
+
+##### create registry certs from jks
+configure_centrasite_params_create_registry_certs_keystore_path:
+configure_centrasite_params_create_registry_certs_keystore_password:
+configure_centrasite_params_create_registry_certs_keystore_keyalias:
+configure_centrasite_params_create_registry_certs_output_dir:
+configure_centrasite_params_create_registry_certs_crt_file: "crr.crt"
+configure_centrasite_params_create_registry_certs_key_file: "crr.key"
+
+##### SSL setup - application server (AST)
+configure_centrasite_params_ast_ssl_keystore_path:
+configure_centrasite_params_ast_ssl_keystore_password:
+configure_centrasite_params_ast_ssl_keystore_type:
+configure_centrasite_params_ast_ssl_keystore_keyalias:
+configure_centrasite_params_ast_ssl_truststore_path:
+configure_centrasite_params_ast_ssl_truststore_password:
+configure_centrasite_params_ast_ssl_truststore_type:
+
+##### SSL setup - registry server (RR)
+configure_centrasite_params_rr_ssl_keystore_path:
+configure_centrasite_params_rr_ssl_keystore_password:
+configure_centrasite_params_rr_ssl_keystore_type:
+configure_centrasite_params_rr_ssl_truststore_path:
+configure_centrasite_params_rr_ssl_truststore_password:
+configure_centrasite_params_rr_ssl_truststore_type:
+configure_centrasite_params_rr_ssl_crr_truststore_path:
+configure_centrasite_params_rr_ssl_crr_cert_path:
+configure_centrasite_params_rr_ssl_crr_key_path:
+configure_centrasite_params_rr_ssl_crr_truststore_password:

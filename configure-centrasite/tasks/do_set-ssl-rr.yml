@@ -1,0 +1,32 @@
+---
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_centrasite_set_ssl_rr_changed: false
+    when: configure_centrasite_set_ssl_rr_changed is not defined
+
+  - name: Populate config file with param values
+    template:
+      src: RR-config.xml.j2
+      dest: "{{ configure_centrasite_params_tools_dir }}/RR-config.xml"
+    register: "result_content_operation"
+
+  - name: command name
+    set_fact:
+      command_names: "[ 'set' ] + [ 'SSL' ] + [ 'RR' ]"
+
+  - name: command params
+    set_fact:
+      command_params: []
+      command_params_secure: []
+
+  - name: append config file param
+    set_fact:
+      command_params: "{{ command_params }} + [ '-file' ] + [ '{{ configure_centrasite_params_tools_dir }}/RR-config.xml' ]"
+
+  - name: run the command
+    include_tasks: "do_centrasitecommand.yml"
+    vars:
+      configure_centrasite_params_managementutils_command_names: "{{ command_names }}"
+      configure_centrasite_params_managementutils_command_params: "{{ command_params }}"
+      configure_centrasite_params_managementutils_command_params_secure: "{{ command_params_secure }}"
