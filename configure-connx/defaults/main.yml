@@ -1,0 +1,3 @@
+---
+
+configure_connx_params_home_dir: "{{ webmethods_install_dir }}/connx"
