@@ -1,0 +1,83 @@
+2 --> create (can be re-run multiple time no problem)
+./sqlregistry64 2 "CONNX.JDBC.CNXLISTENSSL" 0 1
+
+
+1) Display registry keys/values
+2) Create  a registry key and value
+3) Update registry key value
+4) Delete registry key value
+5) Exit Program
+
+Select option: 2
+
+ Enter the Registry key:
+     For example: CONNX.DATABASES.RMS
+
+==> CONNX.JDBC.CNXLISTENSSL  
+
+Key Data Type:
+0) Integer
+1) String
+2) Binary data
+
+==> Select option: 0
+
+ Enter the Registry key value:
+
+==> 1
+
+1) Display registry keys/values
+2) Create  a registry key and value
+3) Update registry key value
+4) Delete registry key value
+5) Exit Program
+
+Select option: 2
+
+ Enter the Registry key:
+     For example: CONNX.DATABASES.RMS
+
+==> CONNX.JDBC.SSLCERT
+
+Key Data Type:
+0) Integer
+1) String
+2) Binary data
+
+==> Select option: 1
+
+ Enter the Registry key value:
+
+==> /opt/softwareag/certs/crr.crt
+
+1) Display registry keys/values
+2) Create  a registry key and value
+3) Update registry key value
+4) Delete registry key value
+5) Exit Program
+
+Select option: 2
+
+ Enter the Registry key:
+     For example: CONNX.DATABASES.RMS
+
+==> CONNX.JDBC.SSLKEY
+
+Key Data Type:
+0) Integer
+1) String
+2) Binary data
+
+==> Select option: 1
+
+ Enter the Registry key value:
+
+==> /opt/softwareag/certs/crr.key
+
+1) Display registry keys/values
+2) Create  a registry key and value
+3) Update registry key value
+4) Delete registry key value
+5) Exit Program
+
+Select option: 5
