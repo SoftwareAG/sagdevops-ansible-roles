@@ -1,0 +1,15 @@
+---
+
+  - debug: var=configure_connx_params_sqlregistry_entries
+
+  - name: Adding multiple entries in the sql registry
+    include_tasks: "do_set-registry-entry.yml"
+    vars:
+      configure_connx_params_sqlregistry_entry_operation: "{{ outer_item.operation }}"
+      configure_connx_params_sqlregistry_entry_key: "{{ outer_item.key }}"
+      configure_connx_params_sqlregistry_entry_key_data_type: "{{ outer_item.key_datatype }}"
+      configure_connx_params_sqlregistry_entry_value: "{{ outer_item.key_value }}"
+      configure_connx_params_sqlregistry_entry_value_issecure: "{{ outer_item.key_value_issecure }}"
+    with_items: "{{ configure_connx_params_sqlregistry_entries }}"
+    loop_control:
+      loop_var: outer_item
