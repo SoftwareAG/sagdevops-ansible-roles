@@ -3,8 +3,10 @@
 - include_tasks: command_native.yaml
   vars:
     webmethods_script_dir: "{{ webmethods_install_dir }}/connx"
-    webmethods_script_start: "./licenseserver START"
-    webmethods_script_stop: "./licenseserver STOP"
+    webmethods_script_start: "./licenseserver"
+    webmethods_script_start_params: "START"
+    webmethods_script_stop: "./licenseserver"
+    webmethods_script_stop_params: "STOP"
     webmethods_command_envs:
       CNXDIR: "{{ webmethods_install_dir }}/connx"
       CONNXREGISTRY: "{{ webmethods_install_dir }}/connx/connxreg.db"
