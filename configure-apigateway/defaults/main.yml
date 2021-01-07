@@ -47,6 +47,7 @@ apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_config
 apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
 apigateway_rest_configurations_keytruststores: "{{ apigateway_rest_configurations_baseapi }}/keystore"
 apigateway_rest_configurations_extendedsettings: "{{ apigateway_rest_configurations_baseapi }}/settings"
+apigateway_rest_configurations_ldapsettings: "{{ apigateway_rest_configurations_baseapi }}/ldapConfig"
 
 # portal gateways
 apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"
@@ -95,7 +96,7 @@ webmethods_apigateway_loadbalancers_https_urls: []
 webmethods_apigateway_loadbalancers_websocket_urls: []
 webmethods_apigateway_loadbalancers_webapp_url: ""
 
-## gateway SSL certs
+## gateway UI SSL certs
 webmethods_apigateway_ui_props_https_keystore_path:
 webmethods_apigateway_ui_props_https_keystore_password:
 webmethods_apigateway_ui_props_https_truststore_path:
@@ -222,3 +223,44 @@ webmethods_apigateway_ports_list:
 ## extended settings - is runtime settings (note: this must be run on all the nodes)
 webmethods_apigateway_extended_settings_isruntime_watt_keys: {}
 webmethods_apigateway_extended_settings_coregateway_extended_keys: {}
+
+## ldap settings
+webmethods_apigateway_ldap_settings: {}
+  # ldapConfig:
+  #   cacheSize: "<string>"
+  #   cacheTTL: "<string>"
+  #   provider: "<string>"
+  #   ldapDirectoryList:
+  #     - index: "<integer>"
+  #       url: "<string>"
+  #       principal: "<string>"
+  #       password: "<string>"
+  #       timeout: "<string>"
+  #       poolMin: "<string>"
+  #       poolMax: "<string>"
+  #       Distinguished Name (DN) method: "<boolean>"
+  #       dnPrefix: "<string>"
+  #       dnSuffix: "<string>"
+  #       uidProp: "<string>"
+  #       userRootDn: "<string>"
+  #       group: "<string>"
+  #       memberAttribute: "<string>"
+  #       groupIdProperty: "<string>"
+  #       groupRootDN: "<string>"
+  #     - index: "<integer>"
+  #       url: "<string>"
+  #       principal: "<string>"
+  #       password: "<string>"
+  #       timeout: "<string>"
+  #       poolMin: "<string>"
+  #       poolMax: "<string>"
+  #       Distinguished Name (DN) method: "<boolean>"
+  #       dnPrefix: "<string>"
+  #       dnSuffix: "<string>"
+  #       uidProp: "<string>"
+  #       userRootDn: "<string>"
+  #       group: "<string>"
+  #       memberAttribute: "<string>"
+  #       groupIdProperty: "<string>"
+  #       groupRootDN: "<string>"
+  #   cdsRunning: "<boolean>"
