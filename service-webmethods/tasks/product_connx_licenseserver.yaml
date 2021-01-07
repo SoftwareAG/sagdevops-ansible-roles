@@ -3,17 +3,6 @@
   - name: Set systemd service for CONNX License Server
     block:
 
-      - name: Copy systemd script files
-        copy:
-          src: "{{ item }}"
-          dest: "{{ webmethods_install_dir }}/connx"
-          owner: "{{ webmethods_user }}"
-          group: "{{ webmethods_group }}"
-          mode: 0755
-          remote_src: no
-        with_items:
-          - "resources/cnxLICsrv_sys.sh"
-
       - include_tasks: "command_createcustom.yaml"
         vars:
           service_name: "sag1cnxLICsrv{{ product_version_full }}"
