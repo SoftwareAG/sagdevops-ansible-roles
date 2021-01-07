@@ -25,4 +25,5 @@
     name: "{{ service_name }}"
     state: "started"
     enabled: true
+  environment: "{{ service_envs }}"
   when: ansible_facts.services[service_name_index] is defined
