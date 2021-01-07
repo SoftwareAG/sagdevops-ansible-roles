@@ -2,11 +2,16 @@
 
   - name: Command shutdown
     block:
+
+    - name: Print the command that we're going to run
+      debug:
+        msg: "About to run: {{ webmethods_script_dir }}/{{ webmethods_script_stop }} {{ webmethods_script_stop_params }}"
+
     - name: Check if shutdown script exists
       stat:
         path: "{{ webmethods_script_dir }}/{{ webmethods_script_stop }}"
       register: stat_shutdown
-    
+
     - name: run shutdown script
       shell: "{{ webmethods_script_stop }} {{ webmethods_script_stop_params }}"
       args:
@@ -23,6 +28,11 @@
 
   - name: Command startup
     block:
+    
+    - name: Print the command that we're going to run
+      debug:
+        msg: "About to run: {{ webmethods_script_dir }}/{{ webmethods_script_start }} {{ webmethods_script_start_params }}"
+
     - name: Check if startup script exists
       stat: 
         path: "{{ webmethods_script_dir }}/{{ webmethods_script_start }}"
