@@ -59,6 +59,10 @@
     command:
       argv: "{{ command_to_exec }}"
       chdir: "{{ configure_connx_params_sqlregistry_exec_dir }}"
+    environment:
+      CONNXREGISTRY: "{{ configure_connx_params_registry_db }}"
+      CONNXREGISTRY64: "{{ configure_connx_params_registry64_db }}"
+      CNXDIR: "{{ configure_connx_params_home_dir }}"
     register: cmd_result
     no_log: "{{ configure_connx_params_sqlregistry_entry_value_issecure | default(false,true) }}"
 
