@@ -1,0 +1,6 @@
+---
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command: startall

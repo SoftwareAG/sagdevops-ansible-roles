@@ -1,0 +1,9 @@
+[{%- if get_all_promotionmgt_stages is defined and get_all_promotionmgt_stages.json is defined  -%}
+    {%- if get_all_promotionmgt_stages.json.stages is defined -%}
+        {%- if get_all_promotionmgt_stages.json.stages|length > 0 -%}
+            {%- for existing_stage in get_all_promotionmgt_stages.json.stages -%}
+                {%- if loop.index0 > 0 -%},{%- endif -%}"{{ existing_stage.id }}"
+            {%- endfor -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endif -%}]

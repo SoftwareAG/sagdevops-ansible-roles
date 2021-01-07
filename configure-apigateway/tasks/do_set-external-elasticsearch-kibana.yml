@@ -18,9 +18,9 @@
   - name: Set external elastic search in the right file 
     block:
 
-      - name: "Update config file {{ apigateway_uiconfiguration_config_file }}"
+      - name: "Update config file {{ apigateway_ui_configuration_config_file }}"
         lineinfile:
-          path: "{{ apigateway_uiconfiguration_config_file }}"
+          path: "{{ apigateway_ui_configuration_config_file }}"
           regexp: '^{{ item.key }}'
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"

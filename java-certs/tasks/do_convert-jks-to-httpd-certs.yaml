@@ -1,0 +1,77 @@
+---
+
+  - name: Print jks_input_file_path var
+    debug: var=jks_input_file_path
+
+  - name: Print httpd_certs_output_dir var
+    debug: var=httpd_certs_output_dir
+
+  - name: Print httpd_certs_output_crt_file var
+    debug: var=httpd_certs_output_crt_file
+
+  - name: Print httpd_certs_output_key_file var
+    debug: var=httpd_certs_output_key_file
+
+  - name: fail if jks_input_file_path not specified
+    fail: 
+      msg: "jks_input_file_path not specified...cannot do anything."
+    when: jks_input_file_path is not defined or jks_input_file_path == ""
+
+  - name: fail if httpd_certs_output_dir not specified
+    fail: 
+      msg: "httpd_certs_output_dir not specified...cannot do anything."
+    when: httpd_certs_output_dir is not defined or httpd_certs_output_dir == ""
+
+  - name: fail if httpd_certs_output_crt_file not specified
+    fail: 
+      msg: "httpd_certs_output_crt_file not specified...cannot do anything."
+    when: httpd_certs_output_crt_file is not defined or httpd_certs_output_crt_file == ""
+
+  - name: fail if httpd_certs_output_key_file not specified
+    fail: 
+      msg: "httpd_certs_output_key_file not specified...cannot do anything."
+    when: httpd_certs_output_key_file is not defined or httpd_certs_output_key_file == ""
+
+  - name: export cert from jks
+    include_tasks: "do_keystore-export-cert-der.yaml"
+    vars:
+      keystore_file_path: "{{ jks_input_file_path }}"
+      keystore_file_password: "{{ jks_input_file_password }}"
+      keystore_file_alias: "{{ jks_input_file_alias }}"
+      output_file_path_dir: "{{ httpd_certs_output_dir }}"
+      output_file_name: "server_cert"
+
+  - name: convert der to pem
+    include_tasks: "do_convert-der-to-pem.yaml"
+    vars:
+      input_file_path: "{{ httpd_certs_output_dir }}/server_cert.der"
+      output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_crt_file }}"
+  
+  - name: cleanup intermediary der file
+    file:
+      path: "{{ httpd_certs_output_dir }}/server_cert.der"
+      state: absent
+    when: cleanup_intermediary_files | bool
+
+  - name: export key from jks
+    include_tasks: "do_keystore-export-key-p12.yaml"
+    vars:
+      keystore_file_path: "{{ jks_input_file_path }}"
+      keystore_file_password: "{{ jks_input_file_password }}"
+      keystore_file_alias: "{{ jks_input_file_alias }}"
+      output_file_path_dir: "{{ httpd_certs_output_dir }}"
+      output_file_name: "server_key"
+      output_file_password: "{{ jks_input_file_password }}"
+
+  - name: convert p12 key to pem
+    include_tasks: "do_convert-p12-to-pem.yaml"
+    vars:
+      input_file_path: "{{ httpd_certs_output_dir }}/server_key.p12"
+      input_file_password: "{{ jks_input_file_password }}"
+      output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_key_file }}"
+
+  - name: cleanup intermediary p12 file
+    file:
+      path: "{{ httpd_certs_output_dir }}/server_key.p12"
+      state: absent
+    when: cleanup_intermediary_files | bool

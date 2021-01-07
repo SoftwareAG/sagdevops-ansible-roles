@@ -1,0 +1,9 @@
+[{%- if get_all_ports is defined and get_all_ports.json is defined  -%}
+    {%- if get_all_ports.json.listeners is defined -%}
+        {%- if get_all_ports.json.listeners|length > 0 -%}
+            {%- for port in get_all_ports.json.listeners -%}
+                {%- if loop.index0 > 0 -%},{%- endif -%}"{{ port.protocol }}-{{ port.portAlias }}-{{ port.port }}"
+            {%- endfor -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endif -%}]

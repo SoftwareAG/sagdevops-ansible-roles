@@ -1,0 +1,29 @@
+---
+
+configure_connx_params_home_dir: "{{ webmethods_install_dir }}/connx"
+configure_connx_params_registry_db: "{{ configure_connx_params_home_dir }}/connxreg.db"
+configure_connx_params_registry64_db: "{{ configure_connx_params_home_dir }}/connxreg64.db"
+
+configure_connx_params_sqlregistry_exec_dir: "{{ configure_connx_params_home_dir }}"
+configure_connx_params_sqlregistry_exec_command: "./sqlregistry64"
+
+configure_connx_params_sqlregistry_operation_list: 1
+configure_connx_params_sqlregistry_operation_create: 2
+configure_connx_params_sqlregistry_operation_update: 3
+configure_connx_params_sqlregistry_operation_delete: 4
+
+configure_connx_params_sqlregistry_key_data_type_integer: 0
+configure_connx_params_sqlregistry_key_data_type_string: 1
+configure_connx_params_sqlregistry_key_data_type_binary: 2
+
+configure_connx_params_sqlregistry_entries: []
+  # - operation:
+  #   key:
+  #   key_datatype:
+  #   key_value:
+  #   key_value_issecure:
+  # - operation:
+  #   key:
+  #   key_datatype:
+  #   key_value:
+  #   key_value_issecure:

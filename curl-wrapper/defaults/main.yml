@@ -1,0 +1,9 @@
+---
+
+curl_wrapper_basicauth_user:
+curl_wrapper_basicauth_password:
+curl_wrapper_target_uri:
+curl_wrapper_headers_fields: {}
+
+## multipart formdata
+curl_wrapper_multipart_formdata_fields: {}

@@ -1,0 +1,80 @@
+---
+
+  - debug: var=configure_centrasite_params_managementutils_command_names
+
+  - debug: var=configure_centrasite_params_managementutils_command_params
+
+  - debug: var=configure_centrasite_params_managementutils_command_params_secure
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - debug: var=configure_centrasite_params_managementutils_registry_url
+  
+  - debug: var=configure_centrasite_params_managementutils_runas_username
+  
+  - debug: var=configure_centrasite_params_managementutils_runas_password
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_centrasite_params_managementutils_command_names not specified...cannot do anything."
+    when: configure_centrasite_params_managementutils_command_names is not defined or configure_centrasite_params_managementutils_command_names | length == 0
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_centrasite_params_managementutils_runas_username not specified...cannot do anything."
+    when: configure_centrasite_params_managementutils_runas_username is not defined or configure_centrasite_params_managementutils_runas_username == ""
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_centrasite_params_managementutils_runas_password not specified...cannot do anything."
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+    when: configure_centrasite_params_managementutils_runas_password is not defined or configure_centrasite_params_managementutils_runas_password == ""
+
+  - name: Init the command
+    set_fact:
+      command_to_exec: ['{{ configure_centrasite_params_tools_exec_command }}']
+
+  - name: append command name
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + {{ configure_centrasite_params_managementutils_command_names }}"
+
+  - name: append server connection uri
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-url' ] + [ '{{ configure_centrasite_params_registry_url }}' ]"
+    when: configure_centrasite_params_registry_url is defined and configure_centrasite_params_registry_url != ""
+
+  - name: append runas user
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-user' ] + [ '{{ configure_centrasite_params_managementutils_runas_username }}' ]"
+
+  - name: append runas user password
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-password' ] + [ '{{ configure_centrasite_params_managementutils_runas_password }}' ]"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: append command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + {{ configure_centrasite_params_managementutils_command_params }}"
+    when: configure_centrasite_params_managementutils_command_params is defined and configure_centrasite_params_managementutils_command_params | length > 0
+
+  - name: append command param secure
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + {{ configure_centrasite_params_managementutils_command_params_secure }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+    when: configure_centrasite_params_managementutils_command_params_secure is defined and configure_centrasite_params_managementutils_command_params_secure | length > 0
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+      chdir: "{{ configure_centrasite_params_tools_dir }}"
+    register: cmd_result
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"

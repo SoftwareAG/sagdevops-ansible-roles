@@ -1,0 +1,71 @@
+---
+
+  - debug: var=configure_connx_params_sqlregistry_entry_operation
+  - debug: var=configure_connx_params_sqlregistry_entry_key
+  - debug: var=configure_connx_params_sqlregistry_entry_key_data_type
+  - debug: var=configure_connx_params_sqlregistry_entry_value
+  - debug: var=configure_connx_params_sqlregistry_entry_value_issecure
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_connx_params_sqlregistry_entry_operation not specified...cannot do anything."
+    when: configure_connx_params_sqlregistry_entry_operation is not defined or configure_connx_params_sqlregistry_entry_operation == ""
+
+  - name: fail if param not specified when operation is not 1
+    fail: 
+      msg: "configure_connx_params_sqlregistry_entry_key not specified...cannot do anything."
+    when: configure_connx_params_sqlregistry_entry_operation != "1" and configure_connx_params_sqlregistry_entry_key is not defined or configure_connx_params_sqlregistry_entry_key == ""
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_connx_params_sqlregistry_entry_key_data_type not specified...cannot do anything."
+    when: configure_connx_params_sqlregistry_entry_operation in ('2','3') and configure_connx_params_sqlregistry_entry_key_data_type is not defined or configure_connx_params_sqlregistry_entry_key_data_type == ""
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_connx_params_sqlregistry_entry_value not specified...cannot do anything."
+    when: configure_connx_params_sqlregistry_entry_operation in ('2','3') and configure_connx_params_sqlregistry_entry_value is not defined or configure_connx_params_sqlregistry_entry_value == ""
+
+  - name: Init the command
+    set_fact:
+      command_to_exec: ['{{ configure_connx_params_sqlregistry_exec_command }}']
+
+  - name: append command param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ configure_connx_params_sqlregistry_entry_operation }}' ]"
+
+  - name: append command param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ configure_connx_params_sqlregistry_entry_key }}' ]"
+    when: configure_connx_params_sqlregistry_entry_key is defined and configure_connx_params_sqlregistry_entry_key != ""
+
+  - name: append command param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ configure_connx_params_sqlregistry_entry_key_data_type }}' ]"
+    when: configure_connx_params_sqlregistry_entry_key_data_type is defined and configure_connx_params_sqlregistry_entry_key_data_type != ""
+
+  - name: append command param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ configure_connx_params_sqlregistry_entry_value }}' ]"
+    when: configure_connx_params_sqlregistry_entry_value is defined and configure_connx_params_sqlregistry_entry_value != ""
+    no_log: "{{ configure_connx_params_sqlregistry_entry_value_issecure | default(false,true) }}"
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+    no_log: "{{ configure_connx_params_sqlregistry_entry_value_issecure | default(false,true) }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+      chdir: "{{ configure_connx_params_sqlregistry_exec_dir }}"
+    environment:
+      CONNXREGISTRY: "{{ configure_connx_params_registry_db }}"
+      CONNXREGISTRY64: "{{ configure_connx_params_registry64_db }}"
+      CNXDIR: "{{ configure_connx_params_home_dir }}"
+    register: cmd_result
+    no_log: "{{ configure_connx_params_sqlregistry_entry_value_issecure | default(false,true) }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"

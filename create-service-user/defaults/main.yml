@@ -3,6 +3,7 @@
 ## user creation
 username:
 userid:
+user_description:
 groupname:
 groupid:
 generate_ssh_key: no

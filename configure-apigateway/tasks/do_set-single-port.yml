@@ -1,0 +1,127 @@
+---
+
+  - name: Port to update
+    debug: var=webmethods_apigateway_port
+
+  - name: fail if webmethods_apigateway_port.port_detail not specified
+    fail: 
+      msg: "webmethods_apigateway_port.port_detail not specified...cannot do anything."
+    when: webmethods_apigateway_port.port_detail is not defined
+
+  - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
+    set_fact:
+      webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
+  
+  - name: port listenerkey
+    debug: var=webmethods_apigateway_port_listenerkey
+  
+  - name: fail if webmethods_apigateway_port_listenerkey is empty
+    fail: 
+      msg: "webmethods_apigateway_port_listenerkey is empty...cannot do anything."
+    when: webmethods_apigateway_port_listenerkey == ""
+
+  - name: Get current API Gateway port based on listenerkey
+    uri:
+      url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey }}"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: get_existing_port
+
+  - name: Response for current API Gateway port based on listenerkey
+    debug: var=get_existing_port
+
+##      "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
+
+  - name: Add the system fields to the object to save based on the protocol
+    set_fact:
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.port_detail.protocol],recursive=True) }}"
+
+  - name: If current API Gateway port exists, update it
+    set_fact:
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port_tosave | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_tosave.pkg},recursive=True) }}"
+      webmethods_apigateway_port_method: PUT
+    when: get_existing_port.json.uniqueID is defined
+
+  - name: If current API Gateway port does not exists, add it
+    set_fact:
+      webmethods_apigateway_port_method: POST
+    when: get_existing_port.json.uniqueID is not defined
+
+  - name: API Gateway port object to save
+    debug: var=webmethods_apigateway_port_tosave
+
+  - name: API Gateway port object to save
+    debug: var=webmethods_apigateway_port_method
+
+  - name: Save api gateway port
+    uri:
+      url: "{{ apigateway_rest_is_ports }}"
+      method: "{{ webmethods_apigateway_port_method }}"
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port_tosave | default({}) | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_saved
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_saved
+
+  - name: Response check - For a new ADD, fail if json response status is not success
+    fail: 
+      msg: "unexpected json response...something wrong happened"
+    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_saved.json.status != "success"
+
+  - name: Response check - For an UPDATE, fail if json response does not contain the newlistenerKey field
+    fail: 
+      msg: "unexpected json response...something wrong happened"
+    when: get_existing_port.json.uniqueID is defined and (webmethods_apigateway_port_saved.json.newlistenerKey is not defined)
+
+  - name: Save access mode for the port
+    uri:
+      url: "{{ apigateway_rest_is_ports }}/{{ webmethods_apigateway_port_listenerkey }}/accessMode"
+      method: "POST"
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port.access_mode | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_accessmode_saved
+    when: webmethods_apigateway_port.access_mode is defined
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_accessmode_saved
+
+  - name: Save IP access mode for the port
+    uri:
+      url: "{{ apigateway_rest_is_ports }}/{{ webmethods_apigateway_port_listenerkey }}/ipAccessMode"
+      method: "POST"
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_port.ip_access_mode | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: webmethods_apigateway_port_ipaccessmode_saved
+    when: webmethods_apigateway_port.ip_access_mode is defined
+
+  - name: Response for the saved object
+    debug: var=webmethods_apigateway_port_ipaccessmode_saved

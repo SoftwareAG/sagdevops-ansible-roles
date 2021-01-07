@@ -1,0 +1,6 @@
+{
+    "httpUrls": {{ webmethods_apigateway_loadbalancers_http_urls | default([]) | to_json }},
+    "httpsUrls": {{ webmethods_apigateway_loadbalancers_https_urls | default([]) | to_json }},
+    "websocketUrls": {{ webmethods_apigateway_loadbalancers_websocket_urls | default([]) | to_json }},
+    "webAppUrl": "{{ webmethods_apigateway_loadbalancers_webapp_url | default('') }}"
+}

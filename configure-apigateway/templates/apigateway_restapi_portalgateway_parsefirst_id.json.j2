@@ -1,0 +1,7 @@
+{%- if get_all_portalgateways is defined and get_all_portalgateways.json is defined  -%}
+    {%- if get_all_portalgateways.json.portalGatewayResponse is defined -%}
+        {%- if get_all_portalgateways.json.portalGatewayResponse|length > 0 -%}
+            {{ get_all_portalgateways.json.portalGatewayResponse[0].id }}
+        {%- endif -%}
+    {%- endif -%}
+{%- endif -%}

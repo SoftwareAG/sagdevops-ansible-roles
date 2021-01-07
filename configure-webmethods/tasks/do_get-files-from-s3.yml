@@ -27,6 +27,7 @@
           getfroms3_local_path_create_dir_owner_user: "{{ outer_item.local_path_create_dir_owner_user | default('',true) }}"
           getfroms3_local_path_create_dir_owner_group: "{{ outer_item.local_path_create_dir_owner_group | default('',true) }}"
           getfroms3_local_path_create_dir_permission: "{{ outer_item.local_path_create_dir_permission | default('',true) }}"
+          getfroms3_force_download: "{{ outer_item.force_download | default('false',true) }}"
         when: outer_item.local_path is defined and outer_item.local_path != ""
         with_items: "{{ webmethods_download_files_s3 }}"
         loop_control:

@@ -1,0 +1,22 @@
+---
+
+  - debug: var=webmethods_apigateway_keytruststore_configuration
+  
+  - name: Update load balancer urls
+    uri:
+      url: "{{ apigateway_rest_configurations_keytruststores }}"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ webmethods_apigateway_keytruststore_configuration | default({}) | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: rest_response
+
+  - name: Print response
+    debug:
+      var: rest_response.json

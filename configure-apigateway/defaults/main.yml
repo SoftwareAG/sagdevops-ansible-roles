@@ -6,12 +6,16 @@ runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_insta
 runtime_instance_home: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}"
 custom_wrapper_file: "{{ runtime_profile_home }}/configuration/custom_wrapper.conf"
 runtime_instance_config_file: "{{ runtime_instance_home }}/config/server.cnf"
+webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
 apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
 apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
-apigateway_uiconfiguration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
-webmethods_terracotta_license_path: "{{ webmethods_install_dir }}/common/conf/terracotta-license.key"
+apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
+apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
 
-## gateway rest apis
+####################################
+## gateway rest apis URLs
+####################################
+
 apigateway_rest_base_uri: "http://localhost:5555"
 apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
 
@@ -24,12 +28,43 @@ apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
 apigateway_rest_is_keystore: "{{ apigateway_rest_is_baseapi }}/keystore"
 apigateway_rest_is_truststore: "{{ apigateway_rest_is_baseapi }}/truststore"
 
+# ports
+apigateway_rest_is_ports: "{{ apigateway_rest_base_path }}/ports"
+apigateway_rest_is_ports_accessmode: "{{ apigateway_rest_is_ports }}/global/accessMode"
+apigateway_rest_is_ports_ipaccessmode: "{{ apigateway_rest_is_ports }}/global/ipAccessMode"
+
+#listenerKey="<protocol | upper case><Listener | case sensitive>@<port>"
+# Request URL: https://apigateway105-ui-ssainfra-devops.clouddemo.saggov.com/apigatewayui/apigateway/ports?listenerKey=HTTPSListener@6444&pkg=WmRoot
+# >> do the request... 
+# >>> if unqieuID is not there, the port does not exist and it's a new one...
+# >>> if unqieuID is there, the port does exist and it's an update
+
 # configurations
 apigateway_rest_configurations_baseapi: "{{ apigateway_rest_base_path }}/configurations"
 apigateway_rest_configurations_loadBalancer: "{{ apigateway_rest_configurations_baseapi }}/loadBalancer"
 apigateway_rest_configurations_cache: "{{ apigateway_rest_configurations_baseapi }}/cache"
 apigateway_rest_configurations_destination_apiportal: "{{ apigateway_rest_configurations_baseapi }}/apiPortalDestinationConfig"
 apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configurations_baseapi }}/gatewayDestinationConfig"
+apigateway_rest_configurations_keytruststores: "{{ apigateway_rest_configurations_baseapi }}/keystore"
+apigateway_rest_configurations_extendedsettings: "{{ apigateway_rest_configurations_baseapi }}/settings"
+
+# portal gateways
+apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"
+
+# Promotion Management
+apigateway_rest_promotionmgt_promotions: "{{ apigateway_rest_base_path }}/promotion"
+apigateway_rest_promotionmgt_stages: "{{ apigateway_rest_base_path }}/stages"
+apigateway_rest_promotionmgt_rollbacks: "{{ apigateway_rest_base_path }}/rollback"
+
+#POST:
+# {"factoryKey":"webMethods/HTTPS","listenerKey":null,"oldPkg":null,"listenerType":null,"ssl":"true","certChain":"","enable":"no","port":"5443","portAlias":"SAGSecurePort","portDescription":null,"pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":null,"useJSSE":"true","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
+# PUT:
+# {"factoryKey":"webMethods/HTTP","listenerKey":"HTTPSListener@5443","oldPkg":"WmRoot","listenerType":"Regular","ssl":"true","certChain":"","enable":"no","port":5443,"portAlias":"SAGSecurePort","portDescription":"Integration Server HTTPS port: 5443","pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":"0","useJSSE":"yes","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
+
+
+####################################
+## default config values
+####################################
 
 ## global JVM settings
 apigateway_jvm_heap_min: 1024
@@ -53,3 +88,137 @@ apigateway_rest_login_username: "Administrator"
 apigateway_rest_login_password: ""
 apigateway_update_local_user_id: ""
 apigateway_update_local_user_password: ""
+
+## load balancer settings
+webmethods_apigateway_loadbalancers_http_urls: []
+webmethods_apigateway_loadbalancers_https_urls: []
+webmethods_apigateway_loadbalancers_websocket_urls: []
+webmethods_apigateway_loadbalancers_webapp_url: ""
+
+## gateway SSL certs
+webmethods_apigateway_ui_props_https_keystore_path:
+webmethods_apigateway_ui_props_https_keystore_password:
+webmethods_apigateway_ui_props_https_truststore_path:
+webmethods_apigateway_ui_props_https_truststore_password:
+
+## api gateway truststore format
+webmethods_apigateway_truststore:
+  # keyStoreName: "<string>"
+  # keyStoreType: "<string>"
+  # keyStoreProvider: "<string>"
+  # keyStorePassword: "<string>"
+  # uploadFileName: "<string>"
+  # keyStoreDescription: "<string>"
+  # fileContent: "@<file_path>"
+
+## api gateway truststore format
+webmethods_apigateway_keystore:
+  # keyStoreName: "<string>"
+  # keyStoreType: "<string>"
+  # keyStoreProvider: "<string>"
+  # keyStorePassword: "<string>"
+  # uploadFileName: "<string>"
+  # keyStoreDescription: "<string>"
+  # fileContentPath: "<string>"
+
+webmethods_apigateway_keytruststore_configuration:
+  # keystoreName: "<string>"
+  # signingAlias: "<string>"
+  # truststoreName: "<string>"
+  # outboundKeystoreName: "<string>"
+  # outboundKeyAlias: "<string>"
+  # outboundTruststoreName: "<string>"
+
+## api portal registration - format
+webmethods_apigateway_portalgateway:
+  # id: "<string>"
+  # refId: "<string>"
+  # gatewayName: "<string>"
+  # gatewayDescription: "<string>"
+  # gatewayUsername: "<string>"
+  # gatewayPassword: "<string>"
+  # gatewayURL: "<string>"
+  # version: "<string>"
+  # stageName: "<string>"
+  # published: "<boolean>"
+  # externalPortal: 
+  #   endpointTenant: "<string>"
+  #   endpointURL: "<string>"
+  #   endpointUsername: "<string>"
+  #   endpointPassword: "<string>"
+  #   type: "<string>"
+
+webmethods_apigateway_promotions_stages:
+  # - name: "<string>"
+  #   description: "<string>"
+  #   url: "<string>"
+  #   username: "<string>"
+  #   password: "<string>"
+  #   keystoreAlias: "<string>"
+  #   keyAlias: "<string>"
+  # - name: "<string>"
+  #   description: "<string>"
+  #   url: "<string>"
+  #   username: "<string>"
+  #   password: "<string>"
+  #   keystoreAlias: "<string>"
+  #   keyAlias: "<string>"
+
+webmethods_apigateway_ports_system_defaults:
+  HTTPS:
+    factoryKey: webMethods/HTTPS
+    ssl: 'true'
+    pkg: WmRoot
+    listenerType: Regular
+  HTTP:
+    factoryKey: webMethods/HTTP
+    ssl: 'false'
+    pkg: WmRoot
+    listenerType: Regular
+
+webmethods_apigateway_ports_list:
+  # - port_detail:
+  #     factoryKey: webMethods/HTTPS
+  #     listenerKey:
+  #     oldPkg:
+  #     listenerType:
+  #     ssl: 'true'
+  #     certChain: ''
+  #     enable: 'no'
+  #     port: '5443'
+  #     portAlias: SAGSecurePort
+  #     portDescription:
+  #     pkg: WmRoot
+  #     bindAddress:
+  #     maxQueue: '200'
+  #     keepAliveTimeout: '20000'
+  #     threadPool: 'true'
+  #     minThread: '1'
+  #     maxThread: '5'
+  #     threadPriority: '5'
+  #     curDelay:
+  #     useJSSE: 'true'
+  #     clientAuth: none
+  #     idProvider: ''
+  #     krbJaasContext:
+  #     krbClientPrincipal:
+  #     krbClientPassword:
+  #     retype_krbClientPassword:
+  #     krbServicePrincipalForm: username
+  #     krbServicePrincipal:
+  #     keyStore:
+  #     alias: 
+  #     trustStore:
+  #   access_mode:
+  #     accessMode: allow
+  #     pkg: WmRoot
+  #     port: ""
+  #     services: []
+  #   ip_access_mode:
+  #     ipAccessType: allow
+  #     pkg: WmRoot
+  #     hostsList: []
+
+## extended settings - is runtime settings (note: this must be run on all the nodes)
+webmethods_apigateway_extended_settings_isruntime_watt_keys: {}
+webmethods_apigateway_extended_settings_coregateway_extended_keys: {}

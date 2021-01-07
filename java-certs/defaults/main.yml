@@ -1,0 +1,14 @@
+---
+
+hide_passwords: no
+java_home:
+java_keytool_exec: "{{ java_home }}/bin/keytool"
+java_keystore_path:
+java_keystore_key_alias:
+java_keystore_type: "jks"
+java_keystore_password:
+
+java_keystore_export_dir:
+java_keystore_export_file:
+
+cleanup_intermediary_files: true

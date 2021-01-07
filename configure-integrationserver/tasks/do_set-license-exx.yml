@@ -1,0 +1,13 @@
+---
+
+  - name: Include generic set license tasks
+    include_tasks: "do_set-license.yml"
+    vars:
+      webmethods_target_license_path: "{{ webmethods_integrationserver_exx_license_path }}"
+      webmethods_license_inzip_path: "{{ webmethods_integrationserver_exx_license_inzip_src_path }}"
+
+  - name: Set changed flag
+    set_fact:
+      configure_integrationserver_set_license_exx_changed: "{{ configure_integrationserver_set_license_changed | bool }}"
+
+  - debug: var=configure_integrationserver_set_license_exx_changed

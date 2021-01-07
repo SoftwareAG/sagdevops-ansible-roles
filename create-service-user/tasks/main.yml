@@ -1,16 +1,27 @@
 ---
 
+- name: Logging user params values
+  debug:
+    msg:
+      - "userid = {{ userid | default('undefined',true) }}"
+      - "username = {{ username | default('undefined',true) }}"
+      - "user_description = {{ user_description | default('undefined',true) }}"
+      - "groupid = {{ groupid | default('undefined',true) }}"
+      - "groupname = {{ groupname | default('undefined',true) }}"
+      - "authorized_sshkey_path = {{ authorized_sshkey_path | default('undefined',true) }}"
+
 - name: Ensure base group
   group:
-    gid: "{{groupid | default(omit)}}"
+    gid: "{{ groupid | default(omit) }}"
     name: "{{ groupname }}"
     state: present
 
 - name: Ensure base user
   user:
-    uid: "{{userid | default(omit)}}"
+    uid: "{{ userid | default(omit) }}"
     name: "{{ username }}"
     group: "{{ groupname }}"
+    comment: "{{ user_description | default(omit) }}"
     state: present
     shell: /bin/bash
     home: "/home/{{ username }}"
@@ -28,7 +39,12 @@
     key: "{{ lookup('file', '{{ item }}') }}"
   with_fileglob:
     - "{{ authorized_sshkey_path | default('/nonexistant') }}"
- 
+
+- name: Logging aws params values
+  debug:
+    msg:
+      - "aws_access_key = {{ aws_access_key | default('undefined',true) }}"
+
 - name: Create .aws directory
   file:
     path: "/home/{{ username }}/.aws"
@@ -37,7 +53,7 @@
     group: "{{ groupname }}"
     mode: 0700
   when: aws_access_key is defined and aws_access_key != ""
- 
+
 - name:  Write the aws config
   template:
     src: aws_credentials.j2

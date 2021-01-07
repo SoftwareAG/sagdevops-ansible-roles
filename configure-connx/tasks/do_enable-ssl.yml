@@ -1,0 +1,46 @@
+---
+
+
+  - debug: var=configure_connx_params_ssl_key_path
+  - debug: var=configure_connx_params_ssl_cert_path
+
+  - name: fail if param not specified
+    fail: 
+      msg: "configure_connx_params_ssl_key_path not specified...cannot do anything."
+    when: configure_connx_params_ssl_key_path is not defined or configure_connx_params_ssl_key_path == ""
+
+  - name: fail if param not specified when operation is not 1
+    fail: 
+      msg: "configure_connx_params_ssl_cert_path not specified...cannot do anything."
+    when: configure_connx_params_ssl_cert_path is not defined or configure_connx_params_ssl_cert_path == ""
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_connx_enable_ssl_changed: false
+    when: configure_connx_enable_ssl_changed is not defined
+
+  - name: Adding multiple entries in the sql registry
+    include_tasks: "do_set-registry-entries.yml"
+    vars:
+      configure_connx_params_sqlregistry_entries: 
+        - operation: "{{ configure_connx_params_sqlregistry_operation_create }}"
+          key: "CONNX.JDBC.CNXLISTENSSL"
+          key_datatype: "{{ configure_connx_params_sqlregistry_key_data_type_integer }}"
+          key_value: 1
+          key_value_issecure: false
+        - operation: "{{ configure_connx_params_sqlregistry_operation_create }}"
+          key: "CONNX.JDBC.SSLCERT"
+          key_datatype: "{{ configure_connx_params_sqlregistry_key_data_type_string }}"
+          key_value: "{{ configure_connx_params_ssl_cert_path }}"
+          key_value_issecure: false
+        - operation: "{{ configure_connx_params_sqlregistry_operation_create }}"
+          key: "CONNX.JDBC.SSLKEY"
+          key_datatype: "{{ configure_connx_params_sqlregistry_key_data_type_string }}"
+          key_value: "{{ configure_connx_params_ssl_key_path }}"
+          key_value_issecure: false
+
+  - name: Set changed flag to true
+    set_fact: 
+      configure_connx_enable_ssl_changed: true
+
+

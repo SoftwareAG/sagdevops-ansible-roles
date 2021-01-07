@@ -18,7 +18,7 @@
     regexp: '^(\S+\s+\/tmp\s+\S+\s+)(\S+)(,noexec)(\s+.+)$'
     line: '\1\2\4'
   register: fstab
- 
+
 - name: 'If /tmp changed, remount'
   command: 'mount /tmp -o remount'
   args:

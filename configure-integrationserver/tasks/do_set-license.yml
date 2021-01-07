@@ -1,0 +1,51 @@
+---
+
+  - debug: var=webmethods_target_license_path
+  - debug: var=webmethods_license_inzip_path
+
+  - name: Check if license file is there at target location
+    stat:
+      path: "{{ webmethods_target_license_path }}"
+    register: stat_license_exists
+
+  - debug: var=stat_license_exists
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_set_license_changed: false
+    when: configure_integrationserver_set_license_changed is not defined
+
+  - name: Get license from the license repo if it's not there already
+    block:
+      - import_role:
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: get_licenses_from_s3
+          webmethods_provisioning_files_download_descritors:
+            - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
+              local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+          webmethods_localrepo_license_inzip_filepath_copy_src: "{{ webmethods_license_inzip_path }}"
+          webmethods_localrepo_license_inzip_filepath_copy_dest: "{{ webmethods_target_license_path }}"
+
+      - import_role:
+          name: provision-with-installer-from-s3
+        vars:
+          provision_action: cleanup
+
+      - name: Re-check if license file is at target location
+        stat:
+          path: "{{ webmethods_target_license_path }}"
+        register: stat_license_exists_recheck
+
+      - name: fail if license file is still not there at target location
+        fail:
+          msg: "license file is still not in the expected location..."
+        when: stat_license_exists_recheck.stat.exists == false
+
+      - name: Set changed flag to true
+        set_fact:
+          configure_integrationserver_set_license_changed: true
+  
+    when: stat_license_exists.stat.exists == false
+
+  - debug: var=configure_integrationserver_set_license_changed

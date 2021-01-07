@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><config>
+<autoConfig>
+    <accessControl>
+
+    <!-- Integration Server groups-->
+    {% for wxconfig_group in wxconfig_params_groups_list %}
+      <group name="{{ wxconfig_group.name }}" updateIfExists="{{ wxconfig_group.updateIfExists }}" deleteOnUnload="{{ wxconfig_group.deleteOnUnload }}">
+        {% if wxconfig_group.members is defined %}
+          {% for username in wxconfig_group.members %}
+          <member user="{{ username }}" />
+          {% endfor %}
+        {% endif %}  
+      </group>
+    {% endfor %}
+
+    <!-- Integration Server ACLs -->
+    {% for wxconfig_acl in wxconfig_params_acl_list %}
+      <acl name="{{ wxconfig_acl.name }}" updateIfExists="{{ wxconfig_acl.updateIfExists }}" deleteOnUnload="{{ wxconfig_acl.deleteOnUnload }}">
+        {% if wxconfig_acl.groups is defined %}
+          {% for group in wxconfig_acl.groups %}
+          <member group="{{ group }}" />
+          {% endfor %} 
+        {% endif %}   
+      </acl>
+    {% endfor %}
+
+    {% for wxconfig_service_acl_mapping in wxconfig_params_service_acl_mapping_list %}
+      <service name="{{ wxconfig_service_acl_mapping.servicename }}">
+        <!-- includeSubfolders is "true" by default -->
+        <!-- Specific services can be excluded when an entire folder is processed -->
+        {% if wxconfig_service_acl_mapping.excludes is defined %}
+          {% for exclude in wxconfig_service_acl_mapping.excludes %}
+            <exclude service="{{ exclude }}" />
+           {% endfor %}    
+        {% endif %}
+        
+        <!-- It is possible to set only some of the ACLs, e.g. the execute ACL without changing any of the others -->
+        <!-- 'enforce' can be "always" or "topLevelOnly" // Other values will be converted to "topLevelOnly" -->
+        {% if wxconfig_service_acl_mapping.executeACL is defined %}
+        <executeACL enforce="{{ wxconfig_service_acl_mapping.executeACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.executeACL.name }}</executeACL>
+        {% endif %}
+
+        {% if wxconfig_service_acl_mapping.browseACL is defined %}
+        <browseACL enforce="{{ wxconfig_service_acl_mapping.browseACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.browseACL.name }}</browseACL>
+        {% endif %}
+
+        {% if wxconfig_service_acl_mapping.readACL is defined %}
+        <readACL enforce="{{ wxconfig_service_acl_mapping.readACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.readACL.name }}</readACL>
+        {% endif %}
+
+        {% if wxconfig_service_acl_mapping.writeACL is defined %}
+        <writeACL enforce="{{ wxconfig_service_acl_mapping.writeACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.writeACL.name }}</writeACL>
+        {% endif %}
+      </service>
+    {% endfor %}
+  </accessControl>
+</autoConfig>
+</config>

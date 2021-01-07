@@ -6,6 +6,7 @@
         <property name="l2.nha.dirtydb.autoDelete" value="true"/>
         <property name="logging.maxBackups" value="20"/>
         <property name="logging.maxLogFileSize" value="50"/>
+        <property name="l1.healthcheck.l2.bindPort" value="9501-9505"/>
     </tc-properties>
     <servers>
         {% for tc_ip in tc_ips %}

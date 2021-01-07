@@ -5,6 +5,24 @@
     msg: "webmethods_localrepo_target_dir not specified...can't do anything"
   when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
+- name: "Include tasks to fetch the install files from s3"
+  include_tasks: "command_get_files_from_s3.yml"
+  vars:
+    webmethods_provisioning_files_download_descritors:
+      - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
+        local_path: "{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
+      - bucket_path: "{{ webmethods_s3repo_products_image_filename }}"
+        local_path: "{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
+      - bucket_path: "{{ webmethods_s3repo_products_autoscript_filename }}"
+        local_path: "{{ webmethods_localrepo_products_autoscript_filename | default('installer.script', true) }}"
+
+- name: "Include tasks to fetch the license files from s3"
+  include_tasks: "command_get_licenses_from_s3.yml"
+  vars:
+    webmethods_provisioning_files_download_descritors:
+      - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
+        local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
+
 - name: Set base extracted license path variable
   set_fact:
     webmethods_localrepo_license_extractedzip_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
@@ -37,3 +55,6 @@
 - name: Print the job_result to the console.
   debug:
     msg: "{{ job_result.stdout_lines | join('\n') }}"
+
+- name: "Include tasks to cleanup the install artifacts"
+  include_tasks: "command_cleanup.yml"
