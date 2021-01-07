@@ -31,12 +31,12 @@
         - operation: "{{ configure_connx_params_sqlregistry_operation_create }}"
           key: "CONNX.JDBC.SSLCERT"
           key_datatype: "{{ configure_connx_params_sqlregistry_key_data_type_string }}"
-          key_value: "{{ configure_connx_params_ssl_key_path }}"
+          key_value: "{{ configure_connx_params_ssl_cert_path }}"
           key_value_issecure: false
         - operation: "{{ configure_connx_params_sqlregistry_operation_create }}"
           key: "CONNX.JDBC.SSLKEY"
           key_datatype: "{{ configure_connx_params_sqlregistry_key_data_type_string }}"
-          key_value: "{{ configure_connx_params_ssl_cert_path }}"
+          key_value: "{{ configure_connx_params_ssl_key_path }}"
           key_value_issecure: false
 
   - name: Set changed flag to true
