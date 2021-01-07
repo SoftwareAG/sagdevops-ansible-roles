@@ -33,6 +33,7 @@
       args:
         chdir: "{{ webmethods_script_dir }}"
         executable: /bin/sh
+      environment: "{{ webmethods_command_envs }}"
       register: cmd_result
       when: stat_startup.stat.exists 
     

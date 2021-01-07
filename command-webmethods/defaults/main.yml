@@ -9,3 +9,4 @@ webmethods_script_start:
 webmethods_script_start_params:
 webmethods_script_stop:
 webmethods_script_stop_params:
+webmethods_command_envs: {}

@@ -5,3 +5,7 @@
     webmethods_script_dir: "{{ webmethods_install_dir }}/connx"
     webmethods_script_start: "./jdbcserver START"
     webmethods_script_stop: "./jdbcserver STOP"
+    webmethods_command_envs:
+      CNXDIR: "{{ webmethods_install_dir }}/connx"
+      CONNXREGISTRY: "{{ webmethods_install_dir }}/connx/connxreg.db"
+      CONNXREGISTRY64: "{{ webmethods_install_dir }}/connx/connxreg64.db"
