@@ -6,5 +6,12 @@
       regexp: '^{{ item.key }}'
       insertafter: '^#{{ item.key }}'
       line: "{{ item.key }}={{ item.value }}"
+    when: item.value is defined
     with_dict: "{{ tc_jvm_params }}"
-    when: tc_jvm_params is defined and (tc_jvm_params|length > 0)
+    register: mutative_operation
+
+  - name: Set changed flag to true if any mutating operation did change
+    set_fact:
+      configure_terracotta_set_jvm_param_changed: "{{ mutative_operation.changed }}"
+
+  - debug: var=configure_terracotta_set_jvm_param_changed
