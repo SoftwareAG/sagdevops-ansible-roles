@@ -43,6 +43,11 @@
     set_fact:
       webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_system_defaults[webmethods_apigateway_port.port_detail.protocol],recursive=True) }}"
 
+  - name: Add the bind address field if it's not there or empty
+    set_fact:
+      webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port_tosave | combine({ 'bindAddress': '0.0.0.0'},recursive=True) }}"
+    when: webmethods_apigateway_port_tosave.bindAddress is not defined or webmethods_apigateway_port_tosave.bindAddress == ""
+
   - name: If current API Gateway port exists, update it
     set_fact:
       webmethods_apigateway_port_tosave: "{{ webmethods_apigateway_port_tosave | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_tosave.pkg},recursive=True) }}"
