@@ -14,6 +14,7 @@
       - "getfroms3_local_path_owner_group: {{ getfroms3_local_path_owner_group | default('undefined',true) }}"
       - "getfroms3_local_path_permission: {{ getfroms3_local_path_permission | default('undefined',true) }}"
       - "getfroms3_force_download: {{ getfroms3_force_download | default('undefined',true) }}"
+      verbosity: 1
       
   - name: fail if getfroms3_bucket_name not specified
     fail: 
@@ -40,6 +41,7 @@
       - name: Print variables
         debug:
           msg: "Local path directory: {{ getfroms3_local_path | dirname }}"
+          verbosity: 2
 
       - name: Create the local path dir on the machine if it does not exist
         file:
@@ -97,6 +99,7 @@
       - name: Print the job_result to the console.
         debug:
           msg: "{{ job_result.stdout_lines | last }}"
+          verbosity: 2
 
       - name: Check if getfroms3_local_path still does not exist
         stat: 
