@@ -1,7 +1,7 @@
 ---
 
   - name: Ports to update
-    debug: var=webmethods_apigateway_ports_list
+    debug: var=webmethods_apigateway_ports_list verbosity=3
 
   # - name: Update ports
   #   include_role:

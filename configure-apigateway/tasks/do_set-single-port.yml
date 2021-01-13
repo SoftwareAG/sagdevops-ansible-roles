@@ -1,7 +1,7 @@
 ---
 
   - name: Port to update
-    debug: var=webmethods_apigateway_port
+    debug: var=webmethods_apigateway_port verbosity=3
 
   - name: fail if webmethods_apigateway_port.port_detail not specified
     fail: 
@@ -13,7 +13,7 @@
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
   
   - name: port listenerkey
-    debug: var=webmethods_apigateway_port_listenerkey
+    debug: var=webmethods_apigateway_port_listenerkey verbosity=3
   
   - name: fail if webmethods_apigateway_port_listenerkey is empty
     fail: 
@@ -35,7 +35,7 @@
     register: get_existing_port
 
   - name: Response for current API Gateway port based on listenerkey
-    debug: var=get_existing_port
+    debug: var=get_existing_port verbosity=3
 
 ##      "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
 
@@ -60,10 +60,10 @@
     when: get_existing_port.json.uniqueID is not defined
 
   - name: API Gateway port object to save
-    debug: var=webmethods_apigateway_port_tosave
+    debug: var=webmethods_apigateway_port_tosave verbosity=3
 
   - name: API Gateway port object to save
-    debug: var=webmethods_apigateway_port_method
+    debug: var=webmethods_apigateway_port_method verbosity=3
 
   - name: Save api gateway port
     uri:
@@ -81,7 +81,7 @@
     register: webmethods_apigateway_port_saved
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_saved
+    debug: var=webmethods_apigateway_port_saved verbosity=3
 
   - name: Response check - For a new ADD, fail if json response status is not success
     fail: 
@@ -110,7 +110,7 @@
     when: webmethods_apigateway_port.access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_accessmode_saved
+    debug: var=webmethods_apigateway_port_accessmode_saved verbosity=3
 
   - name: Save IP access mode for the port
     uri:
@@ -129,4 +129,4 @@
     when: webmethods_apigateway_port.ip_access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_ipaccessmode_saved
+    debug: var=webmethods_apigateway_port_ipaccessmode_saved verbosity=3

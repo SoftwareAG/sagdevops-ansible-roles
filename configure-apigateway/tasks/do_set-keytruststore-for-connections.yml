@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_keytruststore_configuration
+  - debug: var=webmethods_apigateway_keytruststore_configuration verbosity=3
   
   - name: Update load balancer urls
     uri:

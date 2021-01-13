@@ -1,9 +1,9 @@
 ---
 
-  - debug: var=webmethods_apigateway_loadbalancers_http_urls
-  - debug: var=webmethods_apigateway_loadbalancers_https_urls
-  - debug: var=webmethods_apigateway_loadbalancers_websocket_urls
-  - debug: var=webmethods_apigateway_loadbalancers_webapp_url
+  - debug: var=webmethods_apigateway_loadbalancers_http_urls verbosity=3
+  - debug: var=webmethods_apigateway_loadbalancers_https_urls verbosity=3
+  - debug: var=webmethods_apigateway_loadbalancers_websocket_urls verbosity=3
+  - debug: var=webmethods_apigateway_loadbalancers_webapp_url verbosity=3
 
   - name: Update load balancer urls
     uri:

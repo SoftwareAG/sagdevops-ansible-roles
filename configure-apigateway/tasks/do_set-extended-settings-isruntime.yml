@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys
+  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys verbosity=3
   
   - name: Prepare request body content
     set_fact:
@@ -9,7 +9,7 @@
           wattKeys: "{{ webmethods_apigateway_extended_settings_isruntime_watt_keys }}"
           extendedKeys: {}
 
-  - debug: var=webmethods_apigateway_extended_settings_request_body
+  - debug: var=webmethods_apigateway_extended_settings_request_body verbosity=3
 
   - name: Update extended settings
     uri:

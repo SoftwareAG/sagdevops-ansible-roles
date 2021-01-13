@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_ldap_settings
+  - debug: var=webmethods_apigateway_ldap_settings verbosity=3
 
   - name: Update LDAP settings
     uri:
