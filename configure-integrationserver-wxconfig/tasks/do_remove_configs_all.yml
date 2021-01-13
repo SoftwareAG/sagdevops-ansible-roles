@@ -21,7 +21,7 @@
       patterns: "*{{ wxconfig_params_unique_groupname | default('',true) | lower | regex_replace('all') }}.xml"
     register: "result_wxconfig_files"
 
-  - debug: var=result_wxconfig_files
+  - debug: var=result_wxconfig_files verbosity=4
 
   - name: Remove all the relevant config lines in the main controller file
     lineinfile:
