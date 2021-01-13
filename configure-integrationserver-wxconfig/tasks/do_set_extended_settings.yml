@@ -31,7 +31,7 @@
       - name: Populate wxconfig file if the wxconfig_params_extended_settings_list is defined and non empty
         template:
           src: as-extendedSettings-template.xml
-          dest: "{{ wxconfig_target_package_config_path }}/as-extendedSettings-{{ wxconfig_params_unique_groupname }}.xml"
+          dest: "{{ wxconfig_target_package_config_path }}/wxconfigs-extendedSettings-{{ wxconfig_params_unique_groupname | lower }}.xml"
         register: "result_wxconfig_content_operation"
 
       - name: Enable this new config in the main controller file
@@ -42,7 +42,7 @@
           line: "{{ item }}"
         register: "result_wxconfig_controller_operation"
         with_items:
-          - "wx.config.incl=as-extendedSettings-{{ wxconfig_params_unique_groupname }}.xml"
+          - "wx.config.incl=wxconfigs-extendedSettings-{{ wxconfig_params_unique_groupname | lower }}.xml"
 
       - name: Set changed flag to true if any mutating operation did change
         set_fact: 

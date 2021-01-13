@@ -18,7 +18,7 @@
       - name: Populate wxconfig encrypted values file if the wxconfig_params_encrypted_items is defined and non empty
         template:
           src: WxConfigEncVal_template.txt.j2
-          dest: "{{ wxconfig_encrypted_values_dir }}/WxConfigEncVal_{{ wxconfig_params_unique_groupname }}.txt"
+          dest: "{{ wxconfig_encrypted_values_dir }}/WxConfigEncVal_{{ wxconfig_params_unique_groupname | lower }}.txt"
         register: "result_wxconfig_content_operation"
 
       - name: Set changed flag to true if any mutating operation did change

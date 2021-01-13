@@ -15,15 +15,15 @@
       path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
     register: stat_wxconfig_enabled
 
-  - name: Find /var/log files equal or greater than 10 megabytes ending with .old or .log.gz
+  - name: Find wxconfig files in package
     find:
       paths: "{{ wxconfig_target_package_config_path }}"
       patterns: "*{{ wxconfig_params_unique_groupname | default('',true) | lower | regex_replace('all') }}.xml"
     register: "result_wxconfig_files"
 
-  - debug: var=result_wxconfig_files verbosity=4
+  - debug: var=result_wxconfig_files verbosity=3
 
-  - name: Remove all the relevant config lines in the main controller file
+  - name: Remove all the relevant config lines in the main wxconfig controller file
     lineinfile:
       path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
       regexp: '^wx.config.incl={{ item.path | basename }}'
@@ -32,7 +32,7 @@
     with_items: "{{ result_wxconfig_files.files }}"
     when: result_wxconfig_files.matched > 0 and stat_wxconfig_enabled.stat.exists
 
-  - name: Remove actual configs files
+  - name: Remove actual wxconfig configs files
     file:
       path: "{{ item.path }}"
       state: absent
