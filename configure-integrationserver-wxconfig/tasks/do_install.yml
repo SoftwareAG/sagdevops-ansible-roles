@@ -29,4 +29,4 @@
     when: >
       configure_integrationserver_install_packages_changed
         
-  - debug: var=configure_integrationserver_wxconfig_install_changed
+  - debug: var=configure_integrationserver_wxconfig_install_changed verbosity=2

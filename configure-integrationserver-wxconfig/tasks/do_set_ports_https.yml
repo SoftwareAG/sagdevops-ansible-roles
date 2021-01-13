@@ -54,3 +54,4 @@
   - name: Print the changed var
     debug:
       var: configure_integrationserver_wxconfig_set_ports_https_changed
+      verbosity: 2

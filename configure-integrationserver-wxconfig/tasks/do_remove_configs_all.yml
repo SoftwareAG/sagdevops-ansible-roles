@@ -50,3 +50,4 @@
   - name: Print the changed var
     debug:
       var: configure_integrationserver_wxconfig_remove_configs_group_changed
+      verbosity: 2

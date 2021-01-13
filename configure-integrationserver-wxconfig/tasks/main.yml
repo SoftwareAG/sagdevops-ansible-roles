@@ -3,6 +3,7 @@
 - name: Print the params
   debug:
     msg: "Running with action {{ configs_action | default('undefined') }}"
+    verbosity: 1
 
 - name: fail if configs_action not specified
   fail: 

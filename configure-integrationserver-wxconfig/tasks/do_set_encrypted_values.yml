@@ -31,3 +31,4 @@
   - name: Print the changed var
     debug:
       var: configure_integrationserver_wxconfig_set_encrypted_values_changed
+      verbosity: 2
