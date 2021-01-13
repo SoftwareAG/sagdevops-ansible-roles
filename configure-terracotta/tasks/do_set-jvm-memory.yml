@@ -16,4 +16,4 @@
     set_fact:
       configure_terracotta_set_jvm_memory_changed: "{{ mutative_operation.changed }}"
 
-  - debug: var=configure_terracotta_set_jvm_memory_changed
+  - debug: var=configure_terracotta_set_jvm_memory_changed verbosity=3

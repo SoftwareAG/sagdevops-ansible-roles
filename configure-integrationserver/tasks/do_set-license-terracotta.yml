@@ -10,4 +10,4 @@
     set_fact:
       configure_integrationserver_set_license_terracotta_changed: "{{ configure_integrationserver_set_license_changed | bool }}"
 
-  - debug: var=configure_integrationserver_set_license_terracotta_changed
+  - debug: var=configure_integrationserver_set_license_terracotta_changed verbosity=3

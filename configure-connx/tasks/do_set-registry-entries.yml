@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=configure_connx_params_sqlregistry_entries
+  - debug: var=configure_connx_params_sqlregistry_entries verbosity=3
 
   - name: Adding multiple entries in the sql registry
     include_tasks: "do_set-registry-entry.yml"

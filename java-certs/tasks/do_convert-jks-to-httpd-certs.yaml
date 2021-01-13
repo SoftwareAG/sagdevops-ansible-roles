@@ -1,16 +1,16 @@
 ---
 
   - name: Print jks_input_file_path var
-    debug: var=jks_input_file_path
+    debug: var=jks_input_file_path verbosity=3
 
   - name: Print httpd_certs_output_dir var
-    debug: var=httpd_certs_output_dir
+    debug: var=httpd_certs_output_dir verbosity=3
 
   - name: Print httpd_certs_output_crt_file var
-    debug: var=httpd_certs_output_crt_file
+    debug: var=httpd_certs_output_crt_file verbosity=3
 
   - name: Print httpd_certs_output_key_file var
-    debug: var=httpd_certs_output_key_file
+    debug: var=httpd_certs_output_key_file verbosity=3
 
   - name: fail if jks_input_file_path not specified
     fail: 

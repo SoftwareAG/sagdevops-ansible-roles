@@ -21,7 +21,7 @@
       when: stat_shutdown.stat.exists 
     
     - name: Print command results to the console.
-      debug: var=cmd_result
+      debug: var=cmd_result verbosity=3
       when: stat_shutdown.stat.exists 
 
     when: product_command is defined and product_command == "stop"
@@ -48,7 +48,7 @@
       when: stat_startup.stat.exists 
     
     - name: Print command results to the console.
-      debug: var=cmd_result
+      debug: var=cmd_result verbosity=3
       when: stat_startup.stat.exists 
 
     when: product_command is defined and product_command == "start"

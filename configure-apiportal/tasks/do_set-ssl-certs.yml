@@ -1,7 +1,7 @@
 ---
 
   - name: Print webmethods_apiportal_ssl_zip_path var
-    debug: var=webmethods_apiportal_ssl_zip_path
+    debug: var=webmethods_apiportal_ssl_zip_path verbosity=3
 
   - name: check if apiportal_ssl_zipfile already there
     stat: 

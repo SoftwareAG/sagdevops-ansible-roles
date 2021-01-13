@@ -14,4 +14,4 @@
     set_fact:
       configure_terracotta_set_jvm_param_changed: "{{ mutative_operation.changed }}"
 
-  - debug: var=configure_terracotta_set_jvm_param_changed
+  - debug: var=configure_terracotta_set_jvm_param_changed verbosity=3

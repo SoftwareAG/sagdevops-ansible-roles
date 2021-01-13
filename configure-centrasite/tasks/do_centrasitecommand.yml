@@ -1,17 +1,17 @@
 ---
 
-  - debug: var=configure_centrasite_params_managementutils_command_names
+  - debug: var=configure_centrasite_params_managementutils_command_names verbosity=3
 
-  - debug: var=configure_centrasite_params_managementutils_command_params
+  - debug: var=configure_centrasite_params_managementutils_command_params verbosity=3
 
-  - debug: var=configure_centrasite_params_managementutils_command_params_secure
+  - debug: var=configure_centrasite_params_managementutils_command_params_secure verbosity=3
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
-  - debug: var=configure_centrasite_params_managementutils_registry_url
+  - debug: var=configure_centrasite_params_managementutils_registry_url verbosity=3
   
-  - debug: var=configure_centrasite_params_managementutils_runas_username
+  - debug: var=configure_centrasite_params_managementutils_runas_username verbosity=3
   
-  - debug: var=configure_centrasite_params_managementutils_runas_password
+  - debug: var=configure_centrasite_params_managementutils_runas_password verbosity=3
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: fail if param not specified
