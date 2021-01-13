@@ -15,7 +15,14 @@
       path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
     register: stat_wxconfig_enabled
 
-  ##{{ wxconfig_params_unique_groupname | default('',true) | lower | regex_replace('all') }}
+  - name: Find /var/log files equal or greater than 10 megabytes ending with .old or .log.gz
+    find:
+      paths: "{{ wxconfig_target_package_config_path }}"
+      patterns: "*{{ wxconfig_params_unique_groupname | default('',true) | lower | regex_replace('all') }}.xml"
+    register: "result_wxconfig_files"
+
+  - debug: var=result_wxconfig_files
+
   - name: Remove all the relevant config lines in the main controller file
     lineinfile:
       path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
@@ -24,7 +31,7 @@
     register: "result_wxconfig_remove_configs_lines"
     with_fileglob:
       - "{{ wxconfig_target_package_config_path }}/*.xml"
-    when: stat_wxconfig_enabled.stat.exists
+    # when: stat_wxconfig_enabled.stat.exists
 
   - name: Remove actual configs files
     file:
