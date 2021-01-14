@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <autoConfig>
+        {% if wxconfig_params_ldap is defined %}
         <ldap>
             <cache>
-                <numberOfUsers></numberOfUsers>
-                <credentialTimeToLiveMin></credentialTimeToLiveMin>
+                <numberOfUsers>{{ wxconfig_params_ldap.numberOfUsers | default('10',true) }}</numberOfUsers>
+                <credentialTimeToLiveMin>{{ wxconfig_params_ldap.credentialTimeToLiveMin | default('60',true) }}</credentialTimeToLiveMin>
             </cache>
             <serverList>
-                <server updateIfExists="true" deleteOnUnload="true">
+                <server updateIfExists="{{ wxconfig_params_ldap.updateIfExists | default('true',true) }}" deleteOnUnload="{{ wxconfig_params_ldap.deleteOnUnload | default('false',true) }}">
                     <url></url>
                     <authentication>
                         <principal></principal>
