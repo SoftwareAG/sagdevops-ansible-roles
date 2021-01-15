@@ -48,6 +48,7 @@ apigateway_rest_configurations_destination_gateway: "{{ apigateway_rest_configur
 apigateway_rest_configurations_keytruststores: "{{ apigateway_rest_configurations_baseapi }}/keystore"
 apigateway_rest_configurations_extendedsettings: "{{ apigateway_rest_configurations_baseapi }}/settings"
 apigateway_rest_configurations_ldapsettings: "{{ apigateway_rest_configurations_baseapi }}/ldapConfig"
+apigateway_rest_configurations_samlsso: "{{ apigateway_rest_configurations_baseapi }}/samlsso"
 
 # portal gateways
 apigateway_rest_configurations_apiportal_connect: "{{ apigateway_rest_base_path }}/portalGateways"

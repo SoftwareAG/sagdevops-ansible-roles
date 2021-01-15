@@ -44,3 +44,32 @@ wxconfig_params_userpassword_list: []
 wxconfig_params_groups_list: []
 wxconfig_params_acl_list: []
 wxconfig_params_service_acl_mapping_list: []
+
+## ldap settings
+wxconfig_params_ldap: []
+  # numberOfUsers: 10
+  # credentialTimeToLiveMin: 60
+  # server_list:
+  #   - updateIfExists: True
+  #     deleteOnUnload: False
+  #     url: ""
+  #     authentication:
+  #       principal: ""
+  #       password: ""
+  #     connection:
+  #       timeoutSec:
+  #       poolSize_min:
+  #       poolSize_max:
+  #     users:
+  #       synthesize:
+  #         prefix:
+  #         suffix:
+  #       query:
+  #         idproperty:
+  #         rootdn:
+  #     groups:
+  #       default:
+  #       memberattribute:
+  #       query:
+  #         idproperty:
+  #         rootdn:
