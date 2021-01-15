@@ -3,10 +3,9 @@
     <autoConfig>
         <extendedSettings>
             {% for wxconfig_extended_setting in wxconfig_params_extended_settings_list %}
-            
+            <setting operation="{{ wxconfig_extended_setting.visibility | default('show',true) }}" name="{{ wxconfig_extended_setting.name }}" />
             {% if wxconfig_extended_setting.type == "add" %}
                 <setting operation="addUpdate" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" />
-                <setting operation="{{ wxconfig_extended_setting.visibility | default('show',true) }}" name="{{ wxconfig_extended_setting.name }}" />
             {% elif wxconfig_extended_setting.type == "remove" %}
                 <setting operation="remove" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" />
             {% elif wxconfig_extended_setting.type == "append" %}
