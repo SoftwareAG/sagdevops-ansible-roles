@@ -14,16 +14,16 @@
                     <url>{{ ldap_server.url }}</url>
                     {% if ldap_server.authentication is defined %}
                     <authentication>
-                        <principal>{{ ldap_server.authentication.principal }}</principal>
+                        <principal>{{ ldap_server.authentication.principal | default('',true) }}</principal>
                         <password>[[encrypted:{{ ldap_server.authentication.password_encrypted_handle }}]]</password>
                     </authentication>
                     {% endif %}
                     {% if ldap_server.connection is defined %}
                     <connection>
-                        <timeoutSec>{{ ldap_server.connection.timeoutSec }}</timeoutSec>
+                        <timeoutSec>{{ ldap_server.connection.timeoutSec | default('',true) }}</timeoutSec>
                         <poolSize>
-                            <min>{{ ldap_server.connection.poolSize_min }}</min>
-                            <max>{{ ldap_server.connection.poolSize_max }}</max>
+                            <min>{{ ldap_server.connection.poolSize_min | default('',true) }}</min>
+                            <max>{{ ldap_server.connection.poolSize_max | default('',true) }}</max>
                         </poolSize>
                     </connection>
                     {% endif %}
@@ -31,26 +31,26 @@
                     <userDn>
                         {% if ldap_server.users.synthesize is defined %}
                         <synthesize>
-                            <prefix>{{ ldap_server.users.synthesize.prefix }}</prefix>
-                            <suffix>{{ ldap_server.users.synthesize.suffix }}</suffix>
+                            <prefix>{{ ldap_server.users.synthesize.prefix | default('',true) }}</prefix>
+                            <suffix>{{ ldap_server.users.synthesize.suffix | default('',true) }}</suffix>
                         </synthesize>
                         {% endif %}
                         {% if ldap_server.users.query is defined %}
                         <query>
-                            <idProperty>{{ ldap_server.users.query.idproperty }}</idProperty>
-                            <rootDn>{{ ldap_server.users.query.rootdn }}</rootDn>
+                            <idProperty>{{ ldap_server.users.query.idproperty | default('',true) }}</idProperty>
+                            <rootDn>{{ ldap_server.users.query.rootdn | default('',true) }}</rootDn>
                         </query>
                         {% endif %}
                     </userDn>
                     {% endif %}
                     {% if ldap_server.groups is defined %}
                     <group>
-                        <default>{{ ldap_server.groups.default }}</default>
-                        <memberAttribute>{{ ldap_server.groups.memberattribute }}</memberAttribute>
+                        <default>{{ ldap_server.groups.default | default('',true) }}</default>
+                        <memberAttribute>{{ ldap_server.groups.memberattribute | default('',true) }}</memberAttribute>
                         {% if ldap_server.groups.query is defined %}
                         <query>
-                            <idProperty>{{ ldap_server.groups.query.idproperty }}</idProperty>
-                            <rootDn>{{ ldap_server.groups.query.rootdn }}</rootDn>
+                            <idProperty>{{ ldap_server.groups.query.idproperty | default('',true) }}</idProperty>
+                            <rootDn>{{ ldap_server.groups.query.rootdn | default('',true) }}</rootDn>
                         </query>
                         {% endif %}
                     </group>
