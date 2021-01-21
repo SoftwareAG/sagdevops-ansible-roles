@@ -12,15 +12,20 @@
     fail: 
       msg: "webmethods_apigateway_port.port_detail not specified...cannot do anything."
     when: webmethods_apigateway_port.port_detail is not defined
-
+    
+  - name: Extract port fields and save into variable
+    set_fact:
+      webmethods_apigateway_port_type: "{{ webmethods_apigateway_port.port_type }}"
+      webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port.port_detail }}"
+      
   - name: Add the system fields to the object to save based on the port_type
     set_fact:
-      webmethods_apigateway_port.port_detail: "{{ webmethods_apigateway_port.port_detail | combine(webmethods_apigateway_ports_types_internals[webmethods_apigateway_port.port_type],recursive=True) }}"
+      webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine(webmethods_apigateway_ports_types_internals[webmethods_apigateway_port_type],recursive=True) }}"
 
   - name: Add the bind address field if it's not there or empty
     set_fact:
-      webmethods_apigateway_port.port_detail: "{{ webmethods_apigateway_port.port_detail | combine({ 'bindAddress': '0.0.0.0'},recursive=True) }}"
-    when: webmethods_apigateway_port.port_detail.bindAddress is not defined or webmethods_apigateway_port.port_detail.bindAddress == ""
+      webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine({ 'bindAddress': '0.0.0.0'},recursive=True) }}"
+    when: webmethods_apigateway_port_detail.bindAddress is not defined or webmethods_apigateway_port_detail.bindAddress == ""
 
   - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
@@ -53,7 +58,7 @@
 
   - name: If current API Gateway port exists, update it
     set_fact:
-      webmethods_apigateway_port.port_detail: "{{ webmethods_apigateway_port.port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port.port_detail.pkg},recursive=True) }}"
+      webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_detail.pkg},recursive=True) }}"
       webmethods_apigateway_port_method: PUT
     when: get_existing_port.json.uniqueID is defined
 
@@ -63,7 +68,7 @@
     when: get_existing_port.json.uniqueID is not defined
 
   - name: API Gateway port object to save
-    debug: var=webmethods_apigateway_port.port_detail verbosity=3
+    debug: var=webmethods_apigateway_port_detail verbosity=3
 
   - name: API Gateway port object to save
     debug: var=webmethods_apigateway_port_method verbosity=3
@@ -75,7 +80,7 @@
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
-      body: "{{ webmethods_apigateway_port.port_detail | default({}) | to_json }}"
+      body: "{{ webmethods_apigateway_port_detail | default({}) | to_json }}"
       force_basic_auth: yes
       validate_certs: false
       status_code: [200, 201]
