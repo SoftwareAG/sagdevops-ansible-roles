@@ -70,6 +70,9 @@
       p12_input_file_path: "{{ httpd_certs_output_dir }}/server_key.p12"
       p12_input_file_password: "{{ jks_input_file_password }}"
       pem_output_file_path: "{{ httpd_certs_output_dir }}/{{ httpd_certs_output_key_file }}"
+      extra_command_params:
+        - "-nodes"
+        - "-nocerts"
 
   - name: cleanup intermediary p12 file
     file:

@@ -22,7 +22,7 @@
 
   - name: append command params
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ 'pkcs12' ] + [ '-nodes' ] + [ '-nocerts' ]"
+      command_to_exec: "{{ command_to_exec }} + [ 'pkcs12' ]"
 
   - name: append input file
     set_fact:
@@ -38,6 +38,11 @@
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-out' ] + [ '{{ pem_output_file_path }}' ]"
     when: pem_output_file_path is defined and pem_output_file_path != ""
+
+  - name: append extra command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + {{ extra_command_params }}"
+    when: extra_command_params is defined and extra_command_params | length > 0
 
   - name: Print the command that we're going to run
     debug:
