@@ -1,6 +1,6 @@
 ---
 
-  - name: Port to update
+  - name: Port to delete
     debug: var=webmethods_apigateway_port verbosity=3
 
   - name: fail if webmethods_apigateway_port.port_type not specified
@@ -41,6 +41,8 @@
 
   - name: Response for current API Gateway port based on listenerkey
     debug: var=get_existing_port verbosity=3
+
+##      "{{ get_existing_port.json | combine(webmethods_apigateway_port.port_detail,recursive=True) }}"
 
   - name: Add the system fields to the object to save based on the protocol
     set_fact:

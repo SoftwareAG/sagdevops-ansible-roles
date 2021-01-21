@@ -166,31 +166,54 @@ webmethods_apigateway_promotions_stages:
   #   keystoreAlias: "<string>"
   #   keyAlias: "<string>"
 
-webmethods_apigateway_ports_system_defaults:
-  HTTPS:
+webmethods_apigateway_ports_types_internals:
+  regular_https:
     factoryKey: webMethods/HTTPS
     ssl: 'true'
+    useJSSE: 'true'
     pkg: WmRoot
+    protocol: HTTPS
     listenerType: Regular
-  HTTP:
+  regular_http:
     factoryKey: webMethods/HTTP
     ssl: 'false'
     pkg: WmRoot
+    protocol: HTTP
     listenerType: Regular
+  external_http:
+    factoryKey: webMethods/HTTP
+    ssl: 'false'
+    pkg: WmRoot
+    listenerType: revinvoke
+  external_https:
+    factoryKey: webMethods/HTTPS
+    ssl: 'true'
+    useJSSE: 'true'
+    pkg: WmRoot
+    listenerType: revinvoke
+  internal_http:
+    factoryKey: webMethods/HTTP
+    ssl: 'false'
+    pkg: WmRoot
+    listenerType: regularinternal
+  internal_https:
+    factoryKey: webMethods/HTTPS
+    ssl: 'true'
+    useJSSE: 'true'
+    pkg: WmRoot
+    listenerType: regularinternal
+  websocket: {}
 
 webmethods_apigateway_ports_list:
-  # - port_detail:
-  #     factoryKey: webMethods/HTTPS
+  # - port_type: regular_https
+  #   port_detail:
   #     listenerKey:
   #     oldPkg:
-  #     listenerType:
-  #     ssl: 'true'
   #     certChain: ''
   #     enable: 'no'
   #     port: '5443'
   #     portAlias: SAGSecurePort
   #     portDescription:
-  #     pkg: WmRoot
   #     bindAddress:
   #     maxQueue: '200'
   #     keepAliveTimeout: '20000'
@@ -199,7 +222,6 @@ webmethods_apigateway_ports_list:
   #     maxThread: '5'
   #     threadPriority: '5'
   #     curDelay:
-  #     useJSSE: 'true'
   #     clientAuth: none
   #     idProvider: ''
   #     krbJaasContext:
