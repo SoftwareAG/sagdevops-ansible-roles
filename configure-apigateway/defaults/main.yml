@@ -206,7 +206,11 @@ webmethods_apigateway_ports_types_internals:
     pkg: WmRoot
     protocol: HTTPS
     listenerType: regularinternal
-  websocket: {}
+  websocket:
+    factoryKey: webMethods/WebSocket
+    pkg: WmRoot
+    protocol: WebSocket
+    listenerType: websocket
 
 webmethods_apigateway_ports_list:
   # - port_type: regular_https
