@@ -61,7 +61,7 @@
       keystore_input_file_type: "JKS"
       keystore_input_file_alias: "{{ jks_input_file_alias }}"
       p12_output_file_path_dir: "{{ httpd_certs_output_dir }}"
-      p12_output_file_name: "server_key"
+      p12_output_file_name: "server_key.p12"
       p12_output_file_password: "{{ jks_input_file_password }}"
 
   - name: convert p12 key to pem
