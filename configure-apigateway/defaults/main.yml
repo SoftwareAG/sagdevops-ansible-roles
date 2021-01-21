@@ -184,23 +184,27 @@ webmethods_apigateway_ports_types_internals:
     factoryKey: webMethods/HTTP
     ssl: 'false'
     pkg: WmRoot
+    protocol: HTTP
     listenerType: revinvoke
   external_https:
     factoryKey: webMethods/HTTPS
     ssl: 'true'
     useJSSE: 'true'
     pkg: WmRoot
+    protocol: HTTPS
     listenerType: revinvoke
   internal_http:
     factoryKey: webMethods/HTTP
     ssl: 'false'
     pkg: WmRoot
+    protocol: HTTP
     listenerType: regularinternal
   internal_https:
     factoryKey: webMethods/HTTPS
     ssl: 'true'
     useJSSE: 'true'
     pkg: WmRoot
+    protocol: HTTPS
     listenerType: regularinternal
   websocket: {}
 
