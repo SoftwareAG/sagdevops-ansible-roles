@@ -30,18 +30,18 @@
       keystore_file_path: "{{ input_file_path }}"
       keystore_file_password: "{{ input_file_password }}"
       output_file_path_dir: "{{ output_dir }}"
-      output_file_name: "{{ input_file_path | basename | splitext)[0] }}.p12"
+      output_file_name: "{{ (input_file_path | basename | splitext)[0] }}.p12"
       output_file_password: "{{ input_file_password }}"
 
   - name: convert p12 to pem
     include_tasks: "do_convert-p12-to-pem.yaml"
     vars:
-      input_file_path: "{{ output_dir }}/{{ input_file_path | basename | splitext)[0] }}.p12"
+      input_file_path: "{{ output_dir }}/{{ (input_file_path | basename | splitext)[0] }}.p12"
       input_file_password: "{{ input_file_password }}"
       output_file_path: "{{ output_dir }}/{{ output_file }}"
 
   - name: cleanup intermediary p12 file
     file:
-      path: "{{ output_dir }}/{{ input_file_path | basename | splitext)[0] }}.p12"
+      path: "{{ output_dir }}/{{ (input_file_path | basename | splitext)[0] }}.p12"
       state: absent
     when: cleanup_intermediary_files | bool
