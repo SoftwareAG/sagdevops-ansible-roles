@@ -1,6 +1,6 @@
 ---
 
-  - name: "Update config file for memory setting"
+  - name: "Update config file for truststore setting"
     lineinfile:
       path: "{{ webmethods_apiportal_work_apiportalbundle_dir }}/runnable.properties"
       regexp: '^{{ item.key }}'
