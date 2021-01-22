@@ -21,6 +21,16 @@
       msg: "getfroms3_bucket_name not specified...can't do anything"
     when: getfroms3_bucket_name is not defined or getfroms3_bucket_name == ""
 
+  - name: fail if getfroms3_bucket_path not specified
+    fail: 
+      msg: "getfroms3_bucket_path not specified...can't do anything"
+    when: getfroms3_bucket_path is not defined or getfroms3_bucket_path == ""
+
+  - name: fail if getfroms3_local_path not specified
+    fail: 
+      msg: "getfroms3_local_path not specified...can't do anything"
+    when: getfroms3_local_path is not defined or getfroms3_local_path == ""
+
   - name: Check if getfroms3_local_path exists already
     stat: 
       path: "{{ getfroms3_local_path }}"
