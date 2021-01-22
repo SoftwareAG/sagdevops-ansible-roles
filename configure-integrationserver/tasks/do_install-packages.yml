@@ -13,6 +13,7 @@
         vars:
           webmethods_packages_remote_s3_bucket_name: "{{ outer_item.remote_s3_bucket_name }}"
           webmethods_packages_remote_s3_bucket_path: "{{ outer_item.remote_s3_bucket_path }}"
+          webmethods_packages_force_install: "{{ outer_item.force_install }}"
         with_items: "{{ webmethods_packages }}"
         loop_control:
           loop_var: outer_item
