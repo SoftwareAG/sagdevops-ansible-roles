@@ -52,4 +52,4 @@
         set_fact:
           configure_integrationserver_install_package_changed: true
   
-    when: check_package_installed.stat.exists == false or webmethods_packages_force_install == true
+    when: check_package_installed.stat.exists == false or webmethods_packages_force_install | bool
