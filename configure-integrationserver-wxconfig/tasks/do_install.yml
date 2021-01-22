@@ -12,6 +12,8 @@
       configs_action: install-packages
       webmethods_packages: "{{ wxconfig_params_packages }}"
 
+  ## TODO: if license changed, probably should restart too? 
+  ## (problem is: the AWS download wrapper does not check on same file or not...so we'll need to fix that first)
   - name: getting the wxconfig license from s3 to apply on integration server
     import_role: 
       name: configure-webmethods
