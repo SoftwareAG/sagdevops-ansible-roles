@@ -30,6 +30,20 @@ webmethods_apiportal_acc_install_size_mapping:
   medium: m
   small: s
 
+# REST settings
+apiportal_configparams_rest_base_uri: "http://localhost:18101"
+apiportal_configparams_rest_umc_base_path: "{{ apiportal_configparams_rest_base_uri }}/umc/rest"
+apiportal_configparams_rest_auth_username:
+apiportal_configparams_rest_auth_password:
+apiportal_configparams_rest_tenant: default
+
+## REST - groups management over Rest
+apiportal_configparams_rest_groupsmgt_path: "{{ apiportal_configparams_rest_umc_base_path }}/groups"
+apiportal_configparams_rest_groupsmgt_groups_in_group:
+  group_uuid_parent:
+  group_uuid_children: []
+
+# load balancer settings
 webmethods_apiportal_loadbalancer_fqdn:
 
 ### ssl cert

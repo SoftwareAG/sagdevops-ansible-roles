@@ -1,0 +1,13 @@
+---
+
+- name: Include tasks
+  include_tasks: "do_get-groups.yml"
+
+- name: Parse response and extract ids
+  set_fact:
+    group_ids: "{{ lookup('template', 'apiportal_rest_groupsmgt_responseparsing_allgroups_ids_byname.json.j2') }}"
+
+- name: Print response
+  debug:
+    var: group_ids
+    verbosity: 3
