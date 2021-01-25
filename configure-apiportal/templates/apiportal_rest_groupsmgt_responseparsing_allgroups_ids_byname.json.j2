@@ -1,6 +1,6 @@
 [{%- if rest_response is defined and rest_response.json is defined  -%}
     {%- for responseitem in rest_response.json -%}
-        {%- if responseitem[".AUserRole"].technicalName in ("API Consumption Approvers") -%}
+        {%- if responseitem[".AUserRole"].technicalName in rest_response_filter_groupnames -%}
             {%- if loop.index0 > 0 -%},{%- endif -%}"{{ responseitem[".AUserRole"].id }}"
         {%- endif -%}
     {%- endfor -%}

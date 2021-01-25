@@ -39,6 +39,7 @@ apiportal_configparams_rest_tenant: default
 
 ## REST - groups management over Rest
 apiportal_configparams_rest_groupsmgt_path: "{{ apiportal_configparams_rest_umc_base_path }}/groups"
+apiportal_configparams_rest_groupsmgt_get_groups_groupnames:
 apiportal_configparams_rest_groupsmgt_groups_in_group:
   # group_uuid_parent:
   # group_uuid_children: []
