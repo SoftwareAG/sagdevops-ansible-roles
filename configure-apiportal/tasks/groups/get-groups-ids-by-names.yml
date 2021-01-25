@@ -3,7 +3,7 @@
 - name: Include tasks
   include_tasks: "get-groups.yml"
 
-- name: set response test
+- name: set empty response if it was not already defined
   set_fact:
     response:
       json: []

@@ -23,7 +23,7 @@
           body: "{{ apiportal_configparams_rest_groupsmgt_groups_in_group_uuids.group_children | default([]) | to_json }}"
           force_basic_auth: yes
           validate_certs: false
-          status_code: "200"
+          status_code: [200, 201, 202, 204]
           body_format: json
           timeout: 30
         register: rest_response
