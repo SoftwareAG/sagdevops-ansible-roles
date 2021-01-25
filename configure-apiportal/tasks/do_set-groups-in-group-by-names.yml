@@ -1,43 +1,43 @@
 ---
 
-  - debug: var=apiportal_configparams_rest_groupsmgt_groups_in_group verbosity=3
-
-
-
-- name: Include tasks
-  include_tasks: "do_get-groups.yml"
-
-
-
-  - name: update groups if variable defined
+  - debug: var=apiportal_configparams_rest_groupsmgt_groups_in_group_names verbosity=3
+  
+  - name: only update groups if group-association variable defined
     block:
-
-      - name: fail if mandatory param not specified
+      
+      - name: fail if mandatory params not specified
         fail: 
           msg: "A mandatory param was not defined, cannot do anything."
-        when: item is not defined or item == ""
+        when: item is not defined
         with_items:
-          - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group.group_uuid_parent }}"
-          - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group.group_uuid_children }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group_names.group_parent }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group_names.group_children }}"
 
-      - name: Create groups in group association
-        uri:
-          url: "{{ apiportal_configparams_rest_groupsmgt_path }}/{{ apiportal_configparams_rest_groupsmgt_groups_in_group.group_uuid_parent }}/children?tenant={{ apiportal_configparams_rest_tenant }}"
-          method: POST
-          user: "{{ apiportal_configparams_rest_auth_username }}"
-          password: "{{ apiportal_configparams_rest_auth_password }}"
-          return_content: yes
-          body: "{{ apiportal_configparams_rest_groupsmgt_groups_in_group.group_uuid_children | default([]) | to_json }}"
-          force_basic_auth: yes
-          validate_certs: false
-          status_code: "200"
-          body_format: json
-          timeout: 30
-        register: rest_response
-        
-      - name: Print response
-        debug:
-          var: rest_response.json
-          verbosity: 3
+      - name: Get group ids for the parent group name
+        include_tasks: "groups/get-groups-ids-by-names.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames: 
+            - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group_names.group_parent }}"
 
-    when: apiportal_configparams_rest_groupsmgt_groups_in_group is defined
+      - name: Assign var for parent group id
+        set_fact:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid: "{{ group_ids_by_names }}"
+
+      - name: Get group ids for the children group names
+        include_tasks: "groups/get-groups-ids-by-names.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames: 
+            - "{{ apiportal_configparams_rest_groupsmgt_groups_in_group_names.group_children }}"
+
+      - name: Assign var children group ids
+        set_fact:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids: "{{ group_ids_by_names }}"
+
+      - name: Execute the group assignment now we have UUIDs
+        include_tasks: "do_set-groups-in-group-by-ids.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_groups_in_group_uuids:
+            group_parent: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid | first }}"
+            group_children: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids }}"
+
+    when: apiportal_configparams_rest_groupsmgt_groups_in_group_names is defined
