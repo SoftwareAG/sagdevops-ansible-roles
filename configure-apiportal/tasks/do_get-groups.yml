@@ -2,7 +2,7 @@
 
 - name: Get list of groups
   uri:
-    url: "{{ apiportal_configparams_rest_groupsmgt_path }}?tenant={{ apiportal_configparams_rest_groupsmgt_groups_in_group.tenant }}"
+    url: "{{ apiportal_configparams_rest_groupsmgt_path }}?tenant={{ apiportal_configparams_rest_tenant }}"
     method: POST
     user: "{{ apiportal_configparams_rest_auth_username }}"
     password: "{{ apiportal_configparams_rest_auth_password }}"
