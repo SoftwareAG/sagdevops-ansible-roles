@@ -12,7 +12,7 @@
       body: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | default({}) | to_json }}"
       force_basic_auth: yes
       validate_certs: false
-      status_code: "200"
+      status_code: [200,201]
       body_format: json
       timeout: 30
     register: rest_response
