@@ -4,7 +4,7 @@
     debug: var=webmethods_apigateway_ports_list verbosity=3
 
   - name: Include Update ports tasks
-    include_tasks: "do_set-single-port.yml"
+    include_tasks: "do_set-ports-single.yml"
     with_items: "{{ webmethods_apigateway_ports_list }}"
     loop_control:
       loop_var: webmethods_apigateway_port

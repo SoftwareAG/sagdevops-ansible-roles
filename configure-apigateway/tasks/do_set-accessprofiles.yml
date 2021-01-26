@@ -1,0 +1,10 @@
+---
+
+  - name: Access profile to add/update
+    debug: var=apigateway_configparams_rest_usermgt_accessprofiles verbosity=3
+
+  - name: Include group tasks
+    include_tasks: "do_set-accessprofiles-single.yml"
+    with_items: "{{ apigateway_configparams_rest_usermgt_accessprofiles }}"
+    loop_control:
+      loop_var: apigateway_configparams_rest_usermgt_accessprofile_single
