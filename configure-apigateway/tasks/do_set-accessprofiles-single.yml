@@ -9,7 +9,8 @@
 
   - name: Update the payload object with the IDs instead of the names
     set_fact:
-      apigateway_configparams_rest_usermgt_accessprofile_single: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | combine({'groupIds': rest_response_group_ids},recursive=True) }}"
+      apigateway_configparams_rest_usermgt_accessprofile_single: 
+        groupIds: "{{ (apigateway_configparams_rest_usermgt_accessprofile_single.groupIds | default([],true)) + rest_response_group_ids }}"
     when: rest_response_group_ids is defined and rest_response_group_ids | length > 0
 
   - name: First, get all accessprofiles to determine if the access profile with same name exists
