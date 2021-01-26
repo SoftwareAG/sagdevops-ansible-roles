@@ -21,10 +21,13 @@
       var: rest_response_getall.json
       verbosity: 3
 
-  - name: Parse response and find the group id based on group name
+  - name: Set group names filter to parse the rest response
     set_fact:
       rest_response_filter_groupnames:
         - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+
+  - name: Parse response and find the group id based on group name
+    set_fact:
       rest_response_group_ids: "{{ lookup('template', 'apigateway_rest_usermgt_responseparsing_groups_ids_by_name.json.j2') }}"
 
   - name: group ids found from the rest response
