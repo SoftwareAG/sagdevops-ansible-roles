@@ -7,18 +7,18 @@
     vars:
       apigateway_configparams_rest_usermgt_group_names: "{{ apigateway_configparams_rest_usermgt_accessprofile_single.groupnames }}"
 
-  - name: Update the payload object with the IDs instead of the names
+  - name: Merge the payload groupIds field with the IDs that we just got from their names
     set_fact:
-      apigateway_configparams_rest_usermgt_accessprofile_single_updated: 
+      apigateway_configparams_rest_usermgt_accessprofile_single_enrichment: 
         groupIds: "{{ (apigateway_configparams_rest_usermgt_accessprofile_single.groupIds | default([],true)) + rest_response_group_ids }}"
     when: rest_response_group_ids is defined and rest_response_group_ids | length > 0
 
   - name: Update the payload object with the IDs instead of the names
     set_fact:
-      apigateway_configparams_rest_usermgt_accessprofile_single: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | combine(apigateway_configparams_rest_usermgt_accessprofile_single_updated,recursive=True) }}"
-    when: apigateway_configparams_rest_usermgt_accessprofile_single_updated is defined
+      apigateway_configparams_rest_usermgt_accessprofile_single_enriched: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | combine(apigateway_configparams_rest_usermgt_accessprofile_single_enrichment,recursive=True) }}"
+    when: apigateway_configparams_rest_usermgt_accessprofile_single_enrichment is defined
 
-  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single verbosity=3
+  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single_enriched verbosity=3
 
   - name: First, get all accessprofiles to determine if the access profile with same name exists
     uri:
@@ -42,7 +42,7 @@
   - name: Set name filter to parse the rest response
     set_fact:
       rest_response_filter_names:
-        - "{{ apigateway_configparams_rest_usermgt_accessprofile_single.name }}"
+        - "{{ apigateway_configparams_rest_usermgt_accessprofile_single_enriched.name }}"
 
   - name: Parse response and find the id based on name
     set_fact:
@@ -75,16 +75,16 @@
 
       - name: Merge the existing access profile content with the updated content
         set_fact:
-          apigateway_configparams_rest_usermgt_accessprofile_single_toupdate: "{{ rest_response_get.json.accessProfiles[0] | combine(apigateway_configparams_rest_usermgt_accessprofile_single,recursive=True) }}"
+          apigateway_configparams_rest_usermgt_accessprofile_single_enriched_toupdate: "{{ rest_response_get.json.accessProfiles[0] | combine(apigateway_configparams_rest_usermgt_accessprofile_single_enriched,recursive=True) }}"
 
       - name: Update the existing access profile
         uri:
-          url: "{{ apigateway_rest_accessprofiles_api }}/{{ apigateway_configparams_rest_usermgt_accessprofile_single_toupdate.id }}"
+          url: "{{ apigateway_rest_accessprofiles_api }}/{{ apigateway_configparams_rest_usermgt_accessprofile_single_enriched_toupdate.id }}"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ apigateway_configparams_rest_usermgt_accessprofile_single_toupdate | to_json }}"
+          body: "{{ apigateway_configparams_rest_usermgt_accessprofile_single_enriched_toupdate | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
@@ -107,7 +107,7 @@
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | default({}) | to_json }}"
+          body: "{{ apigateway_configparams_rest_usermgt_accessprofile_single_enriched | default({}) | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
