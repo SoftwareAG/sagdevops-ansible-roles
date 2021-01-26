@@ -23,7 +23,7 @@ apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"
 apigateway_rest_users_api: "{{ apigateway_rest_base_path }}/users"
 apigateway_rest_urlaliases_api: "{{ apigateway_rest_base_path }}/urlaliases"
 apigateway_rest_groups_api: "{{ apigateway_rest_base_path }}/groups"
-apigateway_rest_accessProfiles_api: "{{ apigateway_rest_base_path }}/accessProfiles"
+apigateway_rest_accessprofiles_api: "{{ apigateway_rest_base_path }}/accessProfiles"
 
 # is configs
 apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
