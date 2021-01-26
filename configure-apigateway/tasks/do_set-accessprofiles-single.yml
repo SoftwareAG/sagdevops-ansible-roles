@@ -2,6 +2,16 @@
 
   - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single verbosity=3
 
+  - name: Get the group ids based on the input names (returned in var rest_response_group_ids)
+    include_tasks: "groups/get-groups-ids-by-names.yml"
+    vars:
+      apigateway_configparams_rest_usermgt_group_names: "{{ apigateway_configparams_rest_usermgt_accessprofile_single.groupnames }}"
+
+  - name: Update the payload object with the IDs instead of the names
+    set_fact:
+      apigateway_configparams_rest_usermgt_accessprofile_single: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | combine({'groupIds': rest_response_group_ids},recursive=True) }}"
+    when: rest_response_group_ids is defined and rest_response_group_ids | length > 0
+
   - name: First, get all accessprofiles to determine if the access profile with same name exists
     uri:
       url: "{{ apigateway_rest_accessprofiles_api }}"

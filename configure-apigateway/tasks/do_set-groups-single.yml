@@ -2,36 +2,11 @@
 
   - debug: var=apigateway_configparams_rest_usermgt_group_single verbosity=3
 
-  - name: First, get all groups to determine if the group with same name exists
-    uri:
-      url: "{{ apigateway_rest_groups_api }}"
-      method: GET
-      user: "{{ apigateway_rest_login_username }}"
-      password: "{{ apigateway_rest_login_password }}"
-      return_content: yes
-      force_basic_auth: yes
-      validate_certs: false
-      status_code: [200]
-      body_format: json
-      timeout: 30
-    register: rest_response_getall
-
-  - name: Print response
-    debug:
-      var: rest_response_getall.json
-      verbosity: 3
-
-  - name: Set group names filter to parse the rest response
-    set_fact:
-      rest_response_filter_names:
+  - name: First, get the group ids based on the input names (returned in var rest_response_group_ids)
+    include_tasks: "groups/get-groups-ids-by-names.yml"
+    vars:
+      apigateway_configparams_rest_usermgt_group_names: 
         - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
-
-  - name: Parse response and find the group id based on group name
-    set_fact:
-      rest_response_group_ids: "{{ lookup('template', 'apigateway_rest_usermgt_responseparsing_groups_ids_by_name.json.j2') }}"
-
-  - name: group ids found from the rest response
-    debug: var=rest_response_group_ids verbosity=3
 
   - name: Update the existing group if it existed
     block:
