@@ -57,7 +57,7 @@
 
       - name: Merge the existing access profile content with the updated content
         set_fact:
-          apigateway_configparams_rest_usermgt_accessprofile_single_toupdate: "{{ rest_response_get.json.groups[0] | combine(apigateway_configparams_rest_usermgt_accessprofile_single,recursive=True) }}"
+          apigateway_configparams_rest_usermgt_accessprofile_single_toupdate: "{{ rest_response_get.json.accessProfiles[0] | combine(apigateway_configparams_rest_usermgt_accessprofile_single,recursive=True) }}"
 
       - name: Update the existing access profile
         uri:
