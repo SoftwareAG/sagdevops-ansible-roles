@@ -11,12 +11,13 @@
       - name: Installing the packages as defined in the list, only if the list is not empty
         include_tasks: "do_install-package.yml"
         vars:
-          webmethods_packages_remote_s3_bucket_name: "{{ outer_item.remote_s3_bucket_name }}"
-          webmethods_packages_remote_s3_bucket_path: "{{ outer_item.remote_s3_bucket_path }}"
-          webmethods_packages_force_install: "{{ outer_item.force_install | default(false,true) }}"
+          webmethods_packages_remote_s3_bucket_name: "{{ webmethods_packages_item.remote_s3_bucket_name }}"
+          webmethods_packages_remote_s3_bucket_path: "{{ webmethods_packages_item.remote_s3_bucket_path }}"
+          webmethods_packages_local_target_packagename: "{{ webmethods_packages_item.local_target_packagename }}"
+          webmethods_packages_force_install: "{{ webmethods_packages_item.force_install | default(false,true) }}"
         with_items: "{{ webmethods_packages }}"
         loop_control:
-          loop_var: outer_item
+          loop_var: webmethods_packages_item
 
       - name: Set changed flag to true if a change happened
         set_fact: 

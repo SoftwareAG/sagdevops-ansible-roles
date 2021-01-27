@@ -1,9 +1,22 @@
 ---
 
 
+  - name: Default package name to the name of the file on the remote location, unless it's provided
+    set_fact: 
+      webmethods_packages_local_target_packagename: "{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0]"
+    when: webmethods_packages_local_target_packagename is not defined or webmethods_packages_local_target_packagename == ""
+
+  - name: Set the local target package path
+    set_fact: 
+      webmethods_packages_local_target_package_dir: "{{ runtime_instance_package_home }}/{{ webmethods_packages_local_target_packagename }}"
+
+  - name: set temp local download path
+    set_fact: 
+      webmethods_packages_local_download_path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_local_target_packagename }}.zip"
+
   - name: check if package already installed
     stat: 
-      path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
+      path: "{{ webmethods_packages_local_target_package_dir }}/manifest.rel"
     register: check_package_installed
 
   - name: Package installed status
@@ -18,6 +31,11 @@
   - name: Install package only if it's not already there
     block:
 
+      - name: First, delete the target folder if it exists and we are installing
+        file:
+          path: "{{ webmethods_packages_local_target_package_dir }}"
+          state: absent
+
       - name: getting the packages from s3 to apply on integration server
         include_role:
           name: aws-wrapper
@@ -25,27 +43,28 @@
           command: "getfroms3"
           getfroms3_bucket_name: "{{ webmethods_packages_remote_s3_bucket_name | default('', true) }}"
           getfroms3_bucket_path: "{{ webmethods_packages_remote_s3_bucket_path | default('', true) }}"
-          getfroms3_local_path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
+          getfroms3_local_path: "{{ webmethods_packages_local_download_path }}"
+          getfroms3_force_download: true
         
       - name: Create the extracted dir on the remote machine if they don't exist
         file:
-          path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}"
+          path: "{{ webmethods_packages_local_target_package_dir }}"
           state: directory
 
       - name: Unarchive the packages on the remote machine
         unarchive:
-          src: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
-          dest: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}"
+          src: "{{ webmethods_packages_local_download_path }}"
+          dest: "{{ webmethods_packages_local_target_package_dir }}"
           remote_src: yes
 
       - name: Delete the archive once extracted
         file:
-          path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_remote_s3_bucket_path | basename }}"
+          path: "{{ webmethods_packages_local_download_path }}"
           state: absent
       
       - name: check if package installed
         stat: 
-          path: "{{ runtime_instance_package_home }}/{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0] }}/manifest.rel"
+          path: "{{ webmethods_packages_local_target_package_dir }}/manifest.rel"
         register: webmethods_package_just_installed
 
       - name: Set changed flag to true
