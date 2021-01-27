@@ -35,7 +35,7 @@
       - name: Execute the group assignment now we have UUIDs
         include_tasks: "do_set-group-children-by-ids.yml"
         vars:
-          apiportal_configparams_rest_groupsmgt_groups_in_group_uuids:
+          apiportal_configparams_rest_groupsmgt_byids_group_children:
             group_parent: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid | first }}"
             group_children: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids }}"
 
