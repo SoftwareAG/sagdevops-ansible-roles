@@ -1,0 +1,78 @@
+---
+
+  - debug: var=apigateway_configparams_rest_usermgt_user_single verbosity=3
+
+  - name: First, get the user ids based on the input names (returned in var rest_response_user_ids)
+    include_tasks: "users/get-users-ids-by-names.yml"
+    vars:
+      apigateway_configparams_rest_usermgt_user_names: 
+        - "{{ apigateway_configparams_rest_usermgt_user_single.name }}"
+
+  - name: Update the existing user if it existed
+    block:
+
+      - name: get the existing user before updating it
+        uri:
+          url: "{{ apigateway_rest_users_api }}/{{ rest_response_user_ids | first }}"
+          method: GET
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_get
+      
+      - name: Print response
+        debug:
+          var: rest_response_get.json
+          verbosity: 3
+
+      - name: Merge the existing user content with the updated content
+        set_fact:
+          apigateway_configparams_rest_usermgt_user_single_toupdate: "{{ rest_response_get.json.users[0] | combine(apigateway_configparams_rest_usermgt_user_single,recursive=True) }}"
+
+      - name: Update the existing user
+        uri:
+          url: "{{ apigateway_rest_users_api }}/{{ apigateway_configparams_rest_usermgt_user_single_toupdate.id }}"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ apigateway_configparams_rest_usermgt_user_single_toupdate | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_update
+        
+      - name: Response for new updated user
+        debug: var=rest_response_mutate_update verbosity=3
+
+    when: rest_response_user_ids is defined and rest_response_user_ids | length > 0
+
+  - name: Create the user if it does not exist
+    block:
+
+      - name: Create a new user
+        uri:
+          url: "{{ apigateway_rest_users_api }}"
+          method: POST
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ apigateway_configparams_rest_usermgt_user_single | default({}) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_create
+
+      - name: Response for new created user
+        debug: var=rest_response_mutate_create verbosity=3
+
+    when: rest_response_user_ids is not defined or rest_response_user_ids | length == 0
