@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <autoConfig>
+     <wx.config.disableDelimiterParsing>true</wx.config.disableDelimiterParsing>
+     <autoConfig>
         {% if wxconfig_params_ldap is defined %}
         <ldap>
             <cache>
