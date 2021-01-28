@@ -12,6 +12,7 @@
         with_items:
           - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_parent }}"
           - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_children }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_operation }}"
 
       - name: Get group ids for the parent group name
         include_tasks: "groups/get-groups-ids-by-names.yml"
@@ -38,5 +39,6 @@
           apiportal_configparams_rest_groupsmgt_byids_group_children:
             group_parent: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid | first }}"
             group_children: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids }}"
+            group_operation: "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_operation }}"
 
     when: apiportal_configparams_rest_groupsmgt_bynames_group_children is defined
