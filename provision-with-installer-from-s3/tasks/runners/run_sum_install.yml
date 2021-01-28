@@ -1,0 +1,47 @@
+---
+
+  - debug: var=webmethods_install_sum_runner verbosity=3
+  
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ webmethods_install_sum_runner.executable }}"
+      - "{{ webmethods_install_sum_runner.execute_dir }}"
+      - "{{ webmethods_install_sum_runner.install_dir }}"
+      - "{{ webmethods_install_sum_runner.install_image_path }}"
+
+  - name: Create the command
+    set_fact:
+      command_to_exec:
+        - "{{ webmethods_install_sum_runner.executable }}"
+        - "--accept-license"
+        - "-d"
+        - "{{ webmethods_install_sum_runner.install_dir }}"
+        - "-i"
+        - "{{ webmethods_install_sum_runner.install_image_path }}"
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+      chdir: "{{ webmethods_install_sum_runner.execute_dir }}"
+    async: "{{ webmethods_install_async }}"
+    poll: "{{ webmethods_install_poll }}"
+    register: cmd_sleeper
+
+  - name: Check status for the install task
+    async_status:
+      jid: "{{ cmd_sleeper.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: "{{ webmethods_install_async_retries }}"
+    delay: "{{ webmethods_install_async_delay }}"
+
+  - name: Print the job_result to the console.
+    debug:
+      msg: "{{ job_result.stdout_lines | join('\n') }}"

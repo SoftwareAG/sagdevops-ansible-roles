@@ -5,6 +5,12 @@ webmethods_install_async_delay: 10
 webmethods_install_async: 2000
 webmethods_install_poll: 0
 
+## new settings to apply multiple sum
+webmethods_provisioning_params_sum_descriptor_list:
+
+
+
+
 ## global settings
 webmethods_install_target_dir: ""
 webmethods_install_sum_target_dir: ""

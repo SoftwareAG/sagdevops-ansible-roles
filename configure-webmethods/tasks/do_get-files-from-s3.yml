@@ -1,18 +1,11 @@
 ---
 
+  - debug: var=webmethods_download_files_s3 verbosity=3
+
   - name: Install the files only if the list is not empty
     block:
 
-      - name: Create the dirs machine if they don't exist
-        file:
-          path: "{{ outer_item.local_path | dirname }}"
-          state: directory
-        when: outer_item.local_path is defined and outer_item.local_path != ""
-        with_items: "{{ webmethods_download_files_s3 }}"
-        loop_control:
-          loop_var: outer_item
-
-      - name: gettting the files to add
+      - name: Downloading files from S3
         include_role:
           name: aws-wrapper
         vars:
