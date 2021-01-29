@@ -1,51 +1,35 @@
 ---
-
-  - debug: var=webmethods_install_sum_descriptor verbosity=3
-
-  - name: fail if mandatory params not specified
-    fail: 
-      msg: "A mandatory param was not defined, cannot do anything."
-    when: item is not defined
-    with_items:
-      - "{{ webmethods_install_sum_descriptor.target_install_dir }}"
-      - "{{ webmethods_install_sum_descriptor.installer }}"
-      - "{{ webmethods_install_sum_descriptor.binaries_image }}"
-
-  - name: check if sum already installed
-    stat: 
-      path: "{{ webmethods_install_sum_descriptor.target_install_dir }}/bin/SUMlauncher.jar"
-    register: sum_installed
-
-  - name: SUM installed status
-    debug:
-      var: sum_installed.stat.exists
-
-  - name: Set changed flag to false if not defined
-    set_fact: 
-      provision_with_installer_from_s3_sum_changed: false
-    when: provision_with_installer_from_s3_sum_changed is not defined
-
-  - name: Install SUM only if it's not already there
-    block:
-
-      - name: "Include tasks to fetch the sum installer files from s3"
-        include_tasks: "command_get_files_from_s3.yml"
-        vars:
-          webmethods_provisioning_files_download_descritors:
-            - "{{ webmethods_install_sum_descriptor.installer }}"
-            - "{{ webmethods_install_sum_descriptor.binaries_image }}"
-
-      - name: run the install
-        include_tasks: "runners/run_sum_install.yml"
-        vars:
-          webmethods_install_sum_runner:
-            executable: "{{ webmethods_install_sum_descriptor.installer.local_path }}"
-            execute_dir: "{{ webmethods_install_sum_descriptor.installer.local_path | dirname }}"
-            install_dir: "{{ webmethods_install_sum_descriptor.target_install_dir }}"
-            install_image_path: "{{ webmethods_install_sum_descriptor.binaries_image.local_path | default('',true) }}"
-
-      - name: Set changed flag to true
-        set_fact:
-          provision_with_installer_from_s3_sum_changed: true
   
-    when: sum_installed.stat.exists == false or (webmethods_install_sum_descriptor.force_install | default(false,true)) | bool
+- name: fail if webmethods_localrepo_target_dir not specified
+  fail: 
+    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+- name: Write the install scripts on disk with all the params
+  template:
+    src: "install_sum.sh.j2" 
+    dest: "{{ webmethods_localrepo_target_dir }}/install_sum.sh"
+    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+    group: "{{ webmethods_install_localtarget_files_owner_group }}"
+    mode: "{{ webmethods_install_localtarget_files_permissions }}"
+    backup: no
+
+- name: run install_sum command
+  command: "/bin/bash install_sum.sh"
+  args:
+    chdir: "{{ webmethods_localrepo_target_dir }}"
+  async: "{{ webmethods_install_async }}"
+  poll: "{{ webmethods_install_poll }}"
+  register: install_sum_sleeper
+
+- name: Check status for install_sum task
+  async_status:
+    jid: "{{ install_sum_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: "{{ webmethods_install_async_retries }}"
+  delay: "{{ webmethods_install_async_delay }}"
+
+- name: Print the job_result to the console.
+  debug:
+    msg: "{{ job_result.stdout_lines | join('\n') }}"

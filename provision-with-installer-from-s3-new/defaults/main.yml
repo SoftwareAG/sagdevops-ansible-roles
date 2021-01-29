@@ -5,6 +5,12 @@ webmethods_install_async_delay: 10
 webmethods_install_async: 2000
 webmethods_install_poll: 0
 
+## new settings to apply multiple sum
+webmethods_provisioning_params_sum_descriptor_list:
+
+
+
+
 ## global settings
 webmethods_install_target_dir: ""
 webmethods_install_sum_target_dir: ""
@@ -15,6 +21,9 @@ webmethods_install_localtarget_create_dir_ifnotexist: "true"
 webmethods_install_localtarget_create_dir_owner_user: ""
 webmethods_install_localtarget_create_dir_owner_group: ""
 webmethods_install_localtarget_create_dir_permission: "0755"
+webmethods_localrepo_license_inzip_filepath_copy_src:
+webmethods_localrepo_license_inzip_filepath_copy_dest:
+webmethods_sum_force_install: false
 
 ## download settings
 webmethods_s3repo_bucket_name: ""

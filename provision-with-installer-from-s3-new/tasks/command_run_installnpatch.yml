@@ -1,0 +1,10 @@
+---
+  
+- name: "Include tasks in command_run_product_install.yml"
+  include_tasks: "command_run_product_install.yml"
+
+- name: "Include tasks in command_run_sum_install.yml"
+  include_tasks: "command_run_sum_install.yml"
+
+- name: "Include tasks in command_run_apply_fixes.yml"
+  include_tasks: "command_run_apply_fixes.yml"
