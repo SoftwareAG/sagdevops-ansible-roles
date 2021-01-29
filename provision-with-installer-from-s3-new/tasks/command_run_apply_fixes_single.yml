@@ -26,6 +26,7 @@
   template:
     src: "{{ webmethods_install_patches_descriptor.script.local_path }}"
     dest: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+    remote_src: yes
   register: "result_content_operation"
 
 - name: run the install
