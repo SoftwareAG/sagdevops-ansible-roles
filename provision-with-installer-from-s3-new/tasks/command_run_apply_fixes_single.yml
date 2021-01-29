@@ -39,6 +39,8 @@
   vars:
     webmethods_sum_install_patches_runner:
       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      fixes_overinstall: "{{ webmethods_install_patches_descriptor.fixes_overinstall }}"
+      sum_selfupdate: "{{ webmethods_install_patches_descriptor.sum_selfupdate }}"
       execute_dir: "{{ webmethods_install_patches_descriptor.script.local_path | dirname }}"
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
