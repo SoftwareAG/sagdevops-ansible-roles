@@ -10,7 +10,6 @@
       - "{{ webmethods_sum_install_patches_runner.sum_home_dir }}"
       - "{{ webmethods_sum_install_patches_runner.execute_dir }}"
       - "{{ webmethods_sum_install_patches_runner.fixes_image_path }}"
-      - "{{ webmethods_sum_install_patches_runner.sum_image_path }}"
       - "{{ webmethods_sum_install_patches_runner.script_path }}"
 
   - name: Create the command
@@ -19,10 +18,13 @@
         - "{{ webmethods_sum_install_patches_runner.sum_home_dir }}/bin/UpdateManagerCMD.sh"
         - "-readScript"
         - "{{ webmethods_sum_install_patches_runner.script_path }}"
-        - "-installFromImage"
-        - "{{ webmethods_sum_install_patches_runner.sum_image_path }}"
         - "-imageFile"
         - "{{ webmethods_sum_install_patches_runner.fixes_image_path }}"
+
+  - name: append image param if defined
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-installFromImage' ] + [ '{{ webmethods_sum_install_patches_runner.sum_image_path }}' ]"
+    when: webmethods_sum_install_patches_runner.sum_image_path is defined and webmethods_sum_install_patches_runner.sum_image_path != ""
 
   - name: Print the command that we're going to run
     debug:

@@ -42,4 +42,4 @@
       execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
-      sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+      #sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
