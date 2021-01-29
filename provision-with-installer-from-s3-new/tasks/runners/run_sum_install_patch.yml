@@ -47,6 +47,7 @@
     async: "{{ webmethods_install_async }}"
     poll: "{{ webmethods_install_poll }}"
     register: cmd_sleeper
+    failed_when: cmd_sleeper.rc != 0 and cmd_sleeper.rc != 20
 
   - name: Print the cmd_sleeper to the console.
     debug:
