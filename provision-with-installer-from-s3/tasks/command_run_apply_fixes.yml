@@ -46,5 +46,5 @@
   debug:
     msg: "{{ job_result.stdout_lines | join('\n') }}"
 
-- name: "Include tasks to cleanup the install artifacts"
-  include_tasks: "command_cleanup.yml"
+# - name: "Include tasks to cleanup the install artifacts"
+#   include_tasks: "command_cleanup.yml"
