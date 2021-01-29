@@ -47,11 +47,8 @@
     async: "{{ webmethods_install_async }}"
     poll: "{{ webmethods_install_poll }}"
     register: cmd_sleeper
-    failed_when: cmd_sleeper.rc != 0 and cmd_sleeper.rc != 20
-
-  - name: Print the cmd_sleeper to the console.
-    debug:
-      msg: "{{ cmd_sleeper | join('\n') }}"
+  
+  - debug: var=cmd_sleeper verbosity=3
 
   - name: Check status for the install task
     async_status:
@@ -62,6 +59,4 @@
     delay: "{{ webmethods_install_async_delay }}"
     # failed_when: job_result.rc != 0 and job_result.rc != 20
 
-  - name: Print the job_result to the console.
-    debug:
-      msg: "{{ job_result | join('\n') }}"
+  - debug: var=job_result verbosity=3
