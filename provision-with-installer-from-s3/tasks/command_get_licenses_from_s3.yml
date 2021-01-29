@@ -1,0 +1,80 @@
+---
+
+  - name: fail if webmethods_localrepo_target_dir not specified
+    fail: 
+      msg: "webmethods_localrepo_target_dir not specified...can't do anything"
+    when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
+
+  - name: "Include tasks to fetch the license files from s3"
+    include_tasks: "command_get_files_from_s3.yml"
+
+  - name: check if license zip file was downloaded
+    stat: 
+      path: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename }}"
+    register: check_licenses_zip_downloaded
+
+  - name: fail if license zip file was not downloaded
+    fail: 
+      msg: "the license zip file was not downloaded or is not in the right place"
+    when: check_licenses_zip_downloaded.stat.exists == false
+
+  - name: Install / extract license zip files if they were downloaded
+    block:
+
+      - name: Set extracted_zir_dir_path facts
+        set_fact:
+          extracted_zir_dir_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | basename | splitext)[0] }}"
+
+      - debug: var=extracted_zir_dir_path verbosity=3
+
+      - name: Create the extracted dir on the machine if it does not exist
+        file:
+          path: "{{ extracted_zir_dir_path }}/"
+          state: directory
+          owner: "{{ webmethods_install_localtarget_create_dir_owner_user }}"
+          group: "{{ webmethods_install_localtarget_create_dir_owner_group }}"
+          mode: "{{ webmethods_install_localtarget_create_dir_permission }}"
+
+      - name: Unarchive the zip on the remote machine
+        unarchive:
+          src: "{{ webmethods_localrepo_target_dir }}/{{ webmethods_localrepo_license_zip_filename }}"
+          dest: "{{ extracted_zir_dir_path}}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          remote_src: yes
+
+      - name: fix permissions on the extracted folder
+        file:
+          path: "{{ extracted_zir_dir_path}}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          recurse: yes
+
+      - name: Check variable for copying a license out of the zip file
+        debug:
+          var: webmethods_localrepo_license_inzip_filepath_copy_src
+
+      - name: check if license is inside the zip file
+        stat: 
+          path: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src | default('nothing',true) }}"
+        register: check_license_copysrc_inzip
+
+      - name: Check value of variable to check if license is inside the zip file
+        debug:
+          var: check_license_copysrc_inzip.stat.exists
+
+      - name: Copy the license in the zip to a destination of choice, only if the in-zip path source destination exists
+        copy:
+          src: "{{ extracted_zir_dir_path }}/{{ webmethods_localrepo_license_inzip_filepath_copy_src }}"
+          dest: "{{ webmethods_localrepo_license_inzip_filepath_copy_dest | default('',true) }}"
+          owner: "{{ webmethods_install_localtarget_files_owner_user }}"
+          group: "{{ webmethods_install_localtarget_files_owner_group }}"
+          mode: "{{ webmethods_install_localtarget_files_permissions }}"
+          remote_src: yes
+        when: check_license_copysrc_inzip.stat.exists == true
+
+      - name: Set changed flag to true
+        set_fact:
+          configure_integrationserver_install_package_changed: true
+
+    when: check_licenses_zip_downloaded.stat.exists == true
