@@ -39,7 +39,7 @@
   vars:
     webmethods_sum_install_patches_runner:
       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-      execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      execute_dir: "{{ webmethods_install_patches_descriptor.script.local_path | dirname }}"
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
       sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
