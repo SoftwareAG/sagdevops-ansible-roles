@@ -34,12 +34,12 @@
     __sum_fix_target_path: "{{ webmethods_install_patches_descriptor.target_install_dir }}"
     __sum_fix_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
 
-# - name: run the install
-#   include_tasks: "runners/run_sum_install_patch.yml"
-#   vars:
-#     webmethods_sum_install_patches_runner:
-#       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-#       execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-#       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
-#       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
-#       sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+- name: run the install
+  include_tasks: "runners/run_sum_install_patch.yml"
+  vars:
+    webmethods_sum_install_patches_runner:
+      sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+      fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+      sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
