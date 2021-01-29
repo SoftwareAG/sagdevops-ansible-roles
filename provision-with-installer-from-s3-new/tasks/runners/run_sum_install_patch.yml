@@ -48,6 +48,10 @@
     poll: "{{ webmethods_install_poll }}"
     register: cmd_sleeper
 
+  - name: Print the cmd_sleeper to the console.
+    debug:
+      msg: "{{ cmd_sleeper | join('\n') }}"
+
   - name: Check status for the install task
     async_status:
       jid: "{{ cmd_sleeper.ansible_job_id }}"
@@ -55,7 +59,7 @@
     until: job_result.finished
     retries: "{{ webmethods_install_async_retries }}"
     delay: "{{ webmethods_install_async_delay }}"
-    failed_when: job_result.rc != 0 and job_result.rc != 20
+    # failed_when: job_result.rc != 0 and job_result.rc != 20
 
   - name: Print the job_result to the console.
     debug:
