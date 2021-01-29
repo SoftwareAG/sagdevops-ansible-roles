@@ -29,7 +29,7 @@
   replace:
     path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
     backup: no
-    regexp: "{{ ['\{\{', item.key , '\}\}'] | join(' ') }}"
+    regexp: "{{ ['{{', item.key , '}}'] | join(' ') }}"
     replace: "{{ item.value }}"
   with_dict:
     __sum_fix_target_path: "{{ webmethods_install_patches_descriptor.target_install_dir }}"
