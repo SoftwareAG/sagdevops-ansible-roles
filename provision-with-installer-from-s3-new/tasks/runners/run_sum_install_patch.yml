@@ -55,7 +55,8 @@
     until: job_result.finished
     retries: "{{ webmethods_install_async_retries }}"
     delay: "{{ webmethods_install_async_delay }}"
+    failed_when: job_result.rc != 0 and job_result.rc != 20
 
   - name: Print the job_result to the console.
     debug:
-      msg: "{{ job_result.stdout_lines | join('\n') }}"
+      msg: "{{ job_result | join('\n') }}"
