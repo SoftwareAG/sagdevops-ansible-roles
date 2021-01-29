@@ -9,8 +9,6 @@
     with_items:
       - "{{ webmethods_installer_runner.executable }}"
       - "{{ webmethods_installer_runner.execute_dir }}"
-      # - "{{ webmethods_installer_runner.install_dir }}"
-      # - "{{ webmethods_installer_runner.image_path }}"
       - "{{ webmethods_installer_runner.script_path }}"
 
   - name: Create the command

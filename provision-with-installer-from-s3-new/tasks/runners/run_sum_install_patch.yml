@@ -40,6 +40,7 @@
     debug:
       msg: "About to run: {{ command_to_exec|join(' ') }}"
 
+  ## Note, we need to ignore the code=20 which is returned when the fixes are already there
   - name: execute async command
     command:
       argv: "{{ command_to_exec }}"
