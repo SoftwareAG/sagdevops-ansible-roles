@@ -1,0 +1,9 @@
+---
+
+- debug: var=webmethods_install_products_descriptor_list verbosity=3
+
+- name: apply a single install image
+  include_tasks: "command_run_apply_install_single.yml"
+  with_items: "{{ webmethods_install_products_descriptor_list }}"
+  loop_control:
+    loop_var: webmethods_install_products_descriptor
