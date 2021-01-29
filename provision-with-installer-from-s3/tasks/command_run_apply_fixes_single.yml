@@ -1,0 +1,39 @@
+---
+
+- debug: var=webmethods_install_patches_descriptor verbosity=3
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ webmethods_install_patches_descriptor.script }}"
+    - "{{ webmethods_install_patches_descriptor.binaries_image }}"
+
+- name: Include tasks to fetch the fix files from s3
+  include_tasks: "command_get_files_from_s3.yml"
+  vars:
+    webmethods_provisioning_files_download_descritors:
+      - "{{ webmethods_install_patches_descriptor.script }}"
+      - "{{ webmethods_install_patches_descriptor.binaries_image }}"
+
+- name: Set variables to be replaced in the script file
+  set_fact:
+    __sum_fix_target_path: "{{ webmethods_install_patches_descriptor.target_install_dir }}"
+    __sum_fix_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+
+- name: Update the script file with values from the variables
+  template:
+    src: "{{ webmethods_install_patches_descriptor.script.local_path }}"
+    dest: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+  register: "result_content_operation"
+
+- name: run the install
+  include_tasks: "runners/run_sum_install_patch.yml"
+  vars:
+    webmethods_sum_install_patches_runner:
+      sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+      script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+      fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+      sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"

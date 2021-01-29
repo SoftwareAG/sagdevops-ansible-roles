@@ -10,7 +10,6 @@
       - "{{ webmethods_install_sum_runner.executable }}"
       - "{{ webmethods_install_sum_runner.execute_dir }}"
       - "{{ webmethods_install_sum_runner.install_dir }}"
-      - "{{ webmethods_install_sum_runner.install_image_path }}"
 
   - name: Create the command
     set_fact:
@@ -19,8 +18,11 @@
         - "--accept-license"
         - "-d"
         - "{{ webmethods_install_sum_runner.install_dir }}"
-        - "-i"
-        - "{{ webmethods_install_sum_runner.install_image_path }}"
+
+  - name: append image param if defined
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-i' ] + [ '{{ webmethods_install_sum_runner.install_image_path }}' ]"
+    when: webmethods_install_sum_runner.install_image_path is defined and webmethods_install_sum_runner.install_image_path != ""
 
   - name: Print the command that we're going to run
     debug:

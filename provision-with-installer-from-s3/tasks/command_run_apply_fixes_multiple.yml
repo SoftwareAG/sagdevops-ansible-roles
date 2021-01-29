@@ -1,9 +1,0 @@
----
-
-  - debug: var=webmethods_provisioning_params_sum_descriptor_list verbosity=3
-
-  - name: Include group tasks
-    include_tasks: "do_set-groups-single.yml"
-    with_items: "{{ apigateway_configparams_rest_usermgt_groups }}"
-    loop_control:
-      loop_var: apigateway_configparams_rest_usermgt_group_single

@@ -7,22 +7,22 @@
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
-      - "{{ webmethods_sum_install_patches_runner.home_dir }}"
+      - "{{ webmethods_sum_install_patches_runner.sum_home_dir }}"
       - "{{ webmethods_sum_install_patches_runner.execute_dir }}"
-      - "{{ webmethods_sum_install_patches_runner.install_dir }}"
-      - "{{ webmethods_sum_install_patches_runner.image_path }}"
+      - "{{ webmethods_sum_install_patches_runner.fixes_image_path }}"
+      - "{{ webmethods_sum_install_patches_runner.sum_image_path }}"
       - "{{ webmethods_sum_install_patches_runner.script_path }}"
 
   - name: Create the command
     set_fact:
       command_to_exec:
-        - "{{ webmethods_sum_install_patches_runner.home_dir }}/bin/UpdateManagerCMD.sh"
+        - "{{ webmethods_sum_install_patches_runner.sum_home_dir }}/bin/UpdateManagerCMD.sh"
         - "-readScript"
         - "{{ webmethods_sum_install_patches_runner.script_path }}"
         - "-installFromImage"
-        - "{{ webmethods_sum_install_patches_runner.image_path }}"
+        - "{{ webmethods_sum_install_patches_runner.sum_image_path }}"
         - "-imageFile"
-        - "{{ webmethods_sum_install_patches_runner.image_path }}"
+        - "{{ webmethods_sum_install_patches_runner.fixes_image_path }}"
 
   - name: Print the command that we're going to run
     debug:
