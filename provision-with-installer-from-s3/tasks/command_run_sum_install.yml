@@ -42,7 +42,7 @@
             executable: "{{ webmethods_install_sum_descriptor.installer.local_path }}"
             execute_dir: "{{ webmethods_install_sum_descriptor.installer.local_path | dirname }}"
             install_dir: "{{ webmethods_install_sum_descriptor.target_install_dir }}"
-            install_image_path: "{{ webmethods_install_sum_descriptor.binaries_image.local_path }}"
+            install_image_path: "{{ webmethods_install_sum_descriptor.binaries_image.local_path | default('',true) }}"
 
       - name: Set changed flag to true
         set_fact:
