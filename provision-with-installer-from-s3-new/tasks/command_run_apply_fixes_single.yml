@@ -17,8 +17,6 @@
       - "{{ webmethods_install_patches_descriptor.script }}"
       - "{{ webmethods_install_patches_descriptor.binaries_image }}"
 
-    #regexp: "\{\{ ~ {{ item.key }} ~ \}\}"
-
 - name: Copy file to a working runtime copy
   copy:
     src: "{{ webmethods_install_patches_descriptor.script.local_path }}"
