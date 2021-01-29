@@ -17,15 +17,19 @@
       - "{{ webmethods_install_patches_descriptor.script }}"
       - "{{ webmethods_install_patches_descriptor.binaries_image }}"
 
+    #regexp: "\{\{ ~ {{ item.key }} ~ \}\}"
+
 - name: Update the script file with values from the variables
   replace:
     path: "{{ webmethods_install_patches_descriptor.script.local_path }}"
     backup: yes
-    regexp: "{{ ['{{',item.key,'}}'] | join("") }}"
+    regexp: "{{ ['', item.key , ''] | join('') }}"
     replace: "{{ item.value }}"
   with_dict:
     __sum_fix_target_path: "{{ webmethods_install_patches_descriptor.target_install_dir }}"
     __sum_fix_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+
+
 
 - name: run the install
   include_tasks: "runners/run_sum_install_patch.yml"
