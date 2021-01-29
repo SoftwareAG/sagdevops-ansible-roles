@@ -42,7 +42,9 @@ echo "target install dir: $__sum_fix_target_path"
 ls -al $__sum_fix_target_path
 
 ## run update manager
-echo "Running update manager"
+echo "Running update manager with command:"
+echo "/bin/sh ${__sum_install_path}/bin/UpdateManagerCMD.sh -readScript \"${__sum_fix_script_path_runtime}\" -installFromImage \"${__sum_fix_image_path}\" -imageFile \"${__sum_fix_image_path}\""
+
 /bin/sh ${__sum_install_path}/bin/UpdateManagerCMD.sh -readScript "${__sum_fix_script_path_runtime}" -installFromImage "${__sum_fix_image_path}" -imageFile "${__sum_fix_image_path}"
 echo "DONE!!"
 
