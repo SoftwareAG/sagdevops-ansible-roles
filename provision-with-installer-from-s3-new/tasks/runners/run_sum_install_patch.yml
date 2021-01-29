@@ -40,23 +40,28 @@
     debug:
       msg: "About to run: {{ command_to_exec|join(' ') }}"
 
-  - name: execute command
+  - name: execute async command
     command:
       argv: "{{ command_to_exec }}"
       chdir: "{{ webmethods_sum_install_patches_runner.execute_dir }}"
-    async: "{{ webmethods_install_async }}"
-    poll: "{{ webmethods_install_poll }}"
-    register: cmd_sleeper
-  
-  - debug: var=cmd_sleeper verbosity=3
-
-  - name: Check status for the install task
-    async_status:
-      jid: "{{ cmd_sleeper.ansible_job_id }}"
     register: job_result
-    until: job_result.finished
-    retries: "{{ webmethods_install_async_retries }}"
-    delay: "{{ webmethods_install_async_delay }}"
-    # failed_when: job_result.rc != 0 and job_result.rc != 20
+    failed_when: job_result.rc != 0 and job_result.rc != 20
+
+  # - name: execute async command
+  #   command:
+  #     argv: "{{ command_to_exec }}"
+  #     chdir: "{{ webmethods_sum_install_patches_runner.execute_dir }}"
+  #   async: "{{ webmethods_install_async }}"
+  #   poll: "{{ webmethods_install_poll }}"
+  #   register: cmd_sleeper
+  
+  # - name: Check status for the install task
+  #   async_status:
+  #     jid: "{{ cmd_sleeper.ansible_job_id }}"
+  #   register: job_result
+  #   until: job_result.finished
+  #   retries: "{{ webmethods_install_async_retries }}"
+  #   delay: "{{ webmethods_install_async_delay }}"
+  #   failed_when: job_result.rc != 0 and job_result.rc != 20
 
   - debug: var=job_result verbosity=3
