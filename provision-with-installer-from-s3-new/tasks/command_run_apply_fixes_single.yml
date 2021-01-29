@@ -19,24 +19,28 @@
 
     #regexp: "\{\{ ~ {{ item.key }} ~ \}\}"
 
+- name: Copy file to a working runtime copy
+  copy:
+    src: "{{ webmethods_install_patches_descriptor.script.local_path }}"
+    dest: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+    mode: '0644'
+
 - name: Update the script file with values from the variables
   replace:
-    path: "{{ webmethods_install_patches_descriptor.script.local_path }}"
-    backup: yes
-    regexp: "{{ ['', item.key , ''] | join('') }}"
+    path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+    backup: no
+    regexp: "{{ ['\{\{', item.key , '\}\}'] | join(' ') }}"
     replace: "{{ item.value }}"
   with_dict:
     __sum_fix_target_path: "{{ webmethods_install_patches_descriptor.target_install_dir }}"
     __sum_fix_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
 
-
-
-- name: run the install
-  include_tasks: "runners/run_sum_install_patch.yml"
-  vars:
-    webmethods_sum_install_patches_runner:
-      sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-      execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-      script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}"
-      fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
-      sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+# - name: run the install
+#   include_tasks: "runners/run_sum_install_patch.yml"
+#   vars:
+#     webmethods_sum_install_patches_runner:
+#       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+#       execute_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
+#       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+#       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+#       sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
