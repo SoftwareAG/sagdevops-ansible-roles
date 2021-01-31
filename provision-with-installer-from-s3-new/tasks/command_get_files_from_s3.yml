@@ -7,7 +7,7 @@
       name: aws-wrapper
     vars:
       command: "getfroms3"
-      getfroms3_bucket_name: "{{ outer_item.bucket_name }}"
+      getfroms3_bucket_name: "{{ outer_item.bucket_name | default(webmethods_s3repo_bucket_name,true) }}"
       getfroms3_bucket_path: "{{ outer_item.bucket_path }}"
       getfroms3_local_path: "{{ outer_item.local_path }}"
       getfroms3_force_download: "{{ outer_item.force_download | default(webmethods_s3repo_force_redownload,true) }}"

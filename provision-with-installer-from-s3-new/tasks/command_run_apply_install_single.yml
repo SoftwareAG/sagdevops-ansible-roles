@@ -14,20 +14,40 @@
   include_tasks: "command_get_files_from_s3.yml"
   vars:
     webmethods_provisioning_files_download_descritors:
-      - "{{ webmethods_install_patches_descriptor.script }}"
-      - "{{ webmethods_install_patches_descriptor.binaries_image }}"
+      - "{{ webmethods_install_products_descriptor.installer }}"
+      - "{{ webmethods_install_products_descriptor.script }}"
+      - "{{ webmethods_install_products_descriptor.binaries_image }}"
 
-
-- name: "Include tasks to fetch the install files from s3"
+- name: Include licenses to fetch from s3
   include_tasks: "command_get_files_from_s3.yml"
   vars:
-    webmethods_provisioning_files_download_descritors:
-      - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
-        local_path: "{{ webmethods_localrepo_installer_filename | default('softwareaginstaller-linux.bin', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_products_image_filename }}"
-        local_path: "{{ webmethods_localrepo_products_image_filename | default('installer_image.zip', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_products_autoscript_filename }}"
-        local_path: "{{ webmethods_localrepo_products_autoscript_filename | default('installer.script', true) }}"
+    webmethods_provisioning_files_download_descritors: "{{ webmethods_install_products_descriptor.licenses }}"
+
+- name: Copy script file to a working runtime copy
+  copy:
+    src: "{{ webmethods_install_products_descriptor.script.local_path }}"
+    dest: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+    mode: '0644'
+    remote_src: yes
+
+- name: Update the script file with values from the variables
+  replace:
+    path: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+    backup: no
+    regexp: "{{ ['{{', item.key , '}}'] | join('[ ]*') }}"
+    replace: "{{ item.value }}"
+  with_dict:
+    __installer_target_path: "{{ webmethods_install_products_descriptor.target_install_dir }}"
+    __installer_product_image: "{{ webmethods_install_products_descriptor.binaries_image.local_path }}"
+    __installer_target_hostname: ""
+
+- name: Update the script file with license values
+  replace:
+    path: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+    backup: no
+    regexp: "{{ [ '{{' , (['__installer_product_license.', (item.0 + 1) ] | join('')) , '}}' ] | join('[ ]*') }}"
+    replace: "{{ item.1.local_path }}"
+  with_indexed_items: "{{ webmethods_install_products_descriptor.licenses }}"
 
 - name: "Include tasks to fetch the license files from s3"
   include_tasks: "command_get_licenses_from_s3.yml"
