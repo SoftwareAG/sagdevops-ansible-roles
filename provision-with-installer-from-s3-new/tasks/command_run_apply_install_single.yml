@@ -10,7 +10,7 @@
     - "{{ webmethods_install_products_descriptor.script }}"
     - "{{ webmethods_install_products_descriptor.binaries_image }}"
 
-- name: Include tasks to fetch the fix files from s3
+- name: fetch the install artifacts from s3
   include_tasks: "command_get_files_from_s3.yml"
   vars:
     webmethods_provisioning_files_download_descritors:
@@ -18,7 +18,7 @@
       - "{{ webmethods_install_products_descriptor.script }}"
       - "{{ webmethods_install_products_descriptor.binaries_image }}"
 
-- name: Include licenses to fetch from s3
+- name: fetch licenses from s3
   include_tasks: "command_get_files_from_s3.yml"
   vars:
     webmethods_provisioning_files_download_descritors: "{{ webmethods_install_products_descriptor.licenses }}"
@@ -49,45 +49,10 @@
     replace: "{{ item.1.local_path }}"
   with_indexed_items: "{{ webmethods_install_products_descriptor.licenses }}"
 
-- name: "Include tasks to fetch the license files from s3"
-  include_tasks: "command_get_licenses_from_s3.yml"
+- name: run the install
+  include_tasks: "runners/run_installer.yml"
   vars:
-    webmethods_provisioning_files_download_descritors:
-      - bucket_path: "{{ webmethods_s3repo_license_zip_filename }}"
-        local_path: "{{ webmethods_localrepo_license_zip_filename | default('licenses.zip', true) }}"
-
-- name: Set base extracted license path variable
-  set_fact:
-    webmethods_localrepo_license_extractedzip_path: "{{ webmethods_localrepo_target_dir }}/{{ (webmethods_localrepo_license_zip_filename | default('licenses.zip', true) | basename | splitext)[0] }}"
-
-- name: Write the install scripts on disk with all the params
-  template:
-    src: "install_products.sh.j2" 
-    dest: "{{ webmethods_localrepo_target_dir }}/install_products.sh"
-    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-    group: "{{ webmethods_install_localtarget_files_owner_group }}"
-    mode: "{{ webmethods_install_localtarget_files_permissions }}"
-    backup: no
-
-- name: run install_product command
-  command: "/bin/bash install_products.sh"
-  args:
-    chdir: "{{ webmethods_localrepo_target_dir }}"
-  async: "{{ webmethods_install_async }}"
-  poll: "{{ webmethods_install_poll }}"
-  register: install_product_sleeper
-
-- name: Check status for install_product task
-  async_status:
-    jid: "{{ install_product_sleeper.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: "{{ webmethods_install_async_retries }}"
-  delay: "{{ webmethods_install_async_delay }}"
-
-- name: Print the job_result to the console.
-  debug:
-    msg: "{{ job_result.stdout_lines | join('\n') }}"
-
-- name: "Include tasks to cleanup the install artifacts"
-  include_tasks: "command_cleanup.yml"
+    webmethods_installer_runner:
+      executable: "{{ webmethods_install_products_descriptor.installer.local_path  }}"
+      execute_dir: "{{ webmethods_install_products_descriptor.installer.local_path | dirname }}"
+      script_path: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
