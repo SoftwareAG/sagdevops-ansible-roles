@@ -7,8 +7,13 @@
     msg: "A mandatory param was not defined, cannot do anything."
   when: item is not defined
   with_items:
+    - "{{ webmethods_install_patches_descriptor.target_install_dir }}"
+    - "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
     - "{{ webmethods_install_patches_descriptor.script }}"
     - "{{ webmethods_install_patches_descriptor.binaries_image }}"
+    - "{{ webmethods_install_patches_descriptor.script.local_path }}"
+    - "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+
 
 - name: Include tasks to fetch the fix files from s3
   include_tasks: "command_get_files_from_s3.yml"
@@ -39,8 +44,8 @@
   vars:
     webmethods_sum_install_patches_runner:
       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-      fixes_overinstall: "{{ webmethods_install_patches_descriptor.fixes_overinstall }}"
-      sum_selfupdate: "{{ webmethods_install_patches_descriptor.sum_selfupdate }}"
+      fixes_overinstall: "{{ webmethods_install_patches_descriptor.fixes_overinstall | default() | bool }}"
+      sum_selfupdate: "{{ webmethods_install_patches_descriptor.sum_selfupdate | default() | bool }}"
       execute_dir: "{{ webmethods_install_patches_descriptor.script.local_path | dirname }}"
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
