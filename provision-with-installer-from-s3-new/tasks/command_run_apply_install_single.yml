@@ -39,7 +39,7 @@
   with_dict:
     __installer_target_path: "{{ webmethods_install_products_descriptor.target_install_dir }}"
     __installer_product_image: "{{ webmethods_install_products_descriptor.binaries_image.local_path }}"
-    __installer_target_hostname: ""
+    __installer_target_hostname: "{{ ansible_hostname }}"
 
 - name: Update the script file with license values
   replace:
