@@ -39,7 +39,7 @@
 
   - name: cleanup local path
     set_fact: 
-      getfroms3_local_path: "{{ getfroms3_local_path | regex_replace('\/{2,}', '/') }}"
+      getfroms3_local_path: "{{ getfroms3_local_path | regex_replace('\\/{2,}', '/') }}"
 
   - debug: var=getfroms3_local_path verbosity=1
 
