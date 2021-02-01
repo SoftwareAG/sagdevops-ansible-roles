@@ -42,14 +42,24 @@
     set_fact: 
       __target_force_reinstall_packages_package: "{{ wmis_cfgparams_install_package_single.target_force_reinstall | default() | bool }}"
 
-  - name: check if package already installed
+  - name: check 1 if package already installed
     stat: 
       path: "{{ __target_package_dir }}/manifest.rel"
-    register: check_package_installed
+    register: check_package_installed_1
 
-  - name: Package installed status
-    debug:
-      var: check_package_installed.stat.exists
+  - name: check 2 if package already installed
+    stat: 
+      path: "{{ __target_package_dir }}/manifest.v3"
+    register: check_package_installed_2
+
+  - debug: var=check_package_installed_1 verbosity=3
+  - debug: var=check_package_installed_2 verbosity=3
+
+  - name: is package installed?
+    set_fact: 
+      check_package_installed: "{{ check_package_installed_1.stat.exists or check_package_installed_2.stat.exists }}"
+
+  - debug: var=check_package_installed verbosity=3
 
   - name: Install package only if it's not already there, or if force-reinstall var is set
     block:
@@ -57,12 +67,12 @@
       - debug: 
           msg: "Re-installing package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\""
           verbosity: 1
-        when: check_package_installed.stat.exists | bool and __target_force_reinstall_packages | bool
+        when: (check_package_installed | bool) and (__target_force_reinstall_packages | bool)
       
       - debug: 
           msg: "Installing new package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\"" 
           verbosity: 1
-        when: check_package_installed.stat.exists == false
+        when: (check_package_installed | bool) == false
 
       - name: Downloading the package from s3 to apply on integration server
         import_role: 
@@ -107,4 +117,4 @@
         set_fact:
           configure_integrationserver_install_package_changed: true
   
-    when: check_package_installed.stat.exists == false or __target_force_reinstall_packages | default() | bool
+    when: (check_package_installed | bool) == false or __target_force_reinstall_packages | default() | bool
