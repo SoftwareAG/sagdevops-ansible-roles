@@ -34,12 +34,8 @@
 
   - name: Prepend getfroms3_bucket_path with bucket_prefix if defined
     set_fact: 
-      getfroms3_bucket_path: "{{ [getfroms3_bucket_prefix,getfroms3_bucket_path] | join('/') }}"
+      getfroms3_bucket_path: "{{ [getfroms3_bucket_prefix,getfroms3_bucket_path] | join('/') | regex_replace('\\/{2,}', '/') }}"
     when: getfroms3_bucket_prefix is defined and getfroms3_bucket_prefix != ""
-
-  - name: cleanup bucket path
-    set_fact: 
-      getfroms3_bucket_path: "{{ getfroms3_bucket_path | regex_replace('\\/{2,}', '/') }}"
 
   - debug: var=getfroms3_bucket_path verbosity=1
   - debug: var=getfroms3_local_path verbosity=1
