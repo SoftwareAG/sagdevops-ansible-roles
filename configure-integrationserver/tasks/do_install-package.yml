@@ -54,6 +54,16 @@
   - name: Install package only if it's not already there, or if force-reinstall var is set
     block:
 
+      - debug: 
+          msg: "Re-installing package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\""
+          verbosity: 1
+        when: check_package_installed.stat.exists | bool and __target_force_reinstall_packages | bool
+      
+      - debug: 
+          msg: "Installing new package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\"" 
+          verbosity: 1
+        when: check_package_installed.stat.exists == false
+
       - name: Downloading the package from s3 to apply on integration server
         import_role: 
           name: aws-wrapper
