@@ -1,74 +1,100 @@
 ---
 
-
-  - name: Default package name to the name of the file on the remote location, unless it's provided
-    set_fact: 
-      webmethods_packages_local_target_packagename: "{{ (webmethods_packages_remote_s3_bucket_path | basename | splitext)[0]"
-    when: webmethods_packages_local_target_packagename is not defined or webmethods_packages_local_target_packagename == ""
-
-  - name: Set the local target package path
-    set_fact: 
-      webmethods_packages_local_target_package_dir: "{{ runtime_instance_package_home }}/{{ webmethods_packages_local_target_packagename }}"
-
-  - name: set temp local download path
-    set_fact: 
-      webmethods_packages_local_download_path: "{{ runtime_instance_package_home }}/{{ webmethods_packages_local_target_packagename }}.zip"
-
-  - name: check if package already installed
-    stat: 
-      path: "{{ webmethods_packages_local_target_package_dir }}/manifest.rel"
-    register: check_package_installed
-
-  - name: Package installed status
-    debug:
-      var: check_package_installed.stat.exists
+  - name: Single Package to install
+    debug: var=wmis_cfgparams_install_package_single verbosity=3
 
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_install_package_changed: false
     when: configure_integrationserver_install_package_changed is not defined
 
-  - name: Install package only if it's not already there
+  - name: fail if mandatory params not specified
+    fail:
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ wmis_cfgparams_install_package_single.bucket_path }}"
+      - "{{ wmis_cfgparams_install_package_single.target_instance_name }}"
+
+  - name: set target package name from the passed-in variables
+    set_fact: 
+      __target_package_name: "{{ wmis_cfgparams_install_package_single.target_package_name }}"
+    when: wmis_cfgparams_install_package_single.target_package_name is defined and wmis_cfgparams_install_package_single.target_package_name != ""
+
+  - name: OR default package name to the name of the file on the remote location
+    set_fact: 
+      __target_package_name: "{{ (wmis_cfgparams_install_package_single.bucket_path | basename | splitext)[0] }}"
+    when: wmis_cfgparams_install_package_single.target_package_name is not defined or wmis_cfgparams_install_package_single.target_package_name == ""
+
+  - name: Set the target instance for this package install in order to get the riht path for the packages folder
+    set_fact: 
+      product_instance_name: "{{ wmis_cfgparams_install_package_single.target_instance_name }}"
+  
+  - name: Set the local target package path
+    set_fact: 
+      __target_package_dir: "{{ runtime_instance_package_home }}/{{ __target_package_name }}"
+
+  - name: set temp local download path
+    set_fact: 
+      __local_download_path: "{{ runtime_instance_package_home }}/{{ wmis_cfgparams_install_package_single.bucket_path | basename }}"
+
+  - name: check if we should force re-install the package even if it exists
+    set_fact: 
+      __target_force_reinstall_packages_package: "{{ wmis_cfgparams_install_package_single.target_force_reinstall | default() | bool }}"
+
+  - name: check if package already installed
+    stat: 
+      path: "{{ __target_package_dir }}/manifest.rel"
+    register: check_package_installed
+
+  - name: Package installed status
+    debug:
+      var: check_package_installed.stat.exists
+
+  - name: Install package only if it's not already there, or if force-reinstall var is set
     block:
+
+      - name: Downloading the package from s3 to apply on integration server
+        import_role: 
+          name: aws-wrapper
+        vars:
+          command: get-files-from-s3
+          getfroms3_files_descriptor_list:
+            - bucket_path: "{{ wmis_cfgparams_install_package_single.bucket_path }}"
+              local_path: "{{ __local_download_path }}"
+              local_path_permission: "0600"
+              local_path_create_dir_ifnotexist: true
+              local_path_create_dir_permission: "0700"
+              force_download: "true"
 
       - name: First, delete the target folder if it exists and we are installing
         file:
-          path: "{{ webmethods_packages_local_target_package_dir }}"
+          path: "{{ __target_package_dir }}"
           state: absent
 
-      - name: getting the packages from s3 to apply on integration server
-        include_role:
-          name: aws-wrapper
-        vars:
-          command: "getfroms3"
-          getfroms3_bucket_name: "{{ webmethods_packages_remote_s3_bucket_name | default('', true) }}"
-          getfroms3_bucket_path: "{{ webmethods_packages_remote_s3_bucket_path | default('', true) }}"
-          getfroms3_local_path: "{{ webmethods_packages_local_download_path }}"
-          getfroms3_force_download: true
-        
-      - name: Create the extracted dir on the remote machine if they don't exist
+      - name: Create the extracted dir on the remote machine
         file:
-          path: "{{ webmethods_packages_local_target_package_dir }}"
+          path: "{{ __target_package_dir }}"
           state: directory
 
       - name: Unarchive the packages on the remote machine
         unarchive:
-          src: "{{ webmethods_packages_local_download_path }}"
-          dest: "{{ webmethods_packages_local_target_package_dir }}"
+          src: "{{ __local_download_path }}"
+          dest: "{{ __target_package_dir }}"
           remote_src: yes
 
       - name: Delete the archive once extracted
         file:
-          path: "{{ webmethods_packages_local_download_path }}"
+          path: "{{ __local_download_path }}"
           state: absent
       
       - name: check if package installed
         stat: 
-          path: "{{ webmethods_packages_local_target_package_dir }}/manifest.rel"
+          path: "{{ __target_package_dir }}/manifest.rel"
         register: webmethods_package_just_installed
 
       - name: Set changed flag to true
         set_fact:
           configure_integrationserver_install_package_changed: true
   
-    when: check_package_installed.stat.exists == false or webmethods_packages_force_install | bool
+    when: check_package_installed.stat.exists == false or __target_force_reinstall_packages | default() | bool

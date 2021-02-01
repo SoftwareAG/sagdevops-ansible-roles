@@ -10,7 +10,7 @@
       name: configure-integrationserver
     vars:
       configs_action: install-packages
-      webmethods_packages: "{{ wxconfig_params_packages }}"
+      wmis_cfgparams_install_packages_list: "{{ wxconfig_params_packages }}"
 
   ## TODO: if license changed, probably should restart too? 
   ## (problem is: the AWS download wrapper does not check on same file or not...so we'll need to fix that first)

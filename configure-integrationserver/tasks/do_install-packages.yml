@@ -1,26 +1,24 @@
 ---
 
+  - name: Packages to install
+    debug: var=wmis_cfgparams_install_packages_list verbosity=3
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_install_packages_changed: false
     when: configure_integrationserver_install_packages_changed is not defined
 
-  - name: Install package only if it's not already there
+  - name: Installing the packages as defined in the list, only if the list is not empty
     block:
 
-      - name: Installing the packages as defined in the list, only if the list is not empty
+      - name: Include group tasks
         include_tasks: "do_install-package.yml"
-        vars:
-          webmethods_packages_remote_s3_bucket_name: "{{ webmethods_packages_item.remote_s3_bucket_name }}"
-          webmethods_packages_remote_s3_bucket_path: "{{ webmethods_packages_item.remote_s3_bucket_path }}"
-          webmethods_packages_local_target_packagename: "{{ webmethods_packages_item.local_target_packagename }}"
-          webmethods_packages_force_install: "{{ webmethods_packages_item.force_install | default(false,true) }}"
-        with_items: "{{ webmethods_packages }}"
+        with_items: "{{ wmis_cfgparams_install_packages_list }}"
         loop_control:
-          loop_var: webmethods_packages_item
+          loop_var: wmis_cfgparams_install_package_single
 
       - name: Set changed flag to true if a change happened
         set_fact: 
           configure_integrationserver_install_packages_changed: "{{ configure_integrationserver_install_package_changed }}"
 
-    when: webmethods_packages is defined and (webmethods_packages|length > 0)
+    when: wmis_cfgparams_install_packages_list is defined and (wmis_cfgparams_install_packages_list|length > 0)
