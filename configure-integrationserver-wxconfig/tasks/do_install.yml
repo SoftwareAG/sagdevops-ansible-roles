@@ -16,10 +16,10 @@
   ## (problem is: the AWS download wrapper does not check on same file or not...so we'll need to fix that first)
   - name: getting the wxconfig license from s3 to apply on integration server
     import_role: 
-      name: configure-webmethods
+      name: aws-wrapper
     vars:
-      generic_configs_action: get-files-from-s3
-      webmethods_download_files_s3: "{{ wxconfig_params_licensing }}"
+      command: get-files-from-s3
+      getfroms3_files_descriptor_list: "{{ wxconfig_params_licensing }}"
 
   - name: Set changed flag to true if any mutating operation did change
     set_fact: 

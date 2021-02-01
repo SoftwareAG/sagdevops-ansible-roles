@@ -18,3 +18,15 @@ getfroms3_local_path_owner_user:
 getfroms3_local_path_owner_group:
 getfroms3_local_path_permission: "0644"
 getfroms3_force_download: false
+
+## the defaults to use if the file descriptor dictionary does not contain an optional variable
+getfroms3_defaults_bucket_name:
+getfroms3_defaults_bucket_path:
+getfroms3_defaults_local_path_owner_user:
+getfroms3_defaults_local_path_owner_group:
+getfroms3_defaults_local_path_permission:
+getfroms3_defaults_local_path_create_dir_ifnotexist:
+getfroms3_defaults_local_path_create_dir_owner_user:
+getfroms3_defaults_local_path_create_dir_owner_group:
+getfroms3_defaults_local_path_create_dir_permission:
+getfroms3_defaults_force_download: false

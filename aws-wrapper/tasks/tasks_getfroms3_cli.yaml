@@ -4,6 +4,7 @@
     debug:
       msg:
       - "getfroms3_bucket_name: {{ getfroms3_bucket_name | default('undefined',true) }}"
+      - "getfroms3_bucket_prefix: {{ getfroms3_bucket_prefix | default('undefined',true) }}"
       - "getfroms3_bucket_path: {{ getfroms3_bucket_path | default('undefined',true) }}"
       - "getfroms3_local_path: {{ getfroms3_local_path | default('undefined',true) }}"
       - "getfroms3_local_path_create_dir_ifnotexist: {{ getfroms3_local_path_create_dir_ifnotexist | default('undefined',true) }}"
@@ -30,6 +31,17 @@
     fail: 
       msg: "getfroms3_local_path not specified...can't do anything"
     when: getfroms3_local_path is not defined or getfroms3_local_path == ""
+
+  - name: Prepend getfroms3_local_path with bucket_prefix if defined
+    set_fact: 
+      getfroms3_local_path: "{{ [getfroms3_bucket_prefix,getfroms3_local_path] | join('/') }}"
+    when: getfroms3_bucket_prefix is defined and getfroms3_bucket_prefix != ""
+
+  - name: cleanup local path
+    set_fact: 
+      getfroms3_local_path: "{{ getfroms3_local_path | regex_replace('\/{2,}', '/') }}"
+
+  - debug: var=getfroms3_local_path verbosity=1
 
   - name: Check if getfroms3_local_path exists already
     stat: 
