@@ -32,12 +32,21 @@
       msg: "getfroms3_local_path not specified...can't do anything"
     when: getfroms3_local_path is not defined or getfroms3_local_path == ""
 
-  - name: Prepend getfroms3_bucket_path with bucket_prefix if defined
+  - name: Set bucket full path
     set_fact: 
-      getfroms3_bucket_path: "{{ [getfroms3_bucket_prefix,getfroms3_bucket_path] | join('/') | regex_replace('\\/{2,}', '/') }}"
+      getfroms3_full_bucket_path: "{{ getfroms3_bucket_path }}"
+    when: getfroms3_bucket_prefix is not defined or getfroms3_bucket_prefix == ""
+
+  - name: Prepend bucket path with bucket_prefix if defined
+    set_fact: 
+      getfroms3_full_bucket_path: "{{ [getfroms3_bucket_prefix,getfroms3_bucket_path] | join('/') }}"
     when: getfroms3_bucket_prefix is defined and getfroms3_bucket_prefix != ""
 
-  - debug: var=getfroms3_bucket_path verbosity=1
+  - name: cleanup bucket path
+    set_fact: 
+      getfroms3_full_bucket_path: "{{ getfroms3_full_bucket_path | regex_replace('\\/{2,}', '/') }}"
+
+  - debug: var=getfroms3_full_bucket_path verbosity=1
   - debug: var=getfroms3_local_path verbosity=1
 
   - name: Check if getfroms3_local_path exists already
@@ -100,7 +109,7 @@
         when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
         
       - name: run AWS CLI S3 CP command
-        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_bucket_path }} {{ getfroms3_local_path }}"
+        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_full_bucket_path }} {{ getfroms3_local_path }}"
         args:
           chdir: "{{ ansible_env.HOME }}"
         async: "{{ getfroms3_async }}"
