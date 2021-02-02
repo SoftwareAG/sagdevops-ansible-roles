@@ -1,5 +1,6 @@
 ---
 
+  - debug: var=wxconfig_params_groups_list verbosity=3
 
   - name: Set changed flag to false if not defined
     set_fact: 

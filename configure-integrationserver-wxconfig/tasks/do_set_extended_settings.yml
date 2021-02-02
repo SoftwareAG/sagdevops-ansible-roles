@@ -1,5 +1,7 @@
 ---
 
+  - debug: var=wxconfig_params_extended_settings_list verbosity=3
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_set_extended_settings_changed: false

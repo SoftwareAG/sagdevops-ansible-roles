@@ -2,6 +2,8 @@
 
 ## TODO configure_integrationserver_wxconfig_set_encrypted_values_changed --> because the encrypted values file gets renamed automatically, need to improve this to be able to use it
 
+  - debug: var=wxconfig_params_encrypted_items verbosity=3
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_set_encrypted_values_changed: false

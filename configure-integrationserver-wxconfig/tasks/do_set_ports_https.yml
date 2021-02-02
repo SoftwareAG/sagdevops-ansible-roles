@@ -1,5 +1,7 @@
 ---
 
+  - debug: var=wxconfig_params_ports_https_list verbosity=3
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_set_ports_https_changed: false

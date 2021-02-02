@@ -1,5 +1,7 @@
 ---
 
+  - debug: var=wxconfig_params_jdbc verbosity=3
+
   - name: Set changed flag to false if not defined
     set_fact: 
       configure_integrationserver_wxconfig_set_jdbc_pools_changed: false
