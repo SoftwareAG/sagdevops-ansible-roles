@@ -11,7 +11,7 @@
             {% if wxconfig_params_ldap.server_list is defined %}
             <serverList>
                 {% for ldap_server in wxconfig_params_ldap.server_list %}
-                <server updateIfExists="{{ ldap_server.updateIfExists | default('true',true) }}" deleteOnUnload="{{ ldap_server.deleteOnUnload | default('false',true) }}">
+                <server updateIfExists="{{ ldap_server.updateIfExists | default() | bool | lower | default('true',true) }}" deleteOnUnload="{{ ldap_server.deleteOnUnload | default() | bool | lower | default('false',true) }}">
                     <url>{{ ldap_server.url }}</url>
                     {% if ldap_server.authentication is defined %}
                     <authentication>
