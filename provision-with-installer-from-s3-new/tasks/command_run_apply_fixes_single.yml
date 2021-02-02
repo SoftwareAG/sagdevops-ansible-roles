@@ -14,10 +14,12 @@
     - "{{ webmethods_install_patches_descriptor.script.local_path }}"
     - "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
 
-- name: Include tasks to fetch the fix files from s3
-  include_tasks: "command_get_files_from_s3.yml"
+- name: Fetch the fix artifacts from s3
+  include_role:
+    name: aws-wrapper
   vars:
-    webmethods_provisioning_files_download_descritors:
+    command: get-files-from-s3
+    getfroms3_files_descriptor_list:
       - "{{ webmethods_install_patches_descriptor.script }}"
       - "{{ webmethods_install_patches_descriptor.binaries_image }}"
 
@@ -49,3 +51,8 @@
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
       sum_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+
+- name: Clean repo after succesfull install
+  file:
+    state: absent
+    path: "{{ webmethods_localrepo_target_dir }}/"

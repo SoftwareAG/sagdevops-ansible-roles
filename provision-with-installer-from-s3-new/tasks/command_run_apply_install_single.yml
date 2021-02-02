@@ -10,18 +10,23 @@
     - "{{ webmethods_install_products_descriptor.script }}"
     - "{{ webmethods_install_products_descriptor.binaries_image }}"
 
-- name: fetch the install artifacts from s3
-  include_tasks: "command_get_files_from_s3.yml"
+- name: Fetch from s3 the install artifacts
+  include_role:
+    name: aws-wrapper
   vars:
-    webmethods_provisioning_files_download_descritors:
+    command: get-files-from-s3
+    getfroms3_files_descriptor_list:
       - "{{ webmethods_install_products_descriptor.installer }}"
       - "{{ webmethods_install_products_descriptor.script }}"
       - "{{ webmethods_install_products_descriptor.binaries_image }}"
 
-- name: fetch licenses from s3
-  include_tasks: "command_get_files_from_s3.yml"
+- name: fetch from s3 the licenses needed by the installer
+  include_role:
+    name: aws-wrapper
   vars:
-    webmethods_provisioning_files_download_descritors: "{{ webmethods_install_products_descriptor.licenses }}"
+    command: get-files-from-s3
+    getfroms3_files_descriptor_list:
+      - "{{ webmethods_install_products_descriptor.licenses }}"
 
 - name: Copy script file to a working runtime copy
   copy:

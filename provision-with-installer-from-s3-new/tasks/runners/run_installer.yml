@@ -28,8 +28,8 @@
     command:
       argv: "{{ command_to_exec }}"
       chdir: "{{ webmethods_installer_runner.execute_dir }}"
-    async: "{{ webmethods_install_async }}"
-    poll: "{{ webmethods_install_poll }}"
+    async: "{{ rvar_install_async_timeout }}"
+    poll: "{{ rvar_install_async_poll }}"
     register: cmd_sleeper
 
   - name: Check status for the install task
@@ -37,8 +37,8 @@
       jid: "{{ cmd_sleeper.ansible_job_id }}"
     register: job_result
     until: job_result.finished
-    retries: "{{ webmethods_install_async_retries }}"
-    delay: "{{ webmethods_install_async_delay }}"
+    retries: "{{ rvar_install_async_retries }}"
+    delay: "{{ rvar_install_async_delay }}"
 
   - name: Print the job_result to the console.
     debug:
