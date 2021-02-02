@@ -108,9 +108,22 @@
           mode: "{{ getfroms3_local_path_create_dir_permission }}"
         when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
         
+      - name: Create the command
+        set_fact:
+          command_to_exec:
+            - "{{ getfroms3_aws_cli_exe }}"
+            - "s3"
+            - "cp"
+            - "s3://{{ getfroms3_bucket_name }}/{{ getfroms3_full_bucket_path }}"
+            - "{{ getfroms3_local_path }}"
+  
+      - name: Print the command that we're going to run
+        debug:
+          msg: "About to run: {{ command_to_exec|join(' ') }}"
+
       - name: run AWS CLI S3 CP command
-        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_full_bucket_path }} {{ getfroms3_local_path }}"
-        args:
+        command:
+          argv: "{{ command_to_exec }}"
           chdir: "{{ ansible_env.HOME }}"
         async: "{{ getfroms3_async }}"
         poll: "{{ getfroms3_poll }}"
