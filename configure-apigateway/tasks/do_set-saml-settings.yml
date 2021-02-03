@@ -29,6 +29,12 @@
       dict1: "{{ get_existing_saml.json | to_nice_yaml }}"
       dict2: "{{ rvar_apigateway_saml_settings }}"
 
+  - name: Current saml settings
+    debug: var=dict1 verbosity=3
+
+  - name: Current saml settings
+    debug: var=dict2 verbosity=3
+
   - name: Parse response and find the differences between the existing settings vs the new settings being passed
     set_fact:
       configs_diffs: "{{ lookup('template', 'apigateway_restapi_diff_dictionaries.json.j2') }}"
