@@ -24,31 +24,6 @@
   - name: Current saml settings
     debug: var=get_existing_saml verbosity=3
 
-  - name: Set changed flag to true if any mutating operation did change
-    set_fact:
-      configs_differences: []
-
-  - name: Set changed flag to true if any mutating operation did change
-    set_fact:
-      configs_differences: "{{ configs_differences + [ item ] }}"
-    when: (get_existing_saml.json[item]) != (rvar_apigateway_saml_settings[item])
-    with_items:
-      - "saml_keystore_type"
-      - "saml_keystore_location"
-      - "saml_redirect"
-      - "saml_assertion_signed"
-      - "saml_sp_metadata_url"
-      - "saml_ldp_metadata_url"
-      - "saml_defaultkey_alias"
-      - "saml_signkey_alias"
-      - "saml_enabled"
-      - "saml_sp_id"
-      - "saml_authreq_signed"
-      - "saml_encrypkey_alias"
-
-  - name: differences
-    debug: var=configs_differences verbosity=3
-
   - name: Update saml settings
     uri:
       url: "{{ apigateway_rest_configurations_samlsso }}"
@@ -62,11 +37,23 @@
       status_code: "200"
       body_format: json
       timeout: 30
-    register: rest_response
+    register: update_rest_response
 
   - debug:
-      var: rest_response
+      var: update_rest_response
       verbosity: 3
+
+  - name: Assign json responses to compare variables
+    set_fact:
+      dict1: get_existing_saml.json
+      dict2: update_rest_response.json
+
+  - name: find differences between before and after
+    set_fact:
+      configs_differences: "{{ lookup('template', 'apigateway_restapi_diff_dictionaries.json.j2') }}"
+
+  - name: differences
+    debug: var=configs_differences verbosity=3
 
   - name: Set changed flag to true if differences were detected
     set_fact:
