@@ -45,8 +45,8 @@
 
   - name: Assign json responses to compare variables
     set_fact:
-      dict1: get_existing_saml.json
-      dict2: update_rest_response.json
+      dict1: "{{ get_existing_saml.json }}"
+      dict2: "{{ update_rest_response.json }}"
 
   - name: find differences between before and after
     set_fact:
