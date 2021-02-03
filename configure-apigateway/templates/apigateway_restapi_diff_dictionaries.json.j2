@@ -1,8 +1,10 @@
 [{%- if dict1 is defined and dict2 is defined  -%}
     {%- if (dict1.keys() | symmetric_difference(dict2.keys()) | length) == 0 -%}
+        {% set count = namespace(value=0) %}
         {%- for key in (dict1.keys() | sort) -%}
             {%- if dict1[key] != dict2[key]  -%}
                 DICTS_VALUE_NOT_EQUAL_FORKEY_{{ key }}
+                {% set count.value = count.value + 1 %}
             {%- endif -%}
         {%- endfor -%}
     {%- else -%}
