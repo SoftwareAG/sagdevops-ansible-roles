@@ -332,3 +332,22 @@ webmethods_apigateway_ldap_settings: {}
   #       groupIdProperty: "<string>"
   #       groupRootDN: "<string>"
   #   cdsRunning: "<boolean>"
+
+## saml settings
+rvar_apigateway_saml_settings: {}
+  # saml_enabled: "<boolean>"
+  # saml_redirect: "/saml/sso/login"
+  # saml_sp_id: "<string>"
+  # saml_assertion_signed: "<boolean>"
+  # saml_authreq_signed:  "<boolean>"
+  # saml_sp_metadata_url: "<string>"
+  # saml_ldp_metadata_url: "<string>"
+  # saml_keystore_type: "<string>"
+  # saml_keystore_location: "<string>"
+  # saml_keystore_pwd: "<string>"
+  # saml_defaultkey_alias: "<string>"
+  # saml_defaultkey_pwd: "<string>"
+  # saml_signkey_alias: "<string>"
+  # saml_signkey_pwd: "<string>"
+  # saml_encrypkey_alias: "<string>"
+  # saml_encrypkey_pwd: "<string>"
