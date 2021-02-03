@@ -26,7 +26,7 @@
 
   - name: Set dictionary variables to compare
     set_fact:
-      dict1: "{{ get_existing_saml.json | to_yaml }}"
+      dict1: "{{ get_existing_saml.json | to_nice_yaml }}"
       dict2: "{{ rvar_apigateway_saml_settings }}"
 
   - name: Parse response and find the differences between the existing settings vs the new settings being passed
