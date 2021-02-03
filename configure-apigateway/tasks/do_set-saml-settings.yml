@@ -31,7 +31,7 @@
   - name: Set changed flag to true if any mutating operation did change
     set_fact:
       configs_differences: "{{ configs_differences + [ item ] }}"
-    when: (get_existing_saml.json[item] | string) != (rvar_apigateway_saml_settings[item] | string)
+    when: (get_existing_saml.json[item]) != (rvar_apigateway_saml_settings[item])
     with_items:
       - "saml_keystore_type"
       - "saml_keystore_location"
