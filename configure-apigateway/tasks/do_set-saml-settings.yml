@@ -49,64 +49,28 @@
   - name: differences
     debug: var=configs_differences verbosity=3
 
-# get_existing_saml.saml_keystore_type != rvar_apigateway_saml_settings.saml_keystore_type
-# get_existing_saml.saml_keystore_location != rvar_apigateway_saml_settings.saml_keystore_location
-# get_existing_saml.saml_redirect != rvar_apigateway_saml_settings.saml_redirect
-# get_existing_saml.saml_assertion_signed != rvar_apigateway_saml_settings.saml_assertion_signed
-# get_existing_saml.saml_sp_metadata_url != rvar_apigateway_saml_settings.saml_sp_metadata_url
-# get_existing_saml.saml_ldp_metadata_url != rvar_apigateway_saml_settings.saml_ldp_metadata_url
-# get_existing_saml.saml_defaultkey_alias != rvar_apigateway_saml_settings.
-# get_existing_saml.saml_signkey_alias != rvar_apigateway_saml_settings.
-# get_existing_saml.saml_enabled != rvar_apigateway_saml_settings.
-# get_existing_saml.saml_sp_id != rvar_apigateway_saml_settings.
-# get_existing_saml.saml_authreq_signed != rvar_apigateway_saml_settings.
-# get_existing_saml.saml_encrypkey_alias != rvar_apigateway_saml_settings.
+  - name: Update saml settings
+    uri:
+      url: "{{ apigateway_rest_configurations_samlsso }}"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ rvar_apigateway_saml_settings | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: rest_response
 
-  # - name: Set dictionary variables to compare
-  #   set_fact:
-  #     dict1: "{{ get_existing_saml.json }}"
-  #     dict2: "{{ rvar_apigateway_saml_settings }}"
+  - debug:
+      var: rest_response
+      verbosity: 3
 
-  # - name: Current saml settings
-  #   debug: var=dict1 verbosity=3
-
-  # - name: Current saml settings
-  #   debug: var=dict2 verbosity=3
-
-  # - name: Parse response and find the differences between the existing settings vs the new settings being passed
-  #   set_fact:
-  #     configs_diffs: "{{ lookup('template', 'apigateway_restapi_diff_dictionaries.json.j2') }}"
-
-  # - name: differences
-  #   debug: var=configs_diffs verbosity=3
-
-  - name: Update SAML settings only if the new settings are different from the existing ones
-    block:
-
-      - name: Update saml settings
-        uri:
-          url: "{{ apigateway_rest_configurations_samlsso }}"
-          method: PUT
-          user: "{{ apigateway_rest_login_username }}"
-          password: "{{ apigateway_rest_login_password }}"
-          return_content: yes
-          body: "{{ rvar_apigateway_saml_settings | to_json }}"
-          force_basic_auth: yes
-          validate_certs: false
-          status_code: "200"
-          body_format: json
-          timeout: 30
-        register: rest_response
-
-      - debug:
-          var: rest_response
-          verbosity: 3
-
-      - name: Set changed flag to true if any mutating operation did change
-        set_fact: 
-          configure_apigateway_set_saml_settings_changed: true
-
-    when: configs_differences is defined and (configs_differences|length > 0)
+  - name: Set changed flag to true if differences were detected
+    set_fact:
+      configure_apigateway_set_saml_settings_changed: (configs_differences is defined and (configs_differences|length > 0))
 
   - name: Print the changed var
     debug:
