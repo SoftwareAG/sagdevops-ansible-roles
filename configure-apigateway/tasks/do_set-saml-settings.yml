@@ -70,7 +70,7 @@
 
   - name: Set changed flag to true if differences were detected
     set_fact:
-      configure_apigateway_set_saml_settings_changed: (configs_differences is defined and (configs_differences|length > 0))
+      configure_apigateway_set_saml_settings_changed: "{{ configs_differences is defined and configs_differences|length > 0 }}"
 
   - name: Print the changed var
     debug:
