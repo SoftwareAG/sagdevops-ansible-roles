@@ -11,7 +11,7 @@
 
   - name: append command params
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type:multipart/form-data' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-X' ] + [ 'GET' ]"
 
   - name: append all header params
     set_fact:
@@ -24,14 +24,14 @@
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
     when: curl_wrapper_basicauth_user is defined and curl_wrapper_basicauth_password is defined
 
-  - name: append all form-data params
-    set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-F' ] + [ '{{ item.key }}={{ item.value }}' ]"
-    with_dict: "{{ curl_wrapper_multipart_formdata_fields }}"
-
   - name: append target URI
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '{{ curl_wrapper_target_uri }}' ]"
+
+  - name: append file saving path
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '--output' ] + [ '{{ curl_wrapper_output_path }}' ]"
+    when: curl_wrapper_output_path is defined and curl_wrapper_output_path != ""
 
   - name: Print the command that we're going to run
     debug:
