@@ -40,7 +40,8 @@
 
   - name: check if we should force re-install the package even if it exists
     set_fact: 
-      __target_force_reinstall_packages_package: "{{ wmis_cfgparams_install_package_single.target_force_reinstall | default() | bool }}"
+      __target_force_reinstall_package: true
+    when: __target_package_name in (wmis_cfgparams_install_packages_force_reinstall_list | default([],true))
 
   - name: check 1 if package already installed
     stat: 
@@ -117,4 +118,4 @@
         set_fact:
           configure_integrationserver_install_package_changed: true
   
-    when: (check_package_installed | bool) == false or __target_force_reinstall_packages | default() | bool
+    when: (check_package_installed | bool) == false or __target_force_reinstall_package | default() | bool

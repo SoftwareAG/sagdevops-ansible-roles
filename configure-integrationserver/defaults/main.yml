@@ -33,6 +33,6 @@ external_terracotta_inventory_pattern: ""
 external_terracotta_port: 9510
 
 ## install package
-webmethods_packages_force_install: false
-webmethods_packages_remote_s3_bucket_name:
-webmethods_packages_remote_s3_bucket_path:
+wmis_cfgparams_install_packages_list: []
+wmis_cfgparams_install_package_single: {}
+wmis_cfgparams_install_packages_force_reinstall_list: []
