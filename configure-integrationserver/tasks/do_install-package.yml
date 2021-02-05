@@ -71,7 +71,7 @@
       - debug: 
           msg: "Re-installing package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\""
           verbosity: 1
-        when: (check_package_installed | bool) and (__target_force_reinstall_packages | bool)
+        when: (check_package_installed | bool) and (__target_force_reinstall_package | bool)
       
       - debug: 
           msg: "Installing new package {{ __target_package_name }} in Integration Server instance \"{{ product_instance_name }}\"" 
