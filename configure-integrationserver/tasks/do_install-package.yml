@@ -38,6 +38,9 @@
     set_fact: 
       __local_download_path: "{{ runtime_instance_package_home }}/{{ wmis_cfgparams_install_package_single.bucket_path | basename }}"
 
+  - debug: var=__target_package_name verbosity=3
+  - debug: var=wmis_cfgparams_install_packages_force_reinstall_list verbosity=3
+
   - name: check if we should force re-install the package even if it exists
     set_fact: 
       __target_force_reinstall_package: true
