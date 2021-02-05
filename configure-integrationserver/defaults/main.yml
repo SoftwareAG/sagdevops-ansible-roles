@@ -34,5 +34,4 @@ external_terracotta_port: 9510
 
 ## install package
 wmis_cfgparams_install_packages_list: []
-wmis_cfgparams_install_package_single: {}
 wmis_cfgparams_install_packages_force_reinstall_list: []
