@@ -1,0 +1,5 @@
+<groupsmapping>
+{% for groupmapping in (rvar_apigateway_saml_groups_mapping_list | default([],true)) %}
+<group source="{{ groupmapping.saml_group_name }}" target="{{ groupmapping.local_group_name }}" />
+{% endfor %}
+</groupsmapping>

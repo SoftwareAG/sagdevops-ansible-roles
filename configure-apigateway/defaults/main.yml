@@ -11,6 +11,8 @@ apigateway_elasticsearch_config_file: "{{ runtime_instance_home }}/packages/WmAP
 apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/config/kibana.yml"
 apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
 apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
+apigateway_saml_group_mapping_file_path: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/security/saml_groups_mapping.xml"
+
 
 ####################################
 ## gateway UI URLs
@@ -342,6 +344,12 @@ webmethods_apigateway_ldap_settings: {}
   #   cdsRunning: "<boolean>"
 
 ## saml settings
+rvar_apigateway_saml_groups_mapping_list: []
+  # - saml_group_name: <string>
+  #   local_group_name: <string>
+  # - saml_group_name: <string>
+  #   local_group_name: <string>
+
 rvar_apigateway_saml_settings: {}
   # saml_enabled: "<boolean>"
   # saml_redirect: "/saml/sso/login"
