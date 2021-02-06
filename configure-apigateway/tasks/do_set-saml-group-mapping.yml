@@ -12,7 +12,7 @@
       configure_apigateway_set_saml_group_mapping_changed: false
     when: configure_apigateway_set_saml_group_mapping_changed is not defined
 
-  - name: Populate wxconfig file if the wxconfig_params_extended_settings_list is defined and non empty
+  - name: Populate group mapping file
     template:
       src: apigateway_saml_group_mapping.xml.j2
       dest: "{{ apigateway_saml_group_mapping_file_path }}"
