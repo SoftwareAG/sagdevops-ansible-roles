@@ -19,6 +19,7 @@
       - "{{ webmethods_install_products_descriptor.installer }}"
       - "{{ webmethods_install_products_descriptor.script }}"
       - "{{ webmethods_install_products_descriptor.binaries_image }}"
+  throttle: "{{ rvar_install_downloads_throttle }}"
 
 - name: fetch from s3 the licenses needed by the installer
   include_role:

@@ -36,6 +36,7 @@
           getfroms3_files_descriptor_list:
             - "{{ webmethods_install_sum_descriptor.installer }}"
             - "{{ webmethods_install_sum_descriptor.binaries_image }}"
+        throttle: "{{ rvar_install_downloads_throttle }}"
 
       - name: run the install
         include_tasks: "runners/run_sum_install.yml"
