@@ -13,7 +13,8 @@
           name: aws-wrapper
         vars:
           command: get-files-from-s3
-          getfroms3_files_descriptor_list: "{{ webmethods_install_products_descriptor_list.installer }}"
+          getfroms3_files_descriptor_list:
+            - "{{ webmethods_install_products_descriptor_list.installer }}"
           getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
       - name: Set the params initial
