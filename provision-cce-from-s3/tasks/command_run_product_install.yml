@@ -8,14 +8,16 @@
   - name: Install CCE only if it was not installed already
     block:
     
-      - name: Include tasks to fetch the install files from s3
-        import_role:
-          name: provision-with-installer-from-s3
+      - name: Fetch from s3 the install artifacts
+        include_role:
+          name: aws-wrapper
         vars:
-          provision_action: get_files_from_s3
-          webmethods_provisioning_files_download_descritors:
+          command: get-files-from-s3
+          getfroms3_files_descriptor_list:
             - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
               local_path: "{{ webmethods_localrepo_installer_filename }}"
+              force_download: true
+          getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
       - name: Make sure the webmethods_cce_bootstrap_installer file is executable
         file: 
@@ -95,12 +97,6 @@
       - name: Print the job_result to the console.
         debug:
           msg: "{{ job_result.stdout_lines | join('\n') }}"
-
-      - name: cleanup the install artifacts
-        import_role:
-          name: provision-with-installer-from-s3
-        vars:
-          provision_action: cleanup
 
       - name: touch to mark that it's been run
         file:

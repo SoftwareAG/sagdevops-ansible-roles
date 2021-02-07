@@ -5,7 +5,6 @@
     msg: "webmethods_localrepo_target_dir not specified...can't do anything"
   when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
-
 - name: Fetch from s3 the install artifacts
   include_role:
     name: aws-wrapper
