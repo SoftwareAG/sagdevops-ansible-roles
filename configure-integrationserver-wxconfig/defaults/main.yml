@@ -13,6 +13,7 @@ wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
 
 ## group name represent the distinct ID for all the wxconfig files
 wxconfig_params_unique_groupname:
+wxconfig_params_do_remove_configs:
 
 ## install settings
 wxconfig_params_packages: []
