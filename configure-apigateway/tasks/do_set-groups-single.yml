@@ -32,38 +32,44 @@
           var: rest_response_get.json
           verbosity: 3
 
-      - name: Save the existing group content in the var to update
+      - name: get existing group content
         set_fact:
-          apigateway_configparams_rest_usermgt_group_single_toupdate: "{{ rest_response_get.json.groups[0] }}"
+          __current_group: "{{ rest_response_get.json.groups[0] }}"
+
+      - name: extract user ids from the current group
+        set_fact:
+          __current_group_userids: "{{ __current_group.userIds | default([],true) }}"
 
       - name: Merge the existing group content with the updated content
         set_fact:
-          apigateway_configparams_rest_usermgt_group_single_toupdate:
-            name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
-            description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
-
-      - name: Merge the existing group content with the updated content
-        set_fact:
-          apigateway_configparams_rest_usermgt_group_single_toupdate:
-            userIds: "{{ apigateway_configparams_rest_usermgt_group_single_toupdate.userIds + apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
+          __updated_group_userids: "{{ __current_group_userids + apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
         when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == false
 
       - name: Overwrite the existing group content with the updated content
         set_fact:
-          apigateway_configparams_rest_usermgt_group_single_toupdate:
-            userIds: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
+          __updated_group_userids: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
         when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == true
 
-      - debug: var=apigateway_configparams_rest_usermgt_group_single_toupdate verbosity=3
+      - name: Save the existing group content in the var to update
+        set_fact:
+          __group_toupdate: "{{ __current_group | combine(new_item, recursive=true) }}"
+        vars:
+          new_item: "{ '{{ item.key }}': '{{ item.value }}' }"
+        with_dict:
+          name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+          description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
+          userIds: "{{ __updated_group_userids }}"
+
+      - debug: var=__group_toupdate verbosity=3
 
       - name: Update the existing group
         uri:
-          url: "{{ apigateway_rest_groups_api }}/{{ apigateway_configparams_rest_usermgt_group_single_toupdate.id }}"
+          url: "{{ apigateway_rest_groups_api }}/{{ __group_toupdate.id }}"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ apigateway_configparams_rest_usermgt_group_single_toupdate | to_json }}"
+          body: "{{ __group_toupdate | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
@@ -81,12 +87,12 @@
 
       - name: Set group payload
         set_fact:
-          apigateway_configparams_rest_usermgt_group_single_tocreate:
+          __group_tocreate:
             name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
             description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
             userIds: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
 
-      - debug: var=apigateway_configparams_rest_usermgt_group_single_tocreate verbosity=3
+      - debug: var=__group_tocreate verbosity=3
 
       - name: Create a new group
         uri:
@@ -95,7 +101,7 @@
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ apigateway_configparams_rest_usermgt_group_single_tocreate | default({}) | to_json }}"
+          body: "{{ __group_tocreate | default({}) | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
