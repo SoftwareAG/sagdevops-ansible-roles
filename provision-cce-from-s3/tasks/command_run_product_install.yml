@@ -82,8 +82,8 @@
           argv: "{{ install_command }}"
         args:
           chdir: "{{ webmethods_cce_bootstrap_installer_exec_dir }}"
-        async: 1000
-        poll: 0
+        async: "{{ rvar_install_async_timeout }}"
+        poll: "{{ rvar_install_async_poll }}"
         register: install_ccserver_sleeper
 
       - name: Check status of CCE installation command
@@ -91,8 +91,8 @@
           jid: "{{ install_ccserver_sleeper.ansible_job_id }}"
         register: job_result
         until: job_result.finished
-        retries: 200
-        delay: 20
+        retries: "{{ rvar_install_async_retries }}"
+        delay: "{{ rvar_install_async_delay }}"
       
       - name: Print the job_result to the console.
         debug:
