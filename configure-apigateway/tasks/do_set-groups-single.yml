@@ -67,11 +67,10 @@
         set_fact:
           __group_toupdate: "{{ __current_group | combine(new_item, recursive=true) }}"
         vars:
-          new_item: "{ '{{ item.key }}': '{{ item.value }}' }"
-        with_dict:
-          name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
-          description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
-          userIds: "{{ __updated_group_userids }}"
+          new_item:          
+            name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+            description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
+            userIds: "{{ __updated_group_userids }}"
 
       - debug: var=__group_toupdate verbosity=3
 
