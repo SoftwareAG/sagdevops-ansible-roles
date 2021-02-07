@@ -13,17 +13,9 @@
           name: aws-wrapper
         vars:
           command: get-files-from-s3
-          getfroms3_files_descriptor_list:
-            - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
-              local_path: "{{ webmethods_localrepo_installer_filename }}"
-              force_download: true
+          getfroms3_files_descriptor_list: "{{ webmethods_install_products_descriptor_list.installer }}"
           getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
-      - name: Make sure the webmethods_cce_bootstrap_installer file is executable
-        file: 
-          path: "{{ webmethods_cce_bootstrap_installer_exec_dir }}/{{ webmethods_cce_bootstrap_installer }}"
-          mode: "u+rwx"
-        
       - name: Set the params initial
         set_fact:
           install_command: ['./{{ webmethods_cce_bootstrap_installer }}']
