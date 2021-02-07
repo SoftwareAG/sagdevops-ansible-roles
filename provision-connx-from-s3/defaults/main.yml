@@ -7,3 +7,6 @@ webmethods_localrepo_target_dir: ""
 webmethods_install_target_dir: ""
 webmethods_localrepo_target_dir_owner_user: ""
 webmethods_localrepo_target_dir_owner_group: ""
+
+## throttle downloads
+rvar_install_downloads_throttle:

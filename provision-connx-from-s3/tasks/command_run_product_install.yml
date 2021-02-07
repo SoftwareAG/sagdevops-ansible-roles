@@ -5,30 +5,35 @@
     msg: "webmethods_localrepo_target_dir not specified...can't do anything"
   when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
 
-- name: Include tasks to fetch the install files from s3
-  import_role:
-    name: provision-with-installer-from-s3
+
+- name: Fetch from s3 the install artifacts
+  include_role:
+    name: aws-wrapper
   vars:
-    provision_action: get_files_from_s3
-    webmethods_provisioning_files_download_descritors:
+    command: get-files-from-s3
+    getfroms3_files_descriptor_list:
       - bucket_path: "connxInstall/clientlnx.tar.z"
-        local_path: "clientlnx.tar.z"
+        local_path: "{{ webmethods_localrepo_target_dir }}/clientlnx.tar.z"
+        force_download: true
       - bucket_path: "connxInstall/clientsb.tar.z"
-        local_path: "clientsb.tar.z"
+        local_path: "{{ webmethods_localrepo_target_dir }}/clientsb.tar.z"
+        force_download: true
       - bucket_path: "connxInstall/installclient"
-        local_path: "installclient"
+        local_path: "{{ webmethods_localrepo_target_dir }}/installclient"
+        force_download: true
       - bucket_path: "connxInstall/serverlist"
-        local_path: "serverlist"
+        local_path: "{{ webmethods_localrepo_target_dir }}/serverlist"
+        force_download: true
       - bucket_path: "connxInstall/responseFile"
-        local_path: "responseFile"
+        local_path: "{{ webmethods_localrepo_target_dir }}/responseFile"
+        force_download: true
+  throttle: "{{ rvar_install_downloads_throttle }}"
 
 - name: Write the install scripts on disk with all the params
   template:
     src: "install_products.sh.j2" 
     dest: "{{ webmethods_localrepo_target_dir }}/install_products.sh"
-    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-    group: "{{ webmethods_install_localtarget_files_owner_group }}"
-    mode: "{{ webmethods_install_localtarget_files_permissions }}"
+    mode: "0755"
     backup: no
 
 - name: run install_product command
@@ -52,9 +57,3 @@
     msg: "{{ job_result.stdout_lines | join('\n') }}"
 
 - include_tasks: "command_add_registry_vars.yml"
-
-- name: cleanup the install artifacts
-  import_role:
-    name: provision-with-installer-from-s3
-  vars:
-    provision_action: cleanup
