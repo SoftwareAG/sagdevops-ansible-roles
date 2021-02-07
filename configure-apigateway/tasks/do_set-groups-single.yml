@@ -1,6 +1,14 @@
 ---
 
   - debug: var=apigateway_configparams_rest_usermgt_group_single verbosity=3
+      
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+      - "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
 
   - name: First, get the group ids based on the input names (returned in var rest_response_group_ids)
     include_tasks: "groups/get-groups-ids-by-names.yml"
@@ -32,6 +40,11 @@
           var: rest_response_get.json
           verbosity: 3
 
+      - name: fail if group cannot be found at this point
+        fail: 
+          msg: "Group cannot be found which is not expected at this point in the playbook...investigate"
+        when: rest_response_get.json.groups is not defined or rest_response_get.json.groups | length == 0
+
       - name: get existing group content
         set_fact:
           __current_group: "{{ rest_response_get.json.groups[0] }}"
@@ -42,12 +55,12 @@
 
       - name: Merge the existing group content with the updated content
         set_fact:
-          __updated_group_userids: "{{ __current_group_userids + apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
+          __updated_group_userids: "{{ __current_group_userids + apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
         when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == false
 
       - name: Overwrite the existing group content with the updated content
         set_fact:
-          __updated_group_userids: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
+          __updated_group_userids: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
         when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == true
 
       - name: Save the existing group content in the var to update
@@ -90,7 +103,7 @@
           __group_tocreate:
             name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
             description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
-            userIds: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add }}"
+            userIds: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
 
       - debug: var=__group_tocreate verbosity=3
 
