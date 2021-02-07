@@ -15,6 +15,7 @@
       - "getfroms3_local_path_owner_group: {{ getfroms3_local_path_owner_group | default('undefined',true) }}"
       - "getfroms3_local_path_permission: {{ getfroms3_local_path_permission | default('undefined',true) }}"
       - "getfroms3_force_download: {{ getfroms3_force_download | default('undefined',true) }}"
+      - "getfroms3_throttle: {{ getfroms3_throttle | default('undefined',true) }}"
       verbosity: 1
       
   - name: fail if getfroms3_bucket_name not specified
@@ -128,6 +129,7 @@
         async: "{{ getfroms3_async }}"
         poll: "{{ getfroms3_poll }}"
         register: getfroms3_sleeper
+        throttle: "{{ getfroms3_throttle }}"
 
       - name: Check status of AWS CLI S3 CP command
         async_status:

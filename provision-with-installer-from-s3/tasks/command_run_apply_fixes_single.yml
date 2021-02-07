@@ -22,7 +22,7 @@
     getfroms3_files_descriptor_list:
       - "{{ webmethods_install_patches_descriptor.script }}"
       - "{{ webmethods_install_patches_descriptor.binaries_image }}"
-  throttle: "{{ rvar_install_downloads_throttle }}"
+    getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
 - name: Copy file to a working runtime copy
   copy:

@@ -27,7 +27,7 @@
       - bucket_path: "connxInstall/responseFile"
         local_path: "{{ webmethods_localrepo_target_dir }}/responseFile"
         force_download: true
-  throttle: "{{ rvar_install_downloads_throttle }}"
+    getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
 - name: Write the install scripts on disk with all the params
   template:

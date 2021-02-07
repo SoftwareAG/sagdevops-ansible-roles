@@ -22,6 +22,7 @@
           getfroms3_local_path_create_dir_owner_group: "{{ outer_item.local_path_create_dir_owner_group | default(getfroms3_defaults_local_path_create_dir_owner_group,true) }}"
           getfroms3_local_path_create_dir_permission: "{{ outer_item.local_path_create_dir_permission | default(getfroms3_defaults_local_path_create_dir_permission,true) }}"
           getfroms3_force_download: "{{ outer_item.force_download | default(getfroms3_defaults_force_download,true) }}"
+          getfroms3_throttle: "{{ outer_item.throttle | default(getfroms3_defaults_throttle,true) }}"
         when: outer_item.local_path is defined and outer_item.local_path != ""
         with_items: "{{ getfroms3_files_descriptor_list }}"
         loop_control:
