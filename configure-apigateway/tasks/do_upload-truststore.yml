@@ -37,13 +37,40 @@
   - name: CURL URI
     debug: var=curl_wrapper_target_uri verbosity=3
 
-  - name: Upload new truststore to apigateway
-    import_role:
-      name: curl-wrapper
-    vars:
-      command: upload-multipart-formdata
-      curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
-      curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
-      curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"
-      curl_wrapper_headers_fields:
-        "Accept": "application/json"
+  - name: tasks for newer versions of ansible that support form-multipart
+    block:
+
+      - name: Upload new truststore to apigateway
+        uri:
+          url: "{{ curl_wrapper_target_uri }}"
+          method: POST
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200]
+          body: "{{ webmethods_apigateway_truststore | default({},true) }}"
+          body_format: form-multipart
+          timeout: 30
+        register: update_keystore
+
+      - debug: var=update_keystore verbosity=3
+
+    when: ansible_version.major > 2 or (ansible_version.major == 2 and ansible_version.minor >= 10)
+
+  - name: tasks for older versions of ansible that do not support form-multipart
+    block:
+
+      - name: Upload new truststore to apigateway
+        import_role:
+          name: curl-wrapper
+        vars:
+          command: upload-multipart-formdata
+          curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
+          curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
+          curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"
+          curl_wrapper_headers_fields:
+            "Accept": "application/json"
+
+    when: ansible_version.major < 2 or (ansible_version.major == 2 and ansible_version.minor <= 9)
