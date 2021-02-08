@@ -17,6 +17,11 @@
           msg: "wxconfig_params_unique_groupname not specified...cannot create."
         when: wxconfig_params_unique_groupname is not defined or wxconfig_params_unique_groupname == ""
 
+      - name: Make sure the encrypted dir is there
+        file:
+          path: "{{ wxconfig_encrypted_values_dir }}"
+          state: directory
+
       - name: Populate wxconfig encrypted values file if the wxconfig_params_encrypted_items is defined and non empty
         template:
           src: WxConfigEncVal_template.txt.j2
