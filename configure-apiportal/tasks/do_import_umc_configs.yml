@@ -1,9 +1,9 @@
 ---
 
-  - debug: var=webmethods_apiportal_tenantmgmt_server verbosity=3
-  - debug: var=webmethods_apiportal_tenantmgmt_tenant verbosity=3
-  - debug: var=webmethods_apiportal_tenantmgmt_runas_username verbosity=3
-  - debug: var=webmethods_apiportal_tenantmgmt_runas_password verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_server verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_tenant verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_runas_username verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_runas_password verbosity=3
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
   - debug: var=webmethods_apiportal_tenantmgmt_importconfigfile_filepath verbosity=3
 
@@ -12,9 +12,9 @@
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
-      - "{{ webmethods_apiportal_tenantmgmt_server }}"
-      - "{{ webmethods_apiportal_tenantmgmt_tenant }}"
-      - "{{ webmethods_apiportal_tenantmgmt_runas_username }}"
+      - "{{ rvar_apiportal_tenantmgmt_server }}"
+      - "{{ rvar_apiportal_tenantmgmt_tenant }}"
+      - "{{ rvar_apiportal_tenantmgmt_runas_username }}"
       - "{{ webmethods_apiportal_tenantmgmt_importconfigfile_filepath }}"
 
   - name: Init the command
@@ -23,11 +23,11 @@
 
   - name: append server connection uri
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '--server' ] + [ '{{ webmethods_apiportal_tenantmgmt_server }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '--server' ] + [ '{{ rvar_apiportal_tenantmgmt_server }}' ]"
 
   - name: append tenant name
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '--tenant' ] + [ '{{ webmethods_apiportal_tenantmgmt_tenant }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '--tenant' ] + [ '{{ rvar_apiportal_tenantmgmt_tenant }}' ]"
 
   - name: append command name
     set_fact:
@@ -35,11 +35,11 @@
 
   - name: append admin user
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ webmethods_apiportal_tenantmgmt_runas_username }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ rvar_apiportal_tenantmgmt_runas_username }}' ]"
 
   - name: append admin user password
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-p' ] + [ '{{ webmethods_apiportal_tenantmgmt_runas_password }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-p' ] + [ '{{ rvar_apiportal_tenantmgmt_runas_password }}' ]"
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: append config file to import
