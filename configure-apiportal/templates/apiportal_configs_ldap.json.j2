@@ -1,19 +1,19 @@
 
 
 {
-  "com.aris.umc.ldap.active" : "{{ configs_ldap.enabled }}",
+  "com.aris.umc.ldap.active" : "{{ configs_ldap.enabled | default() | bool | lower }}",
   "com.aris.umc.ldap.multi.active" : "false",
-  "com.aris.umc.ldap.debug" : "{{ configs_ldap.enable_debug }}",
-  "com.aris.umc.ldap.user.importOnLogin" : "{{ configs_ldap.import_user_on_login }}",
-  "com.aris.umc.ldap.attribute.memberof.resolveOnFirstLogin" : "{{ configs_ldap.associate_user_groups_on_login }}",
-  "com.aris.umc.ldap.attributes.paging.enabled" : "{{ configs_ldap.attribute_value_paging }}",
-  "com.aris.umc.ldap.sync.user.importGroups" : "{{ configs_ldap.synchronizing_import_groups }}",
-  "com.aris.umc.ldap.group.import.parent.enabled" : "{{ configs_ldap.synchronizing_import_parent_groups }}",
+  "com.aris.umc.ldap.debug" : "{{ configs_ldap.enable_debug | default() | bool | lower }}",
+  "com.aris.umc.ldap.user.importOnLogin" : "{{ configs_ldap.import_user_on_login | default() | bool | lower }}",
+  "com.aris.umc.ldap.attribute.memberof.resolveOnFirstLogin" : "{{ configs_ldap.associate_user_groups_on_login | default() | bool | lower }}",
+  "com.aris.umc.ldap.attributes.paging.enabled" : "{{ configs_ldap.attribute_value_paging | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.user.importGroups" : "{{ configs_ldap.synchronizing_import_groups | default() | bool | lower }}",
+  "com.aris.umc.ldap.group.import.parent.enabled" : "{{ configs_ldap.synchronizing_import_parent_groups | default() | bool | lower }}",
   "com.aris.umc.ldap.entity.cache.size" : "{{ configs_ldap.cache_size }}",
-  "com.aris.umc.ldap.sync.skipOnFault" : "{{ configs_ldap.skip_errors }}",
-  "com.aris.umc.ldap.sync.useDnAsGuid" : "{{ configs_ldap.use_dn_as_guid }}",
-  "com.aris.umc.ldap.auth.only" : "{{ configs_ldap.disallow_local_users }}",
-  "com.aris.umc.ldap.sync.members.searchBottomUp": "{{ configs_ldap.use_bottomup_method }}",
+  "com.aris.umc.ldap.sync.skipOnFault" : "{{ configs_ldap.skip_errors | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.useDnAsGuid" : "{{ configs_ldap.use_dn_as_guid | default() | bool | lower }}",
+  "com.aris.umc.ldap.auth.only" : "{{ configs_ldap.disallow_local_users | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.members.searchBottomUp": "{{ configs_ldap.use_bottomup_method | default() | bool | lower }}",
   "com.aris.umc.ldap.connection.concurrent.timeout": "{{ configs_ldap.pool_wait_time_millis }}",
   "com.aris.umc.ldap.connection.pool.size": "{{ configs_ldap.pool_size }}",
   "com.aris.umc.ldap.connection.pool.timeout": "{{ configs_ldap.pool_time_millis }}",
@@ -76,13 +76,13 @@
     "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.principal }}"
   },
   "com.aris.umc.ldap.ssl" : {
-    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.use_ssl }}"
+    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.use_ssl | default() | bool | lower }}"
   },
   "com.aris.umc.ldap.ssl.certificate.verification.active" : {
-    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.verify_certificates }}"
+    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.verify_certificates | default() | bool | lower }}"
   },
   "com.aris.umc.ldap.ssl.host.verification.active" : {
-    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.verify_hostnames }}"
+    "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.verify_hostnames | default() | bool | lower }}"
   },
   "com.aris.umc.ldap.ssl.mode" : {
     "{{ configs_ldap.connection.id }}" : "{{ configs_ldap.connection.ssl_mode }}"
