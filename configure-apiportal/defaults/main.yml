@@ -69,3 +69,65 @@ webmethods_apiportal_tenantmgmt_runas_password:
 ##### tenant management - user password update
 webmethods_apiportal_tenantmgmt_changepassword_username:
 webmethods_apiportal_tenantmgmt_changepassword_newpassword:
+
+##### apiportal config extracts to import
+rvar_apiportal_configs_staging_dir: ""
+rvar_apiportal_configs_ldap:
+  # enabled: true
+  # enable_debug: false
+  # import_user_on_login: true
+  # associate_user_groups_on_login: true
+  # synchronizing_import_groups: true
+  # synchronizing_import_parent_groups: true
+  # attribute_value_paging: true
+  # disallow_local_users: true
+  # cache_size: 35000
+  # pool_wait_time_millis: 5
+  # pool_size: 150
+  # pool_time_millis: 180
+  # skip_errors: false
+  # use_bottomup_method: false
+  # use_dn_as_guid: true
+  # connection:
+  #   id: "LDAP2"
+  #   name: "LDAP2"
+  #   url: "ldap://ad.clouddemo.saggov.local:389"
+  #   backup_url: ""
+  #   principal: "CN=Fabien Sanglier,OU=saggov,OU=users,OU=Domain_Accounts,DC=ad,DC=clouddemo,DC=saggov,DC=local"
+  #   password: "{crypted}6b97f1087a725ede395819691d2b7e88279b4e824c4e103b408e323edefeb3ba"
+  #   use_ssl: false
+  #   ssl_mode: "STARTTLS"
+  #   verify_hostnames: false
+  #   verify_certificates: false
+  #   concurrent_connections: "100"
+  #   connection_timeout_millis: 10000
+  #   read_timeout_millis: 1800000
+  #   attribute_mapping:
+  #     common:
+  #       distinguishedname: "DN"
+  #       guid: ""
+  #       objectclass: "objectClass"
+  #     group:
+  #       name: "name"
+  #       hasmember: "member"
+  #       user_defined: ""
+  #     user:
+  #       name: "sAMAccountName"
+  #       firstname: "givenName"
+  #       lastname: "sn"
+  #       email: "mail"
+  #       phone: "telephoneNumber"
+  #       picture: ""
+  #       memberof: "memberOf"
+  #       user_defined: ""
+  #   behavior:
+  #     objectclass_group: "group"
+  #     objectclass_user: "person"
+  #     search_common_base_dn: "DC=ad,DC=clouddemo,DC=saggov,DC=local"
+  #     search_groups_base_dn: "OU=groups,OU=Domain_Accounts"
+  #     search_users_base_dn: "OU=users,OU=Domain_Accounts"
+  #     search_groups_filter: "(&(objectClass=*))"
+  #     search_users_filter: "(&(sAMAccountName=*))"
+  #     search_recursion_depth: 1
+  #     search_pagesize: 1000
+  #     search_referrals: "ignore"

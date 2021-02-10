@@ -1,0 +1,39 @@
+---
+
+  - debug: var=rvar_apiportal_configs_ldap verbosity=3
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_apiportal_ldap_changed: false
+    when: configure_apiportal_ldap_changed is not defined
+
+  - name: Install configuration only if defined
+    block:
+
+      - name: fail if configs staging dir is not specified
+        fail: 
+          msg: "configs staging dir is not specified, cannot do anything."
+        when: rvar_apiportal_configs_staging_dir is not defined or rvar_apiportal_configs_staging_dir == ""
+        
+      - name: Make sure the staging dir is there
+        file:
+          path: "{{ rvar_apiportal_configs_staging_dir }}"
+          state: directory
+
+      - name: Populate configuration with variables and put in staging dir
+        template:
+          src: apiportal_configs_ldap.json.j2
+          dest: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_ldap.properties"
+        register: "result_content_operation"
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_apiportal_ldap_changed: true
+        when: result_content_operation.changed == true
+
+    when: rvar_apiportal_configs_ldap is defined
+
+  - name: Print the changed var
+    debug:
+      var: configure_apiportal_ldap_changed
+      verbosity: 2
