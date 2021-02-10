@@ -30,6 +30,11 @@
           configs_saml: "{{ rvar_apiportal_configs_saml }}"
         register: "result_content_operation"
 
+      - name: Execute import
+        include_tasks: "do_import_umc_configs.yml"
+        vars:
+          webmethods_apiportal_tenantmgmt_importconfigfile_filepath: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
+
       - name: Set changed flag to true if any mutating operation did change
         set_fact: 
           configure_apiportal_saml_changed: true
