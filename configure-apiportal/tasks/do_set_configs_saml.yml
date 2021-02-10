@@ -26,6 +26,8 @@
         template:
           src: apiportal_configs_saml.json.j2
           dest: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
+        vars:
+          configs_saml: "{{ rvar_apiportal_configs_saml }}"
         register: "result_content_operation"
 
       - name: Set changed flag to true if any mutating operation did change
