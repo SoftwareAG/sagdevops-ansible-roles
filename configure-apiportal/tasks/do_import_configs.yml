@@ -1,0 +1,3 @@
+
+
+./y-tenantmgmt.sh -s http://localhost:18101 -t default importConfigFile -u system -p 'SomeStrongPassword123!' -f /opt/softwareag/configsimports/umc_configs_ldap.properties
