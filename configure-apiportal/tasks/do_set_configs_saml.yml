@@ -33,7 +33,7 @@
       - name: Execute import
         include_tasks: "do_import_umc_configs.yml"
         vars:
-          webmethods_apiportal_tenantmgmt_importconfigfile_filepath: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
+          rvar_apiportal_tenantmgmt_importconfig_filepath: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
 
       - name: Set changed flag to true if any mutating operation did change
         set_fact: 

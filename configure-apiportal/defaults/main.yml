@@ -67,7 +67,8 @@ rvar_apiportal_tenantmgmt_runas_username:
 rvar_apiportal_tenantmgmt_runas_password:
 
 ##### apiportal config extracts to import
-rvar_apiportal_configs_staging_dir: ""
+rvar_apiportal_configs_staging_dir:
+rvar_apiportal_tenantmgmt_importconfig_filepath:
 rvar_apiportal_configs_ldap:
   # enabled: true
   # enable_debug: false

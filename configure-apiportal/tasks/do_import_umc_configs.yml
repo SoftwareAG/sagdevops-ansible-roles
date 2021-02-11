@@ -5,7 +5,7 @@
   - debug: var=rvar_apiportal_tenantmgmt_runas_username verbosity=3
   - debug: var=rvar_apiportal_tenantmgmt_runas_password verbosity=3
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
-  - debug: var=webmethods_apiportal_tenantmgmt_importconfigfile_filepath verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_importconfig_filepath verbosity=3
 
   - name: fail if mandatory param not specified
     fail: 
@@ -15,7 +15,7 @@
       - "{{ rvar_apiportal_tenantmgmt_server }}"
       - "{{ rvar_apiportal_tenantmgmt_tenant }}"
       - "{{ rvar_apiportal_tenantmgmt_runas_username }}"
-      - "{{ webmethods_apiportal_tenantmgmt_importconfigfile_filepath }}"
+      - "{{ rvar_apiportal_tenantmgmt_importconfig_filepath }}"
 
   - name: Init the command
     set_fact:
@@ -31,7 +31,7 @@
 
   - name: append command name
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ 'importConfigFile' ]"
+      command_to_exec: "{{ command_to_exec }} + [ 'importConfig' ]"
 
   - name: append admin user
     set_fact:
@@ -44,7 +44,7 @@
 
   - name: append config file to import
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-f' ] + [ '{{ webmethods_apiportal_tenantmgmt_importconfigfile_filepath }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-f' ] + [ '{{ rvar_apiportal_tenantmgmt_importconfig_filepath }}' ]"
 
   - name: Print the command that we're going to run
     debug:
