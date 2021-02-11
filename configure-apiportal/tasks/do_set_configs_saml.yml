@@ -22,12 +22,40 @@
           path: "{{ rvar_apiportal_configs_staging_dir }}"
           state: directory
 
+      - name: convert file path into file content
+        slurp:
+          src: "{{ rvar_apiportal_configs_saml.keystore.file_path }}"
+        register: filecontent_keystore
+        when: rvar_apiportal_configs_saml.keystore.file_path is defined and rvar_apiportal_configs_saml.keystore.file_path != ""
+
+      - name: convert file path into file content
+        slurp:
+          src: "{{ rvar_apiportal_configs_saml.truststore.file_path }}"
+        register: filecontent_truststore
+        when: rvar_apiportal_configs_saml.truststore.file_path is defined and rvar_apiportal_configs_saml.truststore.file_path != ""
+
+      - debug: var=filecontent_keystore verbosity=3
+      - debug: var=filecontent_truststore verbosity=3
+      - name: Print returned information
+        debug:
+          msg: "{{ filecontent_keystore['content'] }}"
+
+      - name: Save the existing group content in the var to update
+        set_fact:
+          configs_saml_merged: "{{ rvar_apiportal_configs_saml | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            keystore:
+              file_content: "{{ filecontent_keystore['content'] }}"
+            truststore:
+              file_content: "{{ filecontent_truststore['content'] }}"
+
       - name: Populate configuration with variables and put in staging dir
         template:
           src: apiportal_configs_saml.json.j2
           dest: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
         vars:
-          configs_saml: "{{ rvar_apiportal_configs_saml }}"
+          configs_saml: "{{ configs_saml_merged }}"
         register: "result_content_operation"
 
       - name: Execute import
