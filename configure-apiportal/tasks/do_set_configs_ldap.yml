@@ -20,13 +20,40 @@
           path: "{{ rvar_apiportal_configs_staging_dir }}"
           state: directory
 
+      - name: Set a new var for saml content
+        set_fact:
+          configs_ldap_merged: "{{ rvar_apiportal_configs_ldap }}"
+
+########## truststore
+
+      - name: convert truststore file path into file content
+        slurp:
+          src: "{{ rvar_apiportal_configs_ldap.truststore.file_path }}"
+        register: filecontent_truststore
+        when: rvar_apiportal_configs_ldap.truststore.file_path is defined and rvar_apiportal_configs_ldap.truststore.file_path != ""
+
+      - debug: var=filecontent_truststore verbosity=3
+      
+      - name: Save the existing group content in the var to update
+        set_fact:
+          configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            truststore:
+              file_content: "{{ filecontent_truststore['content'] }}"
+        when: filecontent_truststore['content'] is defined
+
+########## populate configs
+
       - name: Populate configuration with variables and put in staging dir
         template:
           src: apiportal_configs_ldap.json.j2
           dest: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_ldap.properties"
         vars:
-          configs_ldap: "{{ rvar_apiportal_configs_ldap }}"
+          configs_ldap: "{{ configs_ldap_merged }}"
         register: "result_content_operation"
+
+########## execute 
 
       - name: Execute import
         include_tasks: "tenantmgt/import_configs.yml"

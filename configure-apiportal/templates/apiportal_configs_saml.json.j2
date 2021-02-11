@@ -10,18 +10,18 @@
   "com.aris.umc.saml.signature.metadata.active": "{{ configs_saml.signature.metadata_enforce | default() | bool | lower }}",
   "com.aris.umc.saml.signature.request.active": "{{ configs_saml.signature.request_enforce | default() | bool | lower }}",
   "com.aris.umc.saml.signature.response.active": "{{ configs_saml.signature.response_enforce | default() | bool | lower }}",
-{%- if configs_saml.keystore.file_content is defined and configs_saml.keystore.file_content != "" -%}
+{% if configs_saml.keystore.file_content is defined and configs_saml.keystore.file_content != "" %}
   "com.aris.umc.saml.keystore.location": "{{ configs_saml.keystore.file_content | default('',true) }}",
   "com.aris.umc.saml.keystore.alias": "{{ configs_saml.keystore.alias | default('',true) }}",
   "com.aris.umc.saml.keystore.password": "{{ configs_saml.keystore.password | default('',true) }}",
   "com.aris.umc.saml.keystore.type": "{{ configs_saml.keystore.type | default('JKS',true) }}",
-{%- endif -%}
-{%- if configs_saml.truststore.file_content is defined and configs_saml.truststore.file_content != "" -%}
+{% endif %}
+{% if configs_saml.truststore.file_content is defined and configs_saml.truststore.file_content != "" %}
   "com.aris.umc.saml.truststore.location": "{{ configs_saml.truststore.file_content | default('',true) }}",
   "com.aris.umc.saml.truststore.alias": "{{ configs_saml.truststore.alias | default('',true) }}",
   "com.aris.umc.saml.truststore.password": "{{ configs_saml.truststore.password | default('',true) }}",
   "com.aris.umc.saml.truststore.type": "{{ configs_saml.truststore.type | default('JKS',true) }}",
-{%- endif -%}
+{% endif %}
   "com.aris.umc.saml.attribute.email": "{{ configs_saml.user_attributes.email | default('',true) }}",
   "com.aris.umc.saml.attribute.fname": "{{ configs_saml.user_attributes.firstname | default('',true) }}",
   "com.aris.umc.saml.attribute.lname": "{{ configs_saml.user_attributes.lastname | default('',true) }}",

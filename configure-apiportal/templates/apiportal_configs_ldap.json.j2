@@ -15,6 +15,11 @@
   "com.aris.umc.ldap.connection.concurrent.timeout": "{{ configs_ldap.pool_wait_time_millis }}",
   "com.aris.umc.ldap.connection.pool.size": "{{ configs_ldap.pool_size }}",
   "com.aris.umc.ldap.connection.pool.timeout": "{{ configs_ldap.pool_time_millis }}",
+{% if configs_ldap.truststore.file_content is defined and configs_ldap.truststore.file_content != "" %}
+  "com.aris.umc.ldap.truststore.location": "{{ configs_ldap.truststore.file_content | default('',true) }}",
+  "com.aris.umc.ldap.truststore.password": "{{ configs_ldap.truststore.password | default('',true) }}",
+  "com.aris.umc.ldap.truststore.type": "{{ configs_ldap.truststore.type | default('JKS',true) }}",
+{% endif %}
   "com.aris.umc.ldap.attribute.distinguishedname": {
     "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.common.distinguishedname }}"
   },

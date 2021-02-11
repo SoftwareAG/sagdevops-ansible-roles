@@ -85,6 +85,10 @@ rvar_apiportal_configs_ldap:
   # skip_errors: false
   # use_bottomup_method: false
   # use_dn_as_guid: true
+  # truststore:
+  #   file_path: ""
+  #   password: ""
+  #   type: "JKS"
   # connection:
   #   id: "LDAP2"
   #   name: "LDAP2"
