@@ -128,3 +128,52 @@ rvar_apiportal_configs_ldap:
   #     search_recursion_depth: 1
   #     search_pagesize: 1000
   #     search_referrals: "ignore"
+
+rvar_apiportal_configs_saml:
+  # enabled: true
+  # idp_id: ""
+  # sp_id: ""
+  # idp_sso_url: ""
+  # idp_slo_url: ""
+  # binding_type: "POST"
+  # signature:
+  #   assertion_enforce: true
+  #   request_enforce: true
+  #   response_enforce: true
+  #   metadata_enforce: true
+  #   algorithm: "RSAwithSHA256"
+  # keystore:
+  #   file: ""
+  #   alias: ""
+  #   password: ""
+  #   type: "JKS"
+  # truststore:
+  #   file: ""
+  #   alias: ""
+  #   password: ""
+  #   type: "JKS"
+  # user_attributes:
+  #   firstname: ""
+  #   lastname: ""
+  #   email: ""
+  #   phone: ""
+  #   memberof: ""
+  #   user_defined: ""
+  # advanced:
+  #   login_using_dn: false
+  #   decompose_dn: false
+  #   decompose_dn_login_attribute_in_dn: "uid"
+  #   auth_context_classes:
+  #     - unspecified
+  #     - PasswordProtectedTransport
+  #     - Password
+  #     - X509
+  #     - Windows
+  #     - Kerberos
+  #   auth_context_comparisons: "minimum"
+  #   nameid_format: "unspecified"
+  #   autocreate_user_on_login: true
+  #   clock_skew_seconds: 0
+  #   assertion_lifetime_sec: 10
+  #   assertion_consumer_service_overwrite_url: ""
+  #   default_tenant: "default"
