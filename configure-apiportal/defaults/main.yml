@@ -143,12 +143,12 @@ rvar_apiportal_configs_saml:
   #   metadata_enforce: true
   #   algorithm: "RSAwithSHA256"
   # keystore:
-  #   file: ""
+  #   file_path: ""
   #   alias: ""
   #   password: ""
   #   type: "JKS"
   # truststore:
-  #   file: ""
+  #   file_path: ""
   #   alias: ""
   #   password: ""
   #   type: "JKS"
