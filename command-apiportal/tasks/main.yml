@@ -5,10 +5,15 @@
     msg: "Running apiportal with command {{ webmethods_apiportal_acc_command | default('undefined') }}"
     verbosity: 1
 
-- name: fail if webmethods_apiportal_acc_command not specified
+- name: Check that the exec file exists
+  stat:
+    path: "{{ webmethods_apiportal_acc_exec_dir }}/acc.sh"
+  register: acc_exists
+
+- name: fail if mandatory param not specified
   fail: 
-    msg: "webmethods_apiportal_acc_command not specified...cannot do anything."
-  when: webmethods_apiportal_acc_command is not defined or webmethods_apiportal_acc_command == ""
+    msg: "ACC executable does not exist..."
+  when: not acc_exists.stat.exists
 
 - name: fail if mandatory param not specified
   fail: 
@@ -19,10 +24,12 @@
     - "{{ webmethods_apiportal_acc_port }}"
     - "{{ webmethods_apiportal_acc_user }}"
     - "{{ webmethods_apiportal_acc_password }}"
+    - "{{ webmethods_apiportal_acc_command }}"
 
-- name: execute command
-  command:
-    argv:
+- name: Init the command
+  set_fact:
+    command_to_exec:
+      - "/bin/bash"
       - "acc.sh"
       - "-h"
       - "{{webmethods_apiportal_acc_host}}"
@@ -33,6 +40,10 @@
       - "-p"
       - "{{webmethods_apiportal_acc_port}}"
       - "{{webmethods_apiportal_acc_command}}"
+
+- name: execute command
+  command:
+    argv: "{{ command_to_exec }}"
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
   async: 1800
   poll: 0
