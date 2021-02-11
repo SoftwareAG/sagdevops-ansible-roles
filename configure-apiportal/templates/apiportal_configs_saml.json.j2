@@ -11,13 +11,13 @@
   "com.aris.umc.saml.signature.request.active": "{{ configs_saml.signature.request_enforce | default() | bool | lower }}",
   "com.aris.umc.saml.signature.response.active": "{{ configs_saml.signature.response_enforce | default() | bool | lower }}",
 {%- if configs_saml.keystore.file_path is defined and configs_saml.keystore.file_path != "" -%}
-  "com.aris.umc.saml.keystore.location": "{% include configs_saml.keystore.file_path %}",
+  "com.aris.umc.saml.keystore.location": "{{ configs_saml.keystore.file_path | default('',true) }}",
   "com.aris.umc.saml.keystore.alias": "{{ configs_saml.keystore.alias | default('',true) }}",
   "com.aris.umc.saml.keystore.password": "{{ configs_saml.keystore.password | default('',true) }}",
   "com.aris.umc.saml.keystore.type": "{{ configs_saml.keystore.type | default('JKS',true) }}",
 {%- endif -%}
 {%- if configs_saml.truststore.file_path is defined and configs_saml.truststore.file_path != "" -%}
-  "com.aris.umc.saml.truststore.location": "{% include configs_saml.truststore.file_path %}",
+  "com.aris.umc.saml.truststore.location": "{{ configs_saml.truststore.file_path | default('',true) }}",
   "com.aris.umc.saml.truststore.alias": "{{ configs_saml.truststore.alias | default('',true) }}",
   "com.aris.umc.saml.truststore.password": "{{ configs_saml.truststore.password | default('',true) }}",
   "com.aris.umc.saml.truststore.type": "{{ configs_saml.truststore.type | default('JKS',true) }}",
