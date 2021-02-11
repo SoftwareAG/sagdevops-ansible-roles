@@ -25,15 +25,23 @@
     {% endfor %}
 
     {% for wxconfig_service_acl_mapping in wxconfig_params_service_acl_mapping_list %}
+      {% if wxconfig_service_acl_mapping.servicename is defined and wxconfig_service_acl_mapping.servicename != "" %}
       <service name="{{ wxconfig_service_acl_mapping.servicename }}">
-        <!-- includeSubfolders is "true" by default -->
+      {% elif wxconfig_service_acl_mapping.folder is defined and wxconfig_service_acl_mapping.folder != "" %}
+      <service folder="{{ wxconfig_service_acl_mapping.folder }}" includeSubfolders="{{ wxconfig_service_acl_mapping.includeSubfolders | default() | bool | lower }}" >
+      {% else %}
+      <service name="">
+      {% endif %}
+
+      {% if wxconfig_service_acl_mapping.folder is defined and wxconfig_service_acl_mapping.folder != "" %}
         <!-- Specific services can be excluded when an entire folder is processed -->
         {% if wxconfig_service_acl_mapping.excludes is defined %}
           {% for exclude in wxconfig_service_acl_mapping.excludes %}
             <exclude service="{{ exclude }}" />
-           {% endfor %}    
+          {% endfor %}    
         {% endif %}
-        
+      {% endif %}
+
         <!-- It is possible to set only some of the ACLs, e.g. the execute ACL without changing any of the others -->
         <!-- 'enforce' can be "always" or "topLevelOnly" // Other values will be converted to "topLevelOnly" -->
         {% if wxconfig_service_acl_mapping.executeACL is defined %}
