@@ -23,7 +23,7 @@
 - name: execute command
   command:
     argv:
-      - "./acc.sh"
+      - "acc.sh"
       - "-h"
       - "{{webmethods_apiportal_acc_host}}"
       - "-u"
