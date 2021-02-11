@@ -29,7 +29,7 @@
         register: "result_content_operation"
 
       - name: Execute import
-        include_tasks: "do_import_umc_configs.yml"
+        include_tasks: "tenantmgt/import_configs.yml"
         vars:
           rvar_apiportal_tenantmgmt_importconfig_filepath: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_ldap.properties"
 
