@@ -68,6 +68,3 @@
           output_inventory_hosts: []
 
     when: elasticsearch_hosts_list is defined and (elasticsearch_hosts_list|length > 0)
-
-
-

@@ -1,0 +1,70 @@
+---
+
+  - debug: var=rvar_apiportal_tenantmgmt_server verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_tenant verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_runas_username verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_runas_password verbosity=3
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+  - debug: var=rvar_apiportal_tenantmgmt_importconfigfile_attribute verbosity=3
+  - debug: var=rvar_apiportal_tenantmgmt_importconfigfile_attribute_filevalue_path verbosity=3
+
+  - name: fail if mandatory param not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apiportal_tenantmgmt_server }}"
+      - "{{ rvar_apiportal_tenantmgmt_tenant }}"
+      - "{{ rvar_apiportal_tenantmgmt_runas_username }}"
+      - "{{ rvar_apiportal_tenantmgmt_importconfigfile_attribute }}"
+      - "{{ rvar_apiportal_tenantmgmt_importconfigfile_attribute_filevalue_path }}"
+
+  - name: Init the command
+    set_fact:
+      command_to_exec: ['./y-tenantmgmt.sh']
+
+  - name: append server connection uri
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '--server' ] + [ '{{ rvar_apiportal_tenantmgmt_server }}' ]"
+
+  - name: append tenant name
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '--tenant' ] + [ '{{ rvar_apiportal_tenantmgmt_tenant }}' ]"
+
+  - name: append command name
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ 'importConfigFile' ]"
+
+  - name: append admin user
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ rvar_apiportal_tenantmgmt_runas_username }}' ]"
+
+  - name: append admin user password
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-p' ] + [ '{{ rvar_apiportal_tenantmgmt_runas_password }}' ]"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: append atrribute name for which to upload the new file
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-o' ] + [ '{{ rvar_apiportal_tenantmgmt_importconfigfile_attribute }}' ]"
+
+  - name: append config file to import
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-f' ] + [ '{{ rvar_apiportal_tenantmgmt_importconfigfile_attribute_filevalue_path }}' ]"
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+      verbosity: 1
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+      chdir: "{{ webmethods_apiportal_tools_dir }}"
+    register: cmd_result
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"

@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_keytruststore_configuration
+  - debug: var=webmethods_apigateway_keytruststore_configuration verbosity=3
   
   - name: Update load balancer urls
     uri:
@@ -20,3 +20,4 @@
   - name: Print response
     debug:
       var: rest_response.json
+      verbosity: 3

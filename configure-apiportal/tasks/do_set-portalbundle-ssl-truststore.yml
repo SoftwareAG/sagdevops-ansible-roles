@@ -1,0 +1,19 @@
+---
+
+  - name: "Update config file for truststore setting"
+    lineinfile:
+      path: "{{ webmethods_apiportal_work_apiportalbundle_dir }}/runnable.properties"
+      regexp: '^{{ item.key }}'
+      insertafter: '^#{{ item.key }}'
+      line: "{{ item.key }}={{ item.value }}"
+    when: item.value is defined
+    with_dict:
+      "JAVA-Djavax.net.ssl.trustStore": "{{ apiportal_configparams_apiportalbundle_jvm_truststore_path }}"
+      "JAVA-Djavax.net.ssl.trustStoreType": "{{ apiportal_configparams_apiportalbundle_jvm_truststore_type }}"
+    register: mutative_operation
+
+  - name: Set changed flag to true if any mutating operation did change
+    set_fact:
+      configure_apiportal_set_portalbundle_ssl_truststore_changed: "{{ mutative_operation.changed }}"
+
+  - debug: var=configure_apiportal_set_portalbundle_ssl_truststore_changed verbosity=3

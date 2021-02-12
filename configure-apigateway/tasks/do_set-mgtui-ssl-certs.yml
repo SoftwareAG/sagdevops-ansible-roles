@@ -64,6 +64,7 @@
   - name: Print the force_change var
     debug:
       var: configure_apigateway_set_ui_ssl_force_changed
+      verbosity: 1
 
   - name: Set new ssl settings only if values are new
     block:
@@ -109,3 +110,4 @@
   - name: Print the changed var
     debug:
       var: configure_apigateway_set_ui_ssl_changed
+      verbosity: 1

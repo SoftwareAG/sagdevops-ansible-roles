@@ -2,6 +2,7 @@
 
 - name: Logging user params values
   debug:
+    verbosity: 1
     msg:
       - "userid = {{ userid | default('undefined',true) }}"
       - "username = {{ username | default('undefined',true) }}"
@@ -41,9 +42,7 @@
     - "{{ authorized_sshkey_path | default('/nonexistant') }}"
 
 - name: Logging aws params values
-  debug:
-    msg:
-      - "aws_access_key = {{ aws_access_key | default('undefined',true) }}"
+  debug: var=aws_access_key verbosity=3
 
 - name: Create .aws directory
   file:

@@ -1,0 +1,59 @@
+---
+
+  - debug: var=wxconfig_params_ldap verbosity=3
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_set_ldap_changed: false
+    when: configure_integrationserver_wxconfig_set_ldap_changed is not defined
+
+  - name: Install the wxconfig configs in IS target package only if value variable is not empty
+    block:
+
+      - name: fail if wxconfig_params_target_package_name not specified
+        fail: 
+          msg: "wxconfig_params_target_package_name not specified...cannot create."
+        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
+
+      - name: fail if wxconfig_params_unique_groupname not specified
+        fail: 
+          msg: "wxconfig_params_unique_groupname not specified...cannot create."
+        when: wxconfig_params_unique_groupname is not defined or wxconfig_params_unique_groupname == ""
+
+      - name: Check if main wxconfig controller file is there already
+        stat: 
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+        register: stat_wxconfig_enabled
+
+      - name: fail if wxconfig is not enabled via the controller file
+        fail: 
+          msg: "wxconfig controller file wxconfig.cnf is not present in current package {{ wxconfig_params_target_package_name }}...make sure to enable WxConfig for this package"
+        when: stat_wxconfig_enabled.stat.exists == false
+
+      - name: Populate wxconfig file if the wxconfig_params_ldap is defined and non empty
+        template:
+          src: as-ldap-template.xml
+          dest: "{{ wxconfig_target_package_config_path }}/wxconfigs-ldap-{{ wxconfig_params_unique_groupname | lower }}.xml"
+        register: "result_wxconfig_content_operation"
+
+      - name: Enable this new config in the main controller file
+        lineinfile:
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+          regexp: '^{{ item }}'
+          insertafter: '^#{{ item }}'
+          line: "{{ item }}"
+        register: "result_wxconfig_controller_operation"
+        with_items:
+          - "wx.config.incl=wxconfigs-ldap-{{ wxconfig_params_unique_groupname | lower }}.xml"
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_integrationserver_wxconfig_set_ldap_changed: true
+        when: result_wxconfig_content_operation.changed == true or result_wxconfig_controller_operation.changed == true
+
+    when: wxconfig_params_ldap is defined
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_set_ldap_changed
+      verbosity: 2

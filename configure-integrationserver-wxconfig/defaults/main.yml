@@ -13,6 +13,7 @@ wxconfig_encrypted_values_dir: "{{ wxconfig_configs_dir }}/EncryptedValues"
 
 ## group name represent the distinct ID for all the wxconfig files
 wxconfig_params_unique_groupname:
+wxconfig_params_do_remove_configs:
 
 ## install settings
 wxconfig_params_packages: []
@@ -41,6 +42,60 @@ wxconfig_params_extended_settings_list: []
 wxconfig_params_userpassword_list: []
 
 ## ACL settings
-wxconfig_params_groups_list: []
-wxconfig_params_acl_list: []
-wxconfig_params_service_acl_mapping_list: []
+wxconfig_params_groups_list:
+  # - name: "groupname"
+  #   updateIfExists: "true"
+  #   deleteOnUnload: "false"
+  #   users: []
+
+wxconfig_params_acl_list:
+  # - name: "aclname"
+  #   updateIfExists: "true"
+  #   deleteOnUnload: "false"
+  #   groups:
+  #     - "groupname"
+  #     - "LDAP/groupname"
+
+# if folder is set, it will be taken over the servicename value
+# 'enforce' can be "always" or "topLevelOnly"
+wxconfig_params_service_acl_mapping_list:
+  # - servicename: "service"
+  #   folder: "foldername"
+  #   includeSubfolders: true
+  #   excludes:
+  #     - "pub.flow:debugLog"
+  #     - "pub.flow:tracePipeline"
+  #   executeACL: "ACLNAME"
+  #   executeACL_enforce: "always"
+  #   browseACL: "ACLNAME"
+  #   readACL: "ACLNAME"
+  #   writeACL: "ACLNAME"
+
+## ldap settings
+wxconfig_params_ldap: []
+  # numberOfUsers: 10
+  # credentialTimeToLiveMin: 60
+  # server_list:
+  #   - updateIfExists: True
+  #     deleteOnUnload: False
+  #     url: ""
+  #     authentication:
+  #       principal: ""
+  #       password: ""
+  #     connection:
+  #       timeoutSec:
+  #       poolSize_min:
+  #       poolSize_max:
+  #     users:
+  #       synthesize:
+  #         prefix:
+  #         suffix:
+  #       query:
+  #         idproperty:
+  #         rootdn:
+  #     groups:
+  #       default:
+  #       memberattribute:
+  #       query:
+  #         idproperty:
+  #         rootdn:

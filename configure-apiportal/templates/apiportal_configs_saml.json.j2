@@ -1,0 +1,42 @@
+{
+  "com.aris.umc.saml.active": "{{ configs_saml.enabled | default() | bool | lower }}",
+  "com.aris.umc.saml.identity.provider.id": "{{ configs_saml.idp_id | default('',true) }}",
+  "com.aris.umc.saml.identity.provider.sso.url": "{{ configs_saml.idp_sso_url | default('',true) }}",
+  "com.aris.umc.saml.identity.provider.logout.url": "{{ configs_saml.idp_slo_url | default('',true) }}",
+  "com.aris.umc.saml.service.provider.id": "{{ configs_saml.sp_id | default('',true) }}",
+  "com.aris.umc.saml.binding": "{{ configs_saml.binding_type | default('POST',true) }}",
+  "com.aris.umc.saml.signature.algorithm": "{{ configs_saml.signature.algorithm | default('RSAwithSHA256',true) }}",
+  "com.aris.umc.saml.signature.assertion.active": "{{ configs_saml.signature.assertion_enforce | default() | bool | lower }}",
+  "com.aris.umc.saml.signature.metadata.active": "{{ configs_saml.signature.metadata_enforce | default() | bool | lower }}",
+  "com.aris.umc.saml.signature.request.active": "{{ configs_saml.signature.request_enforce | default() | bool | lower }}",
+  "com.aris.umc.saml.signature.response.active": "{{ configs_saml.signature.response_enforce | default() | bool | lower }}",
+{% if configs_saml.keystore.file_content is defined and configs_saml.keystore.file_content != "" %}
+  "com.aris.umc.saml.keystore.location": "{{ configs_saml.keystore.file_content | default('',true) }}",
+  "com.aris.umc.saml.keystore.alias": "{{ configs_saml.keystore.alias | default('',true) }}",
+  "com.aris.umc.saml.keystore.password": "{{ configs_saml.keystore.password | default('',true) }}",
+  "com.aris.umc.saml.keystore.type": "{{ configs_saml.keystore.type | default('JKS',true) }}",
+{% endif %}
+{% if configs_saml.truststore.file_content is defined and configs_saml.truststore.file_content != "" %}
+  "com.aris.umc.saml.truststore.location": "{{ configs_saml.truststore.file_content | default('',true) }}",
+  "com.aris.umc.saml.truststore.alias": "{{ configs_saml.truststore.alias | default('',true) }}",
+  "com.aris.umc.saml.truststore.password": "{{ configs_saml.truststore.password | default('',true) }}",
+  "com.aris.umc.saml.truststore.type": "{{ configs_saml.truststore.type | default('JKS',true) }}",
+{% endif %}
+  "com.aris.umc.saml.attribute.email": "{{ configs_saml.user_attributes.email | default('',true) }}",
+  "com.aris.umc.saml.attribute.fname": "{{ configs_saml.user_attributes.firstname | default('',true) }}",
+  "com.aris.umc.saml.attribute.lname": "{{ configs_saml.user_attributes.lastname | default('',true) }}",
+  "com.aris.umc.saml.attribute.memberof": "{{ configs_saml.user_attributes.memberof | default('',true) }}",
+  "com.aris.umc.saml.attribute.phone": "{{ configs_saml.user_attributes.phone | default('',true) }}",
+  "com.aris.umc.saml.attribute.userdefined": "{{ configs_saml.user_attributes.user_defined | default('',true) }}",
+  "com.aris.umc.saml.login.mode.dn.active": "{{ configs_saml.advanced.login_using_dn | default() | bool | lower }}",
+  "com.aris.umc.saml.login.mode.keyword.active": "{{ configs_saml.advanced.decompose_dn | default() | bool | lower }}",
+  "com.aris.umc.saml.login.mode.keyword.name": "{{ configs_saml.advanced.decompose_dn_login_attribute_in_dn | default('',true) }}",
+  "com.aris.umc.saml.auth.context.class.refs": "{{ configs_saml.advanced.auth_context_classes | default([],true) | join(',') }}",
+  "com.aris.umc.saml.auth.context.comparison": "{{ configs_saml.advanced.auth_context_comparisons | default('minimum',true) }}",
+  "com.aris.umc.saml.auth.nameid.format": "{{ configs_saml.advanced.nameid_format | default('',true) }}",
+  "com.aris.umc.saml.login.users.create": "{{ configs_saml.advanced.autocreate_user_on_login | default() | bool | lower }}",
+  "com.aris.umc.saml.assertion.timeoffset": "{{ configs_saml.advanced.clock_skew_seconds | default(0,true) }}",
+  "com.aris.umc.saml.assertion.ttl": "{{ configs_saml.advanced.assertion_lifetime_sec | default(10,true) }}",
+  "com.aris.umc.saml.service.provider.assertion.consumer.url.overwrite": "{{ configs_saml.advanced.assertion_consumer_service_overwrite_url | default('',true) }}",
+  "com.aris.umc.saml.default": "{{ configs_saml.advanced.default_tenant | default('default',true) }}"
+}

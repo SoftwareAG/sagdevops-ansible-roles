@@ -1,45 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <autoConfig>
+     <wx.config.disableDelimiterParsing>true</wx.config.disableDelimiterParsing>
+     <autoConfig>
+        {% if wxconfig_params_ldap is defined %}
         <ldap>
             <cache>
-                <numberOfUsers></numberOfUsers>
-                <credentialTimeToLiveMin></credentialTimeToLiveMin>
+                <numberOfUsers>{{ wxconfig_params_ldap.numberOfUsers | default('10',true) }}</numberOfUsers>
+                <credentialTimeToLiveMin>{{ wxconfig_params_ldap.credentialTimeToLiveMin | default('60',true) }}</credentialTimeToLiveMin>
             </cache>
+            {% if wxconfig_params_ldap.server_list is defined %}
             <serverList>
-                <server updateIfExists="true" deleteOnUnload="true">
-                    <url></url>
+                {% for ldap_server in wxconfig_params_ldap.server_list %}
+                <server updateIfExists="{{ ldap_server.updateIfExists | default() | bool | lower | default('true',true) }}" deleteOnUnload="{{ ldap_server.deleteOnUnload | default() | bool | lower | default('false',true) }}">
+                    <url>{{ ldap_server.url }}</url>
+                    {% if ldap_server.authentication is defined %}
                     <authentication>
-                        <principal></principal>
-                        <password></password>
+                        <principal>{{ ldap_server.authentication.principal | default('',true) }}</principal>
+                        <password>[[encrypted:{{ ldap_server.authentication.password_encrypted_handle }}]]</password>
                     </authentication>
+                    {% endif %}
+                    {% if ldap_server.connection is defined %}
                     <connection>
-                        <timeoutSec></timeoutSec>
+                        <timeoutSec>{{ ldap_server.connection.timeoutSec | default('',true) }}</timeoutSec>
                         <poolSize>
-                            <min></min>
-                            <max></max>
+                            <min>{{ ldap_server.connection.poolSize_min | default('',true) }}</min>
+                            <max>{{ ldap_server.connection.poolSize_max | default('',true) }}</max>
                         </poolSize>
                     </connection>
+                    {% endif %}
+                    {% if ldap_server.users is defined %}
                     <userDn>
+                        {% if ldap_server.users.synthesize is defined %}
                         <synthesize>
-                            <prefix></prefix>
-                            <suffix></suffix>
+                            <prefix>{{ ldap_server.users.synthesize.prefix | default('',true) }}</prefix>
+                            <suffix>{{ ldap_server.users.synthesize.suffix | default('',true) }}</suffix>
                         </synthesize>
+                        {% endif %}
+                        {% if ldap_server.users.query is defined %}
                         <query>
-                            <idProperty></idProperty>
-                            <rootDn></rootDn>
+                            <idProperty>{{ ldap_server.users.query.idproperty | default('',true) }}</idProperty>
+                            <rootDn>{{ ldap_server.users.query.rootdn | default('',true) }}</rootDn>
                         </query>
+                        {% endif %}
                     </userDn>
+                    {% endif %}
+                    {% if ldap_server.groups is defined %}
                     <group>
-                        <default></default>
-                        <memberAttribute></memberAttribute>
+                        <default>{{ ldap_server.groups.default | default('',true) }}</default>
+                        <memberAttribute>{{ ldap_server.groups.memberattribute | default('',true) }}</memberAttribute>
+                        {% if ldap_server.groups.query is defined %}
                         <query>
-                            <idProperty></idProperty>
-                            <rootDn></rootDn>
+                            <idProperty>{{ ldap_server.groups.query.idproperty | default('',true) }}</idProperty>
+                            <rootDn>{{ ldap_server.groups.query.rootdn | default('',true) }}</rootDn>
                         </query>
+                        {% endif %}
                     </group>
+                    {% endif %}
                 </server>
+                {% endfor %}
             </serverList>
+            {% endif %}
         </ldap>
+        {% endif %}
     </autoConfig>
 </config>

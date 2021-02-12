@@ -1,5 +1,6 @@
 ---
 
+
 ## global settings
 webmethods_s3repo_bucket_name: ""
 webmethods_s3repo_bucket_prefix: ""
@@ -7,3 +8,10 @@ webmethods_localrepo_target_dir: ""
 webmethods_install_target_dir: ""
 webmethods_localrepo_target_dir_owner_user: ""
 webmethods_localrepo_target_dir_owner_group: ""
+
+## install settings
+rvar_install_async_retries: 200
+rvar_install_async_delay: 10
+rvar_install_async_timeout: 2000
+rvar_install_async_poll: 0
+rvar_install_downloads_throttle:

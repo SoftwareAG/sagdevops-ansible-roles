@@ -1,0 +1,10 @@
+[{%- if rest_response is defined and rest_response.json is defined  -%}
+    {%- for itergroupname in rest_response_filter_groupnames -%}
+        {% set itergroupname_loop = loop %}
+        {%- for responseitem in rest_response.json -%}
+            {%- if responseitem[".AUserRole"].technicalName == itergroupname -%}
+                {%- if itergroupname_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem[".AUserRole"].id }}'
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endif -%}]

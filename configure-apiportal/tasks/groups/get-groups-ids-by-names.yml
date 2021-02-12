@@ -1,0 +1,23 @@
+---
+
+- name: Include tasks
+  include_tasks: "get-groups.yml"
+
+- name: set empty response if it was not already defined
+  set_fact:
+    response:
+      json: []
+  when: response.json is not defined
+      
+- name: Set filter values for response parsing
+  set_fact:
+    rest_response_filter_groupnames: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames | default([],true) }}"
+
+- name: Parse response and extract ids based on rest_response_filter_groupnames filter var
+  set_fact:
+    group_ids_by_names: "{{ lookup('template', 'apiportal_rest_groupsmgt_responseparsing_allgroups_ids_byname.json.j2') }}"
+
+- name: Print response
+  debug:
+    var: group_ids_by_names
+    verbosity: 3

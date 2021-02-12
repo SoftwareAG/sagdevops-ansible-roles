@@ -1,0 +1,31 @@
+---
+
+  - debug: var=getfroms3_files_descriptor_list verbosity=3
+
+  - name: Install the files only if the list is not empty
+    block:
+
+      - name: Downloading files from S3
+        include_role:
+          name: aws-wrapper
+        vars:
+          command: "getfroms3"
+          getfroms3_bucket_name: "{{ outer_item.bucket_name | default(getfroms3_defaults_bucket_name, true) }}"
+          getfroms3_bucket_prefix: "{{ outer_item.bucket_prefix | default(getfroms3_defaults_bucket_prefix, true) }}"
+          getfroms3_bucket_path: "{{ outer_item.bucket_path | default(getfroms3_defaults_bucket_path, true) }}"
+          getfroms3_local_path: "{{ outer_item.local_path }}"
+          getfroms3_local_path_owner_user: "{{ outer_item.local_path_owner_user | default(getfroms3_defaults_local_path_owner_user,true) }}"
+          getfroms3_local_path_owner_group: "{{ outer_item.local_path_owner_group | default(getfroms3_defaults_local_path_owner_group,true) }}"
+          getfroms3_local_path_permission: "{{ outer_item.local_path_permission | default(getfroms3_defaults_local_path_permission,true) }}"
+          getfroms3_local_path_create_dir_ifnotexist: "{{ outer_item.local_path_create_dir_ifnotexist | default(getfroms3_defaults_local_path_create_dir_ifnotexist,true) }}"
+          getfroms3_local_path_create_dir_owner_user: "{{ outer_item.local_path_create_dir_owner_user | default(getfroms3_defaults_local_path_create_dir_owner_user,true) }}"
+          getfroms3_local_path_create_dir_owner_group: "{{ outer_item.local_path_create_dir_owner_group | default(getfroms3_defaults_local_path_create_dir_owner_group,true) }}"
+          getfroms3_local_path_create_dir_permission: "{{ outer_item.local_path_create_dir_permission | default(getfroms3_defaults_local_path_create_dir_permission,true) }}"
+          getfroms3_force_download: "{{ outer_item.force_download | default(getfroms3_defaults_force_download,true) }}"
+          getfroms3_throttle: "{{ outer_item.throttle | default(getfroms3_defaults_throttle,true) }}"
+        when: outer_item.local_path is defined and outer_item.local_path != ""
+        with_items: "{{ getfroms3_files_descriptor_list }}"
+        loop_control:
+          loop_var: outer_item
+
+    when: getfroms3_files_descriptor_list is defined and (getfroms3_files_descriptor_list|length > 0)

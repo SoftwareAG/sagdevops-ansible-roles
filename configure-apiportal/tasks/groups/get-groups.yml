@@ -1,0 +1,20 @@
+---
+
+- name: Get list of groups
+  uri:
+    url: "{{ apiportal_configparams_rest_groupsmgt_path }}?tenant={{ apiportal_configparams_rest_tenant }}"
+    method: GET
+    user: "{{ apiportal_configparams_rest_auth_username }}"
+    password: "{{ apiportal_configparams_rest_auth_password }}"
+    return_content: yes
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: "200"
+    body_format: json
+    timeout: 30
+  register: rest_response
+
+- name: Print response
+  debug:
+    var: rest_response.json
+    verbosity: 3

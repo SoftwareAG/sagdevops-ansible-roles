@@ -1,0 +1,127 @@
+---
+
+  - debug: var=apigateway_configparams_rest_usermgt_group_single verbosity=3
+      
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+      - "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
+
+  - name: First, get the group ids based on the input names (returned in var rest_response_group_ids)
+    include_tasks: "groups/get-groups-ids-by-names.yml"
+    vars:
+      apigateway_configparams_rest_usermgt_group_names: 
+        - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+
+  - debug: var=rest_response_group_ids verbosity=3
+
+  - name: Update the existing group if it existed
+    block:
+
+      - name: get the existing group before updating it
+        uri:
+          url: "{{ apigateway_rest_groups_api }}/{{ rest_response_group_ids | first }}"
+          method: GET
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_get
+      
+      - name: Print response
+        debug:
+          var: rest_response_get.json
+          verbosity: 3
+
+      - name: fail if group cannot be found at this point
+        fail: 
+          msg: "Group cannot be found which is not expected at this point in the playbook...investigate"
+        when: rest_response_get.json.groups is not defined or rest_response_get.json.groups | length == 0
+
+      - name: get existing group content
+        set_fact:
+          __current_group: "{{ rest_response_get.json.groups[0] }}"
+
+      - name: extract user ids from the current group
+        set_fact:
+          __current_group_userids: "{{ __current_group.userIds | default([],true) }}"
+
+      - name: Merge the existing group content with the updated content
+        set_fact:
+          __updated_group_userids: "{{ __current_group_userids + apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
+        when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == false
+
+      - name: Overwrite the existing group content with the updated content
+        set_fact:
+          __updated_group_userids: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
+        when: (apigateway_configparams_rest_usermgt_group_single.empty_user_ids | default(false) | bool) == true
+
+      - name: Save the existing group content in the var to update
+        set_fact:
+          __group_toupdate: "{{ __current_group | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:          
+            name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+            description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
+            userIds: "{{ __updated_group_userids }}"
+
+      - debug: var=__group_toupdate verbosity=3
+
+      - name: Update the existing group
+        uri:
+          url: "{{ apigateway_rest_groups_api }}/{{ __group_toupdate.id }}"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ __group_toupdate | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_update
+        
+      - name: Response for new updated group
+        debug: var=rest_response_mutate_update verbosity=3
+
+    when: rest_response_group_ids is defined and rest_response_group_ids | length > 0
+
+  - name: Create the group if it does not exist
+    block:
+
+      - name: Set group payload
+        set_fact:
+          __group_tocreate:
+            name: "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
+            description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
+            userIds: "{{ apigateway_configparams_rest_usermgt_group_single.user_ids_add | default([],true) }}"
+
+      - debug: var=__group_tocreate verbosity=3
+
+      - name: Create a new group
+        uri:
+          url: "{{ apigateway_rest_groups_api }}"
+          method: POST
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ __group_tocreate | default({}) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_create
+
+      - name: Response for new created group
+        debug: var=rest_response_mutate_create verbosity=3
+
+    when: rest_response_group_ids is not defined or rest_response_group_ids | length == 0

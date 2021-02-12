@@ -1,0 +1,58 @@
+---
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_integrationserver_wxconfig_remove_configs_group_changed: false
+    when: configure_integrationserver_wxconfig_remove_configs_group_changed is not defined
+
+  - name: Remove configs only if variable wxconfig_params_do_remove_configs set
+    block:
+
+      - name: fail if wxconfig_params_target_package_name not specified
+        fail: 
+          msg: "wxconfig_params_target_package_name not specified...cannot create."
+        when: wxconfig_params_target_package_name is not defined or wxconfig_params_target_package_name == ""
+
+      - name: Check if main wxconfig controller file is there already
+        stat: 
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+        register: stat_wxconfig_enabled
+
+      - name: Find wxconfig files in package
+        find:
+          paths: "{{ wxconfig_target_package_config_path }}"
+          patterns: "*{{ wxconfig_params_unique_groupname | default('',true) | lower | regex_replace('all') }}.xml"
+        register: "result_wxconfig_files"
+
+      - debug: var=result_wxconfig_files verbosity=3
+
+      - name: Remove all the relevant config lines in the main wxconfig controller file
+        lineinfile:
+          path: "{{ wxconfig_target_package_config_path }}/wxconfig.cnf"
+          regexp: '^wx.config.incl={{ item.path | basename }}'
+          state: absent
+        register: "result_wxconfig_remove_configs_lines"
+        with_items: "{{ result_wxconfig_files.files }}"
+        when: result_wxconfig_files.matched > 0 and stat_wxconfig_enabled.stat.exists
+
+      - name: Remove actual wxconfig configs files
+        file:
+          path: "{{ item.path }}"
+          state: absent
+        register: "result_wxconfig_remove_configs_files"
+        with_items: "{{ result_wxconfig_files.files }}"
+        when: result_wxconfig_files.matched > 0
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_integrationserver_wxconfig_remove_configs_group_changed: true
+        when: >
+          result_wxconfig_remove_configs_files.changed | bool or
+          result_wxconfig_remove_configs_lines.changed | bool
+
+    when: wxconfig_params_do_remove_configs | default() | bool
+
+  - name: Print the changed var
+    debug:
+      var: configure_integrationserver_wxconfig_remove_configs_group_changed
+      verbosity: 2

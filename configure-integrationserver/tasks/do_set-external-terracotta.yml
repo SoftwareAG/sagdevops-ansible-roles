@@ -48,9 +48,6 @@
           wrapper.java.additional.506: "-Dl1.socket.connect.timeout=10000"
           wrapper.java.additional.507: "-Dl1.socket.reconnect.waitInterval=10000"
 
-      - name: Include Terracotta license tasks
-        include_tasks: do_set-license-terracotta.yml
-
       - name: Re-Clear the terracotta_hosts_list list
         set_fact:
           terracotta_hosts_list: []

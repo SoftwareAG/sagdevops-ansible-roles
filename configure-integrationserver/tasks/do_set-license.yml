@@ -1,14 +1,14 @@
 ---
 
-  - debug: var=webmethods_target_license_path
-  - debug: var=webmethods_license_inzip_path
+  - debug: var=webmethods_target_license_path verbosity=3
+  - debug: var=webmethods_license_inzip_path verbosity=3
 
   - name: Check if license file is there at target location
     stat:
       path: "{{ webmethods_target_license_path }}"
     register: stat_license_exists
 
-  - debug: var=stat_license_exists
+  - debug: var=stat_license_exists verbosity=3
 
   - name: Set changed flag to false if not defined
     set_fact: 
@@ -48,4 +48,4 @@
   
     when: stat_license_exists.stat.exists == false
 
-  - debug: var=configure_integrationserver_set_license_changed
+  - debug: var=configure_integrationserver_set_license_changed verbosity=3

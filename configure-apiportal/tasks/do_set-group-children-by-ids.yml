@@ -1,0 +1,52 @@
+---
+
+  - debug: var=apiportal_configparams_rest_groupsmgt_byids_group_children verbosity=3
+
+  - name: only update groups if group-association variable defined
+    block:
+
+      - name: fail if mandatory param not specified
+        fail: 
+          msg: "A mandatory param was not defined, cannot do anything."
+        when: item is not defined
+        with_items:
+          - "{{ apiportal_configparams_rest_groupsmgt_byids_group_children.group_parent }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_byids_group_children.group_children }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_byids_group_children.group_operation }}"
+
+      - name: fail if group_operation does not have expected value
+        fail: 
+          msg: "A mandatory param was not defined, cannot do anything."
+        when: (apiportal_configparams_rest_groupsmgt_byids_group_children.group_operation | lower) not in ("add","delete")
+        
+      - name: If current API Gateway port exists, update it
+        set_fact:
+          apiportal_configparams_rest_method: POST
+        when: (apiportal_configparams_rest_groupsmgt_byids_group_children.group_operation | lower) == "add"
+
+      - name: If current API Gateway port does not exists, add it
+        set_fact:
+          apiportal_configparams_rest_method: DELETE
+        when: (apiportal_configparams_rest_groupsmgt_byids_group_children.group_operation | lower) == "delete"
+
+      - name: Create groups in group association
+        uri:
+          url: "{{ apiportal_configparams_rest_groupsmgt_path }}/{{ apiportal_configparams_rest_groupsmgt_byids_group_children.group_parent }}/children?tenant={{ apiportal_configparams_rest_tenant }}"
+          method: "{{ apiportal_configparams_rest_method }}"
+          user: "{{ apiportal_configparams_rest_auth_username }}"
+          password: "{{ apiportal_configparams_rest_auth_password }}"
+          return_content: yes
+          body: "{{ apiportal_configparams_rest_groupsmgt_byids_group_children.group_children | default([]) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201, 202, 204]
+          body_format: json
+          timeout: 30
+        register: rest_response
+        
+      - name: Print response
+        debug:
+          var: rest_response.json
+          verbosity: 3
+
+    when: apiportal_configparams_rest_groupsmgt_byids_group_children is defined

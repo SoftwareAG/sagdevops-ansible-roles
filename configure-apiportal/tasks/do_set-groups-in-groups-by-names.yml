@@ -1,0 +1,10 @@
+---
+
+  - name: Users to add/update
+    debug: var=apiportal_configparams_rest_groupsmgt_bynames_groups_in_groups verbosity=3
+
+  - name: Include group tasks
+    include_tasks: "do_set-group-children-by-names.yml"
+    with_items: "{{ apiportal_configparams_rest_groupsmgt_bynames_groups_in_groups }}"
+    loop_control:
+      loop_var: apiportal_configparams_rest_groupsmgt_bynames_group_children

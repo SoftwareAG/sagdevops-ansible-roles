@@ -32,3 +32,4 @@
   - name: Print the changed var
     debug:
       var: configure_integrationserver_wxconfig_enable_package_changed
+      verbosity: 2

@@ -1,50 +1,9 @@
 ---
 
-- name: "Include tasks to install sum"
-  include_tasks: "command_run_sum_install.yml"
+- debug: var=webmethods_install_patches_descriptor_list verbosity=3
 
-- name: fail if webmethods_localrepo_target_dir not specified
-  fail: 
-    msg: "webmethods_localrepo_target_dir not specified...can't do anything"
-  when: webmethods_localrepo_target_dir is not defined or webmethods_localrepo_target_dir == ""
-
-- name: "Include tasks to fetch the fix files from s3"
-  include_tasks: "command_get_files_from_s3.yml"
-  vars:
-    webmethods_provisioning_files_download_descritors:
-      - bucket_path: "{{ webmethods_s3repo_fixes_image_filename }}"
-        local_path: "{{ webmethods_localrepo_fixes_image_filename | default('sum_image.zip', true) }}"
-      - bucket_path: "{{ webmethods_s3repo_fixes_autoscript_filename }}"
-        local_path: "{{ webmethods_localrepo_fixes_autoscript_filename | default('sum.script', true) }}"
-
-- name: Write the install scripts on disk with all the params
-  template:
-    src: "install_fixes.sh.j2" 
-    dest: "{{ webmethods_localrepo_target_dir }}/install_fixes.sh"
-    owner: "{{ webmethods_install_localtarget_files_owner_user }}"
-    group: "{{ webmethods_install_localtarget_files_owner_group }}"
-    mode: "{{ webmethods_install_localtarget_files_permissions }}"
-    backup: no
-    
-- name: run install_fixes command
-  command: "/bin/bash install_fixes.sh"
-  args:
-    chdir: "{{ webmethods_localrepo_target_dir }}"
-  async: "{{ webmethods_install_async }}"
-  poll: "{{ webmethods_install_poll }}"
-  register: install_fixes_sleeper
-
-- name: Check status for install_fixes task
-  async_status:
-    jid: "{{ install_fixes_sleeper.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: "{{ webmethods_install_async_retries }}"
-  delay: "{{ webmethods_install_async_delay }}"
-
-- name: Print the job_result to the console.
-  debug:
-    msg: "{{ job_result.stdout_lines | join('\n') }}"
-
-- name: "Include tasks to cleanup the install artifacts"
-  include_tasks: "command_cleanup.yml"
+- name: apply a single fix
+  include_tasks: "command_run_apply_fixes_single.yml"
+  with_items: "{{ webmethods_install_patches_descriptor_list }}"
+  loop_control:
+    loop_var: webmethods_install_patches_descriptor
