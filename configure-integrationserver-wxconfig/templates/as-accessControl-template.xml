@@ -5,8 +5,8 @@
     <!-- Integration Server groups-->
     {% for wxconfig_group in wxconfig_params_groups_list %}
       <group name="{{ wxconfig_group.name }}" updateIfExists="{{ wxconfig_group.updateIfExists | default() | bool | lower }}" deleteOnUnload="{{ wxconfig_group.deleteOnUnload | default() | bool | lower }}">
-        {% if wxconfig_group.members is defined %}
-          {% for username in wxconfig_group.members %}
+        {% if wxconfig_group.users is defined %}
+          {% for username in wxconfig_group.users %}
           <member user="{{ username }}" />
           {% endfor %}
         {% endif %}  
@@ -45,19 +45,19 @@
         <!-- It is possible to set only some of the ACLs, e.g. the execute ACL without changing any of the others -->
         <!-- 'enforce' can be "always" or "topLevelOnly" // Other values will be converted to "topLevelOnly" -->
         {% if wxconfig_service_acl_mapping.executeACL is defined %}
-        <executeACL enforce="{{ wxconfig_service_acl_mapping.executeACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.executeACL.name }}</executeACL>
+        <executeACL enforce="{{ wxconfig_service_acl_mapping.executeACL_enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.executeACL }}</executeACL>
         {% endif %}
 
         {% if wxconfig_service_acl_mapping.browseACL is defined %}
-        <browseACL enforce="{{ wxconfig_service_acl_mapping.browseACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.browseACL.name }}</browseACL>
+        <browseACL>{{ wxconfig_service_acl_mapping.browseACL }}</browseACL>
         {% endif %}
 
         {% if wxconfig_service_acl_mapping.readACL is defined %}
-        <readACL enforce="{{ wxconfig_service_acl_mapping.readACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.readACL.name }}</readACL>
+        <readACL>{{ wxconfig_service_acl_mapping.readACL }}</readACL>
         {% endif %}
 
         {% if wxconfig_service_acl_mapping.writeACL is defined %}
-        <writeACL enforce="{{ wxconfig_service_acl_mapping.writeACL.enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.writeACL.name }}</writeACL>
+        <writeACL>{{ wxconfig_service_acl_mapping.writeACL }}</writeACL>
         {% endif %}
       </service>
     {% endfor %}

@@ -46,6 +46,8 @@ wxconfig_params_groups_list:
   # - name: "groupname"
   #   updateIfExists: "true"
   #   deleteOnUnload: "false"
+  #   users: []
+
 wxconfig_params_acl_list:
   # - name: "aclname"
   #   updateIfExists: "true"
@@ -63,18 +65,11 @@ wxconfig_params_service_acl_mapping_list:
   #   excludes:
   #     - "pub.flow:debugLog"
   #     - "pub.flow:tracePipeline"
-  #   executeACL:
-  #     acl: "internal"
-  #     enforce: "always"
-  #   browseACL:
-  #     acl: "internal"
-  #     enforce: "always"
-  #   readACL:
-  #     acl: "internal"
-  #     enforce: "always"
-  #   writeACL:
-  #     acl: "internal"
-  #     enforce: "always"
+  #   executeACL: "ACLNAME"
+  #   executeACL_enforce: "always"
+  #   browseACL: "ACLNAME"
+  #   readACL: "ACLNAME"
+  #   writeACL: "ACLNAME"
 
 ## ldap settings
 wxconfig_params_ldap: []
