@@ -24,6 +24,7 @@
       </acl>
     {% endfor %}
 
+    <!-- ACLs to services mapping -->
     {% for wxconfig_service_acl_mapping in wxconfig_params_service_acl_mapping_list %}
       {% if wxconfig_service_acl_mapping.servicename is defined and wxconfig_service_acl_mapping.servicename != "" %}
       <service name="{{ wxconfig_service_acl_mapping.servicename }}">
@@ -34,7 +35,6 @@
       {% endif %}
 
       {% if wxconfig_service_acl_mapping.folder is defined and wxconfig_service_acl_mapping.folder != "" %}
-        <!-- Specific services can be excluded when an entire folder is processed -->
         {% if wxconfig_service_acl_mapping.excludes is defined %}
           {% for exclude in wxconfig_service_acl_mapping.excludes %}
             <exclude service="{{ exclude }}" />
@@ -42,8 +42,6 @@
         {% endif %}
       {% endif %}
 
-        <!-- It is possible to set only some of the ACLs, e.g. the execute ACL without changing any of the others -->
-        <!-- 'enforce' can be "always" or "topLevelOnly" // Other values will be converted to "topLevelOnly" -->
         {% if wxconfig_service_acl_mapping.executeACL is defined %}
         <executeACL enforce="{{ wxconfig_service_acl_mapping.executeACL_enforce | default('topLevelOnly',true) }}">{{ wxconfig_service_acl_mapping.executeACL }}</executeACL>
         {% endif %}

@@ -13,7 +13,6 @@
             {% elif wxconfig_extended_setting.type == "unappend" %}
                 <setting operation="removePart" name="{{ wxconfig_extended_setting.name }}" value="{{ wxconfig_extended_setting.value }}" separator ="\," />
             {% endif %}
-
             {% endfor %}
         </extendedSettings>
     </autoConfig>
