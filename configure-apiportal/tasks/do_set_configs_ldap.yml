@@ -34,7 +34,7 @@
 
       - debug: var=filecontent_truststore verbosity=3
       
-      - name: Save the existing group content in the var to update
+      - name: Save the existing truststore content in the var to update
         set_fact:
           configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
         vars:
@@ -42,6 +42,9 @@
             truststore:
               file_content: "{{ filecontent_truststore['content'] }}"
         when: filecontent_truststore['content'] is defined
+
+########## passwords
+
 
 ########## populate configs
 
