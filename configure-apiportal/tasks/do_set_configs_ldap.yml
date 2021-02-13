@@ -57,7 +57,7 @@
         vars:
           new_item:    
             truststore:
-              password: "{crypted}{{ encrypted_value }}"
+              password: "{{ encrypted_value }}"
         when: rvar_apiportal_configs_ldap.truststore.password is defined
 
       - name: Execute encrypt password for connection user password
@@ -72,7 +72,7 @@
         vars:
           new_item:    
             connection:
-              password: "{crypted}{{ encrypted_value }}"
+              password: "{{ encrypted_value }}"
         when: rvar_apiportal_configs_ldap.connection.password is defined
 
 ########## populate configs
