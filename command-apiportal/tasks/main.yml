@@ -10,7 +10,7 @@
     path: "{{ webmethods_apiportal_acc_exec_dir }}/acc.sh"
   register: acc_exists
 
-- name: fail if mandatory param not specified
+- name: fail if exec file does not exist
   fail: 
     msg: "ACC executable does not exist..."
   when: not acc_exists.stat.exists
