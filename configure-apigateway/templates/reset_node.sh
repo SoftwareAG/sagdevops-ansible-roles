@@ -39,6 +39,8 @@ else
    touch $STATFILE
 fi
 
+## TODO perform a folder/file replacement of old host to new
+
 # install/etc/installconfig.prop:hostname=ip-172-40-192-143
 # IntegrationServer/instances/default/packages/WmAssetPublisher/config/assetpublisher.cnf:    <value name="is_hostname">ip-172-40-192-143.ad.clouddemo.saggov.local</value>
 # IntegrationServer/instances/default/config/security/openid/salesforce.com.json:  "redirection_endpoint_host" : "ip-172-40-192-143.ad.clouddemo.saggov.local",
