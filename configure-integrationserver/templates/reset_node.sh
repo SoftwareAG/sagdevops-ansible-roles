@@ -19,3 +19,5 @@ rm -Rf ${SAG_HOME}/install/logs/*
 
 ## reset osgi profile
 cd ${SAG_HOME}/IntegrationServer/instances; ./is_instance.sh delete-osgi-profile -Dinstance.name=${INSTANCE_NAME}; ./is_instance.sh create-osgi-profile -Dinstance.name=${INSTANCE_NAME}
+
+## TODO perform a folder/file replacement of old host to new
