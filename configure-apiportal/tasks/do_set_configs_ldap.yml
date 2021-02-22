@@ -45,35 +45,35 @@
 
 ########## encrypt passwords
 
-      - name: Execute encrypt password for truststore password
-        include_tasks: "tenantmgt/encrypt_password.yml"
-        vars:
-          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_ldap.truststore.password }}"
-        when: rvar_apiportal_configs_ldap.truststore.password is defined
+      # - name: Execute encrypt password for truststore password
+      #   include_tasks: "tenantmgt/encrypt_password.yml"
+      #   vars:
+      #     rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_ldap.truststore.password }}"
+      #   when: rvar_apiportal_configs_ldap.truststore.password is defined
 
-      - name: Save encrypted value for truststore password
-        set_fact:
-          configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
-        vars:
-          new_item:    
-            truststore:
-              password: "{{ encrypted_value }}"
-        when: rvar_apiportal_configs_ldap.truststore.password is defined
+      # - name: Save encrypted value for truststore password
+      #   set_fact:
+      #     configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
+      #   vars:
+      #     new_item:    
+      #       truststore:
+      #         password: "{{ encrypted_value }}"
+      #   when: rvar_apiportal_configs_ldap.truststore.password is defined
 
-      - name: Execute encrypt password for connection user password
-        include_tasks: "tenantmgt/encrypt_password.yml"
-        vars:
-          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_ldap.connection.password }}"
-        when: rvar_apiportal_configs_ldap.connection.password is defined
+      # - name: Execute encrypt password for connection user password
+      #   include_tasks: "tenantmgt/encrypt_password.yml"
+      #   vars:
+      #     rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_ldap.connection.password }}"
+      #   when: rvar_apiportal_configs_ldap.connection.password is defined
 
-      - name: Save encrypted value for connection user password
-        set_fact:
-          configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
-        vars:
-          new_item:    
-            connection:
-              password: "{{ encrypted_value }}"
-        when: rvar_apiportal_configs_ldap.connection.password is defined
+      # - name: Save encrypted value for connection user password
+      #   set_fact:
+      #     configs_ldap_merged: "{{ configs_ldap_merged | combine(new_item, recursive=true) }}"
+      #   vars:
+      #     new_item:    
+      #       connection:
+      #         password: "{{ encrypted_value }}"
+      #   when: rvar_apiportal_configs_ldap.connection.password is defined
 
 ########## populate configs
 

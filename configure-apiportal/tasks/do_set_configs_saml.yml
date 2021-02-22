@@ -66,35 +66,35 @@
 
 ########## encrypt passwords
 
-      - name: Execute encrypt password for truststore password
-        include_tasks: "tenantmgt/encrypt_password.yml"
-        vars:
-          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.truststore.password }}"
-        when: rvar_apiportal_configs_saml.truststore.password is defined
+      # - name: Execute encrypt password for truststore password
+      #   include_tasks: "tenantmgt/encrypt_password.yml"
+      #   vars:
+      #     rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.truststore.password }}"
+      #   when: rvar_apiportal_configs_saml.truststore.password is defined
 
-      - name: Save encrypted value for truststore password
-        set_fact:
-          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
-        vars:
-          new_item:    
-            truststore:
-              password: "{{ encrypted_value }}"
-        when: rvar_apiportal_configs_saml.truststore.password is defined
+      # - name: Save encrypted value for truststore password
+      #   set_fact:
+      #     configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+      #   vars:
+      #     new_item:    
+      #       truststore:
+      #         password: "{{ encrypted_value }}"
+      #   when: rvar_apiportal_configs_saml.truststore.password is defined
 
-      - name: Execute encrypt password for keystore password
-        include_tasks: "tenantmgt/encrypt_password.yml"
-        vars:
-          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.keystore.password }}"
-        when: rvar_apiportal_configs_saml.keystore.password is defined
+      # - name: Execute encrypt password for keystore password
+      #   include_tasks: "tenantmgt/encrypt_password.yml"
+      #   vars:
+      #     rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.keystore.password }}"
+      #   when: rvar_apiportal_configs_saml.keystore.password is defined
 
-      - name: Save encrypted value for connection user password
-        set_fact:
-          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
-        vars:
-          new_item:    
-            keystore:
-              password: "{{ encrypted_value }}"
-        when: rvar_apiportal_configs_saml.keystore.password is defined
+      # - name: Save encrypted value for connection user password
+      #   set_fact:
+      #     configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+      #   vars:
+      #     new_item:    
+      #       keystore:
+      #         password: "{{ encrypted_value }}"
+      #   when: rvar_apiportal_configs_saml.keystore.password is defined
 
 ########## populate configs
 
