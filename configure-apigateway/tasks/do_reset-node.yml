@@ -1,0 +1,8 @@
+---
+
+- name: Populate file
+  template:
+    src: reset_node.sh
+    dest: "{{ runtime_instance_home }}/bin/reset_node.sh"
+    mode: "0755"
+  register: "result_content_operation"
