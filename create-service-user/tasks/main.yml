@@ -53,10 +53,19 @@
     mode: 0700
   when: aws_access_key is defined and aws_access_key != ""
 
-- name:  Write the aws config
+- name:  Write the default aws credentials
   template:
     src: aws_credentials.j2
     dest: "/home/{{ username }}/.aws/credentials"
+    owner: "{{ username }}"
+    group: "{{ groupname }}"
+    mode: 0600
+  when: aws_access_key is defined and aws_access_key != ""
+
+- name:  Write the default aws config
+  template:
+    src: aws_configs.j2
+    dest: "/home/{{ username }}/.aws/config"
     owner: "{{ username }}"
     group: "{{ groupname }}"
     mode: 0600
