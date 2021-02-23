@@ -18,35 +18,29 @@
   - name: Set external terracotta in the right file if host list is not empty
     block:
 
-      - name: "Update config file {{ runtime_instance_config_file }}"
-        lineinfile:
-          path: "{{ runtime_instance_config_file }}"
-          regexp: '^{{ item.key }}'
-          insertafter: '^#{{ item.key }}'
-          line: "{{ item.key }}={{ item.value }}"
-        with_dict:
-          watt.server.cluster.aware: "true"
-          watt.server.cluster.tsaURLs: "{{ terracotta_hosts_list | join(',') }}"
-          watt.server.cluster.name: "TC_CLUSTER"
-          watt.server.cluster.action.errorOnStartup: "shutdown"
-          watt.server.cachemanager.connectTimeout: 30000
-          watt.server.cluster.SessTimeout: 90
+      - name: "Set IS extended settings with terracotta specific configs"
+        include_tasks: "do_set-extended-settings.yml"
+        vars:
+          wmis_cfgparams_extended_settings_dict:
+            watt.server.cluster.aware: "true"
+            watt.server.cluster.tsaURLs: "{{ terracotta_hosts_list | join(',') }}"
+            watt.server.cluster.name: "TC_CLUSTER"
+            watt.server.cluster.action.errorOnStartup: "shutdown"
+            watt.server.cachemanager.connectTimeout: 30000
+            watt.server.cluster.SessTimeout: 90
 
       - name: "Update config file {{ custom_wrapper_file }} with terracotta specific settings"
-        lineinfile:
-          path: "{{ custom_wrapper_file }}"
-          regexp: '^{{ item.key }}'
-          insertafter: '^#{{ item.key }}'
-          line: "{{ item.key }}={{ item.value }}"
-        with_dict:
-          wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ is_clustering_use_internal_db | bool | lower }}"
-          wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
-          wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
-          wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"
-          wrapper.java.additional.504: "-Dl1.max.connect.retries=180"
-          wrapper.java.additional.505: "-Dl1.connect.versionMatchCheck.enabled=true"
-          wrapper.java.additional.506: "-Dl1.socket.connect.timeout=10000"
-          wrapper.java.additional.507: "-Dl1.socket.reconnect.waitInterval=10000"
+        include_tasks: "do_set-jvm-params.yml"
+        vars:
+          wmis_cfgparams_jvm_settings_dict:
+            wrapper.java.additional.500: "-Dtest.cluster.withDerby={{ is_clustering_use_internal_db | bool | lower }}"
+            wrapper.java.additional.501: "-Dcom.tc.tc.config.total.timeout=1200000"
+            wrapper.java.additional.502: "-Dcom.tc.l1.max.connect.retries=100"
+            wrapper.java.additional.503: "-Dcom.tc.l1.socket.reconnect.waitInterval=10000"
+            wrapper.java.additional.504: "-Dl1.max.connect.retries=180"
+            wrapper.java.additional.505: "-Dl1.connect.versionMatchCheck.enabled=true"
+            wrapper.java.additional.506: "-Dl1.socket.connect.timeout=10000"
+            wrapper.java.additional.507: "-Dl1.socket.reconnect.waitInterval=10000"
 
       - name: Re-Clear the terracotta_hosts_list list
         set_fact:
