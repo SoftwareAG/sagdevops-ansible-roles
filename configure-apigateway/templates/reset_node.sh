@@ -20,8 +20,6 @@ rm -Rf ${SAG_HOME}/profiles/IS_${INSTANCE_NAME}/logs/*
 rm -Rf ${SAG_HOME}/InternalDataStore/logs/*
 rm -Rf ${SAG_HOME}/install/logs/*
 
-# cd ${SAG_HOME}/IntegrationServer/instances; ./is_instance.sh delete-osgi-profile -Dinstance.name=${INSTANCE_NAME}; ./is_instance.sh create-osgi-profile -Dinstance.name=${INSTANCE_NAME}
-
 # update node
 if [ ! -d "${SAG_HOME}/IntegrationServer/instances/${INSTANCE_NAME}/logs" ]
 then
@@ -39,7 +37,7 @@ else
    touch $STATFILE
 fi
 
-## TODO perform a folder/file replacement of old host to new
+## TODO perform a folder/file replacement of old host to new?
 
 # install/etc/installconfig.prop:hostname=ip-172-40-192-143
 # IntegrationServer/instances/default/packages/WmAssetPublisher/config/assetpublisher.cnf:    <value name="is_hostname">ip-172-40-192-143.ad.clouddemo.saggov.local</value>
