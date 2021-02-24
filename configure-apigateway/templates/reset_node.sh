@@ -37,7 +37,21 @@ else
    touch $STATFILE
 fi
 
-## TODO perform a folder/file replacement of old host to new?
+## Perform a folder/file replacement of old host to new?
+replacePathsInFiles() {
+   local search_pattern=$1;
+   local replacement=$2;
+
+   for file in `find ${SAG_HOME} -type f -exec grep -il "${search_pattern}" {} \; | grep -vE "\.log|\.jar"`
+   do
+      echo "update pattern ${search_pattern} in $file"
+      sed -i "s!${search_pattern}!${replacement}!g" $file
+   done
+}
+
+{% if search_pattern is defined and search_pattern != "" %}
+replacePathsInFiles "{{ search_pattern }}" "{{ search_pattern_replacement }}"
+{% endif %}
 
 # install/etc/installconfig.prop:hostname=ip-172-40-192-143
 # IntegrationServer/instances/default/packages/WmAssetPublisher/config/assetpublisher.cnf:    <value name="is_hostname">ip-172-40-192-143.ad.clouddemo.saggov.local</value>
