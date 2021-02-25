@@ -6,7 +6,7 @@
   - name: Populate file
     template:
       src: reset_node.sh
-      dest: "{{ runtime_instance_home }}/bin/reset_node.sh"
+      dest: "{{ webmethods_apiportal_work_dir }}/reset_node.sh"
       mode: "0755"
     vars:
       search_hostname_pattern: "{{ rvar_resetnode_search_hostname_pattern }}"
@@ -16,8 +16,8 @@
   - name: execute command
     command:
       argv:
-        - "{{ runtime_instance_home }}/bin/reset_node.sh"
-      chdir: "{{ runtime_instance_home }}/bin"
+        - "{{ webmethods_apiportal_work_dir }}/reset_node.sh"
+      chdir: "{{ webmethods_apiportal_work_dir }}/bin"
     register: cmd_result
 
   - name: Print the cmd_result to the console.
