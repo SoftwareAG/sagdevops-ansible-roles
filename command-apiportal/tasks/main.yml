@@ -45,7 +45,7 @@
   command:
     argv: "{{ command_to_exec }}"
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
-  async: 1800
+  async: 2400
   poll: 0
   register: cmd_async
   no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
@@ -55,8 +55,8 @@
     jid: "{{ cmd_async.ansible_job_id }}"
   register: cmd_result
   until: cmd_result.finished
-  retries: 360
-  delay: 5
+  retries: 240
+  delay: 10
 
 - name: Print the cmd_result to the console.
   debug:

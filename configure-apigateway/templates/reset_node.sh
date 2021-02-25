@@ -18,6 +18,7 @@ fi
 
 # cleanup all runtime data from previous runs
 rm -Rf ${SAG_HOME}/install/logs/*
+rm -Rf ${SAG_HOME}/IntegrationServer/instances/logs/*
 rm -f ${SAG_HOME}/IntegrationServer/instances/${INSTANCE_NAME}/config/repository4.cnf
 rm -Rf ${SAG_HOME}/IntegrationServer/instances/${INSTANCE_NAME}/logs/*
 rm -Rf ${SAG_HOME}/profiles/IS_${INSTANCE_NAME}/logs/*
