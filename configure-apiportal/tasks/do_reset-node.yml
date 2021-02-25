@@ -17,7 +17,7 @@
     command:
       argv:
         - "{{ webmethods_apiportal_work_dir }}/reset_node.sh"
-      chdir: "{{ webmethods_apiportal_work_dir }}/bin"
+      chdir: "{{ webmethods_apiportal_work_dir }}"
     register: cmd_result
 
   - name: Print the cmd_result to the console.
