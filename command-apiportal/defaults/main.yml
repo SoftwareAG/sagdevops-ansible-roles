@@ -1,3 +1,9 @@
 ---
 
 webmethods_apiportal_acc_exec_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc"
+
+## command settings
+rvar_command_apiportal_async_retries: 240
+rvar_command_apiportal_async_delay: 10
+rvar_command_apiportal_async_timeout: 2400
+rvar_command_apiportal_async_poll: 0
