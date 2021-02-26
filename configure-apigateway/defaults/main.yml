@@ -12,7 +12,9 @@ apigateway_kibana_config_file: "{{ runtime_profile_home }}/apigateway/dashboard/
 apigateway_ui_configuration_config_file: "{{ runtime_profile_home }}/apigateway/config/uiconfiguration.properties"
 apigateway_ui_props_configs_dir: "{{ runtime_profile_home }}/configuration/com.softwareag.platform.config.propsloader"
 apigateway_saml_group_mapping_file_path: "{{ runtime_instance_home }}/packages/WmAPIGateway/config/resources/security/saml_groups_mapping.xml"
-
+apigateway_external_configs_source_dir: "{{ runtime_instance_home }}/packages/WmAPIGateway/resources/configuration"
+apigateway_external_configs_file_path: "{{ apigateway_external_configs_source_dir }}/custom-configs.yml"
+apigateway_external_configs_source_file_path: "{{ apigateway_external_configs_source_dir }}/config-sources.yml"
 
 ####################################
 ## gateway UI URLs
