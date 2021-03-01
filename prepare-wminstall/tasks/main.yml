@@ -1,15 +1,5 @@
 ---
 
-- name: Create wM folder
-  file: 
-    path: "{{ install_dir }}"
-    state: directory
-
-- name: Create wM sum folder
-  file: 
-    path: "{{ install_sum_dir }}"
-    state: directory
-
 - name: '/etc/fstab: remove noexec opt for /tmp mount'
   lineinfile:
     path: /etc/fstab
@@ -18,20 +8,20 @@
     regexp: '^(\S+\s+\/tmp\s+\S+\s+)(\S+)(,noexec)(\s+.+)$'
     line: '\1\2\4'
   register: fstab
-
+ 
 - name: 'If /tmp changed, remount'
   command: 'mount /tmp -o remount'
   args:
     warn: no
   when: fstab.changed
-  
+ 
 - name: Create a new primary partition
   parted:
     device: "{{ disk_device }}"
     number: "{{ disk_part_number }}"
     state: present
   when: disk_device is defined and disk_device != ""
-
+ 
 - name: Create a ext4 filesystem on disk_device and check disk blocks
   filesystem:
     fstype: ext4
@@ -39,7 +29,7 @@
     force: no
     opts: -L webmethods
   when: disk_device is defined and disk_device != ""
-
+ 
 - name: Mount up device by label
   mount:
     path: "{{ install_dir }}"
@@ -47,21 +37,15 @@
     fstype: ext4
     state: mounted
   when: disk_device is defined and disk_device != ""
-
-- name: Fix permission on install dir
-  file: 
-    path: "{{ install_dir }}"
+ 
+- name: Create {{ item }} dir and set permissions
+  file:
+    path: "{{ item }}"
     state: directory
     recurse: no
     owner: "{{ install_user }}"
     group: "{{ install_group }}"
     mode: 0775
-
-- name: Fix permission on install sum dir
-  file: 
-    path: "{{ install_sum_dir }}"
-    state: directory
-    recurse: no
-    owner: "{{ install_user }}"
-    group: "{{ install_group }}"
-    mode: 0775
+  with_items:
+    - "{{ install_dir }}"
+    - "{{ install_sum_dir }}"
