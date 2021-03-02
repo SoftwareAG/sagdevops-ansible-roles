@@ -49,7 +49,7 @@ replacePatternInFiles() {
    local pattern=$1;
    local replacement=$2;
 
-   for file in `find ${SAG_HOME} -type f -exec grep -il "${pattern}" {} \; | grep -vE "\.log|\.jar|\.cfs"`
+   for file in `find ${SAG_HOME} -type f -exec grep -il "${pattern}" {} \; | grep -vE "\.log|\.jar|\.cfs|\.bak"`
    do
       echo "update pattern ${pattern} in ${file}"
       sed -i 's#'"${pattern}"'#'"${replacement}"'#g' ${file}
