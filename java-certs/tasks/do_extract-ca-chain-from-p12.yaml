@@ -1,0 +1,9 @@
+---
+
+  - name: convert p12 to pem
+    include_tasks: "do_convert-p12-to-pem.yaml"
+    vars:
+      extra_command_params:
+        - -cacerts
+        - -nokeys
+        - -chain
