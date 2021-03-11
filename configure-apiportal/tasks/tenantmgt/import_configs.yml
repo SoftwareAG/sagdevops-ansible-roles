@@ -50,7 +50,6 @@
     debug:
       msg: "About to run: {{ command_to_exec|join(' ') }}"
       verbosity: 1
-    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: execute command
     command:
