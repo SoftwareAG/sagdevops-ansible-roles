@@ -9,4 +9,4 @@
         name: configure-integrationserver
       vars:
         configs_action: set-jvm-params
-        is_jvm_params: "{{ process_params }}"
+        wmis_cfgparams_jvm_settings_dict: "{{ process_params }}"

@@ -1,0 +1,49 @@
+---
+
+  - name: fail if group_operation does not have expected value
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: curl_wrapper_target_uri is not defined or curl_wrapper_target_uri == ""
+
+  - name: Clear the CURL command params
+    set_fact:
+      command_to_exec: ['curl']
+
+  - name: append command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-X' ] + [ 'GET' ]"
+
+  - name: append all header params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-H' ] + [ '{{ item.key }}:{{ item.value }}' ]"
+    with_dict: "{{ curl_wrapper_headers_fields }}"
+
+  - name: append auth param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ curl_wrapper_basicauth_user }}:{{ curl_wrapper_basicauth_password }}' ]"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+    when: curl_wrapper_basicauth_user is defined and curl_wrapper_basicauth_password is defined
+
+  - name: append target URI
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '{{ curl_wrapper_target_uri }}' ]"
+
+  - name: append file saving path
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '--output' ] + [ '{{ curl_wrapper_output_path }}' ]"
+    when: curl_wrapper_output_path is defined and curl_wrapper_output_path != ""
+
+  - name: Print the command that we're going to run
+    debug:
+      msg: "About to run: {{ command_to_exec|join(' ') }}"
+
+  - name: execute command
+    command:
+      argv: "{{ command_to_exec }}"
+    register: cmd_result
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+
+  - name: Print the cmd_result to the console.
+    debug:
+      msg: "{{ cmd_result.stdout_lines | join('\n') }}"
+      verbosity: 3

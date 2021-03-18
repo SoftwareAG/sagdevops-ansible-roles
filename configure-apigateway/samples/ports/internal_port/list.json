@@ -1,0 +1,43 @@
+{
+    "listeners": [
+        {
+            "configURL": "/WmRoot/configHTTP.dsp",
+            "maxQueue": "65534",
+            "listenerType": "regularinternal",
+            "useJSSE": "true",
+            "threadPriority": "5",
+            "pkg": "WmRoot",
+            "ssl": "true",
+            "targets": "0",
+            "enabled": "false",
+            "minThread": "1",
+            "protocol": "HTTPS",
+            "password": "********************************",
+            "provider": "webMethods",
+            "alias": "1",
+            "threadPool": "true",
+            "portAlias": "InternalPort",
+            "usedThreadCount": "0",
+            "key": "HTTPSListener@7443@test.com",
+            "uniqueID": "7566d2b6474f448faf8ac40a2e103dc1",
+            "maxConnections": "5",
+            "curDelay": "0",
+            "keepAliveTimeout": "20000",
+            "listenerKey": "HTTPSListener@7443@test.com",
+            "portDescription": "Integration Server HTTPS port: 7443",
+            "internalPort": "-1",
+            "maxThread": "5",
+            "proxyHost": "test.com",
+            "suspended": "false",
+            "jsseEnabledProtocols": null,
+            "port": 7443,
+            "factoryKey": "webMethods/HTTP",
+            "idProvider": null,
+            "keyStore": "SAGKeystore",
+            "trustStore": "SAGTruststore",
+            "clientAuth": "none",
+            "stepsize": "10000",
+            "username": "Admin"
+        }
+    ]
+}

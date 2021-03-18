@@ -1,0 +1,16 @@
+[{%- if dict1 is defined and dict2 is defined  -%}
+    {%- if (dict1.keys() | symmetric_difference(dict2.keys()) | length) == 0 -%}
+        {%- set counter = [] -%}
+        {%- for key in (dict1.keys() | sort) -%}
+            {%- if dict1[key] != dict2[key]  -%}
+                {%- if counter | length > 0 -%},{%- endif -%}DICTS_VALUE_NOT_EQUAL_FORKEY_{{ key }}
+                {%- set __ = counter.append(1) -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- else -%}
+        DICTS_KEYS_NOT_EQUAL
+    {%- endif -%}
+{%- elif dict1 is not defined and dict2 is not defined -%}
+{%- else -%}
+    DICTS_DEFINED_UNDEFINED
+{%- endif -%}]

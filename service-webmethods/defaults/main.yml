@@ -6,6 +6,7 @@ service_user:
 service_group:
 service_name:
 service_type: forking
+service_envs: {}
 force_create: false
 fail_service_notfound: true
 

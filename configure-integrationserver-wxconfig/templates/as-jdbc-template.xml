@@ -6,7 +6,7 @@
         {% if wxconfig_params_jdbc.poolalias_list is defined %}
             <poolAliasList>
                 {% for wxconfig_params_jdbc_poolalias in wxconfig_params_jdbc.poolalias_list %}
-                <poolAlias alias="{{ wxconfig_params_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_params_jdbc_poolalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_params_jdbc_poolalias.destroyOnShutdown }}">
+                <poolAlias alias="{{ wxconfig_params_jdbc_poolalias.name }}" updateIfExists="{{ wxconfig_params_jdbc_poolalias.updateIfExists | default() | bool | lower }}" destroyOnShutdown="{{ wxconfig_params_jdbc_poolalias.destroyOnShutdown | default() | bool | lower }}">
                     {% if wxconfig_params_jdbc_poolalias.functionalalias_depends_list is defined and wxconfig_params_jdbc_poolalias.functionalalias_depends_list|length > 0 %}
                     <depends>
                         {% for functionalalias_depend in wxconfig_params_jdbc_poolalias.functionalalias_depends_list %}
@@ -42,7 +42,7 @@
             <functionalAliasList>
                 {% if wxconfig_params_jdbc.functionalalias_list is defined and wxconfig_params_jdbc.functionalalias_list|length > 0 %}
                     {% for wxconfig_params_jdbc_functionalalias in wxconfig_params_jdbc.functionalalias_list %}
-                    <functionalAlias alias="{{ wxconfig_params_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_params_jdbc_functionalalias.updateIfExists }}" destroyOnShutdown="{{ wxconfig_params_jdbc_functionalalias.destroyOnShutdown }}">
+                    <functionalAlias alias="{{ wxconfig_params_jdbc_functionalalias.name }}" updateIfExists="{{ wxconfig_params_jdbc_functionalalias.updateIfExists | default() | bool | lower }}" destroyOnShutdown="{{ wxconfig_params_jdbc_functionalalias.destroyOnShutdown | default() | bool | lower }}">
                         <pool>{{ wxconfig_params_jdbc_functionalalias.poolalias }}</pool>
                         <description>{{ wxconfig_params_jdbc_functionalalias.description }}</description>
 

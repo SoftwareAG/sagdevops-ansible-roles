@@ -1,8 +1,8 @@
 ---
 
 
-  - debug: var=configure_connx_params_ssl_key_path
-  - debug: var=configure_connx_params_ssl_cert_path
+  - debug: var=configure_connx_params_ssl_key_path verbosity=3
+  - debug: var=configure_connx_params_ssl_cert_path verbosity=3
 
   - name: fail if param not specified
     fail: 

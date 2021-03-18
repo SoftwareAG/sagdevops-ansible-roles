@@ -1,0 +1,12 @@
+---
+
+  - debug: var=wmis_cfgparams_extended_settings_dict verbosity=3
+
+  - name: "Update config file {{ runtime_instance_config_file }} with new extended settings"
+    lineinfile:
+      path: "{{ runtime_instance_config_file }}"
+      regexp: "^{{ item.key }}"
+      insertafter: "^#{{ item.key }}"
+      line: "{{ item.key }}={{ item.value }}"
+    with_dict: "{{ wmis_cfgparams_extended_settings_dict }}"
+    when: wmis_cfgparams_extended_settings_dict is defined and (wmis_cfgparams_extended_settings_dict|length > 0)

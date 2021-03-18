@@ -1,20 +1,20 @@
 ---
    
-  - name: Print input_file_path var
-    debug: var=input_file_path
+  - name: Print p12_input_file_path var
+    debug: var=p12_input_file_path verbosity=3
 
-  - name: Print output_file_path var
-    debug: var=output_file_path
+  - name: Print pem_output_file_path var
+    debug: var=pem_output_file_path verbosity=3
 
-  - name: fail if input_file_path not specified
+  - name: fail if p12_input_file_path not specified
     fail: 
-      msg: "input_file_path not specified...cannot do anything."
-    when: input_file_path is not defined or input_file_path == ""
+      msg: "p12_input_file_path not specified...cannot do anything."
+    when: p12_input_file_path is not defined or p12_input_file_path == ""
 
-  - name: fail if output_file_path not specified
+  - name: fail if pem_output_file_path not specified
     fail: 
-      msg: "output_file_path not specified...cannot do anything."
-    when: output_file_path is not defined or output_file_path == ""
+      msg: "pem_output_file_path not specified...cannot do anything."
+    when: pem_output_file_path is not defined or pem_output_file_path == ""
 
   - name: Clear the command params
     set_fact:
@@ -22,22 +22,27 @@
 
   - name: append command params
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ 'pkcs12' ] + [ '-nodes' ] + [ '-nocerts' ]"
+      command_to_exec: "{{ command_to_exec }} + [ 'pkcs12' ]"
 
   - name: append input file
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-in' ] + [ '{{ input_file_path }}' ]"
-    when: input_file_path is defined and input_file_path != ""
+      command_to_exec: "{{ command_to_exec }} + [ '-in' ] + [ '{{ p12_input_file_path }}' ]"
+    when: p12_input_file_path is defined and p12_input_file_path != ""
 
   - name: append input file password
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-passin' ] + [ 'pass:{{ input_file_password }}' ]"
-    when: input_file_password is defined and input_file_password != ""
+      command_to_exec: "{{ command_to_exec }} + [ '-passin' ] + [ 'pass:{{ p12_input_file_password }}' ]"
+    when: p12_input_file_password is defined and p12_input_file_password != ""
 
   - name: append output file
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-out' ] + [ '{{ output_file_path }}' ]"
-    when: output_file_path is defined and output_file_path != ""
+      command_to_exec: "{{ command_to_exec }} + [ '-out' ] + [ '{{ pem_output_file_path }}' ]"
+    when: pem_output_file_path is defined and pem_output_file_path != ""
+
+  - name: append extra command params
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + {{ extra_command_params }}"
+    when: extra_command_params is defined and extra_command_params | length > 0
 
   - name: Print the command that we're going to run
     debug:

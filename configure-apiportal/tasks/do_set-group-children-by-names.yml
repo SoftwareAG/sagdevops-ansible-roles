@@ -1,0 +1,44 @@
+---
+
+  - debug: var=apiportal_configparams_rest_groupsmgt_bynames_group_children verbosity=3
+  
+  - name: only update groups if group-association variable defined
+    block:
+      
+      - name: fail if mandatory params not specified
+        fail: 
+          msg: "A mandatory param was not defined, cannot do anything."
+        when: item is not defined
+        with_items:
+          - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_parent }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_children }}"
+          - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_operation }}"
+
+      - name: Get group ids for the parent group name
+        include_tasks: "groups/get-groups-ids-by-names.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames: 
+            - "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_parent }}"
+
+      - name: Assign var for parent group id
+        set_fact:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid: "{{ group_ids_by_names }}"
+
+      - name: Get group ids for the children group names
+        include_tasks: "groups/get-groups-ids-by-names.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames: "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_children }}"
+
+      - name: Assign var children group ids
+        set_fact:
+          apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids: "{{ group_ids_by_names }}"
+
+      - name: Execute the group assignment now we have UUIDs
+        include_tasks: "do_set-group-children-by-ids.yml"
+        vars:
+          apiportal_configparams_rest_groupsmgt_byids_group_children:
+            group_parent: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_parent_group_uuid | first }}"
+            group_children: "{{ apiportal_configparams_rest_groupsmgt_get_groups_groupnames_children_group_uuids }}"
+            group_operation: "{{ apiportal_configparams_rest_groupsmgt_bynames_group_children.group_operation }}"
+
+    when: apiportal_configparams_rest_groupsmgt_bynames_group_children is defined

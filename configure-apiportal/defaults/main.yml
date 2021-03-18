@@ -1,10 +1,21 @@
 ---
 
 webmethods_apiportal_work_dir: "{{ webmethods_install_dir }}/API_Portal/server/bin/work"
-webmethods_apiportal_postgresdata_dir: "{{ webmethods_apiportal_work_dir }}/work_postgres_s/pgworkdata"
-webmethods_apiportal_tools_dir: "{{ webmethods_apiportal_work_dir }}/work_apiportalbundle_l/tools/bin"
+webmethods_apiportal_work_postgres_dir: "{{ webmethods_apiportal_work_dir }}/work_postgres_{{ webmethods_apiportal_acc_install_size_code }}"
+webmethods_apiportal_work_apiportalbundle_dir: "{{ webmethods_apiportal_work_dir }}/work_apiportalbundle_{{ webmethods_apiportal_acc_install_size_code }}"
+
+webmethods_apiportal_postgresdata_dir: "{{ webmethods_apiportal_work_postgres_dir }}/pgworkdata"
+webmethods_apiportal_tools_dir: "{{ webmethods_apiportal_work_apiportalbundle_dir }}/tools/bin"
 webmethods_apiportal_acc_exec_dir: "{{ webmethods_install_dir }}/API_Portal/server/acc"
 webmethods_apiportal_java_home: "{{ webmethods_install_dir }}/jvm/jvm"
+
+#JVM settings
+apiportal_configparams_apiportalbundle_jvm_heap_min:
+apiportal_configparams_apiportalbundle_jvm_heap_max:
+apiportal_configparams_apiportalbundle_jvm_params: {}
+apiportal_configparams_apiportalbundle_jvm_truststore_path:
+apiportal_configparams_apiportalbundle_jvm_truststore_type:
+
 webmethods_apiportal_acc_host:
 webmethods_apiportal_acc_port:
 webmethods_apiportal_acc_user:
@@ -13,6 +24,36 @@ webmethods_apiportal_acc_command:
 
 ### large, medium, small
 webmethods_apiportal_acc_install_size:
+webmethods_apiportal_acc_install_size_code: "{{ webmethods_apiportal_acc_install_size_mapping[webmethods_apiportal_acc_install_size] }}"
+webmethods_apiportal_acc_install_size_mapping:
+  large: l
+  medium: m
+  small: s
+
+# REST settings
+apiportal_configparams_rest_base_uri: "http://localhost:18101"
+apiportal_configparams_rest_umc_base_path: "{{ apiportal_configparams_rest_base_uri }}/umc/rest"
+apiportal_configparams_rest_auth_username:
+apiportal_configparams_rest_auth_password:
+apiportal_configparams_rest_tenant: default
+
+## REST - groups management over Rest
+apiportal_configparams_rest_groupsmgt_path: "{{ apiportal_configparams_rest_umc_base_path }}/groups"
+apiportal_configparams_rest_groupsmgt_bynames_groups_in_groups:
+  - group_parent:
+    group_children: []
+  - group_parent:
+    group_children: []
+
+apiportal_configparams_rest_groupsmgt_get_groups_groupnames:
+apiportal_configparams_rest_groupsmgt_groups_in_group_uuids:
+  # group_parent:
+  # group_children: []
+apiportal_configparams_rest_groupsmgt_groups_in_group_names:
+  # group_parent:
+  # group_children: []
+
+# load balancer settings
 webmethods_apiportal_loadbalancer_fqdn:
 
 ### ssl cert
@@ -20,11 +61,123 @@ webmethods_apiportal_ssl_zip_path: ""
 webmethods_apiportal_ssl_cleanup_intermediary: true
 
 ### tenant management globals
-webmethods_apiportal_tenantmgmt_server: "localhost:18101"
-webmethods_apiportal_tenantmgmt_tenant: "default"
-webmethods_apiportal_tenantmgmt_runas_username:
-webmethods_apiportal_tenantmgmt_runas_password:
+rvar_apiportal_tenantmgmt_server: "localhost:18101"
+rvar_apiportal_tenantmgmt_tenant: "default"
+rvar_apiportal_tenantmgmt_runas_username:
+rvar_apiportal_tenantmgmt_runas_password:
 
-##### tenant management - user password update
-webmethods_apiportal_tenantmgmt_changepassword_username:
-webmethods_apiportal_tenantmgmt_changepassword_newpassword:
+##### apiportal config extracts to import
+rvar_apiportal_configs_staging_dir:
+rvar_apiportal_tenantmgmt_importconfig_filepath:
+rvar_apiportal_configs_ldap:
+  # enabled: true
+  # enable_debug: false
+  # import_user_on_login: true
+  # associate_user_groups_on_login: true
+  # synchronizing_import_groups: true
+  # synchronizing_import_parent_groups: true
+  # attribute_value_paging: true
+  # disallow_local_users: true
+  # cache_size: 35000
+  # pool_wait_time_millis: 5
+  # pool_size: 150
+  # pool_time_millis: 180
+  # skip_errors: false
+  # use_bottomup_method: false
+  # use_dn_as_guid: true
+  # truststore:
+  #   file_path: ""
+  #   password: ""
+  #   type: "JKS"
+  # connection:
+  #   id: "LDAP2"
+  #   name: "LDAP2"
+  #   url: "ldap://ad.clouddemo.saggov.local:389"
+  #   backup_url: ""
+  #   principal: "CN=Fabien Sanglier,OU=saggov,OU=users,OU=Domain_Accounts,DC=ad,DC=clouddemo,DC=saggov,DC=local"
+  #   password: "{crypted}6b97f1087a725ede395819691d2b7e88279b4e824c4e103b408e323edefeb3ba"
+  #   use_ssl: false
+  #   ssl_mode: "STARTTLS"
+  #   verify_hostnames: false
+  #   verify_certificates: false
+  #   concurrent_connections: "100"
+  #   connection_timeout_millis: 10000
+  #   read_timeout_millis: 1800000
+  #   attribute_mapping:
+  #     common:
+  #       distinguishedname: "DN"
+  #       guid: ""
+  #       objectclass: "objectClass"
+  #     group:
+  #       name: "name"
+  #       hasmember: "member"
+  #       user_defined: ""
+  #     user:
+  #       name: "sAMAccountName"
+  #       firstname: "givenName"
+  #       lastname: "sn"
+  #       email: "mail"
+  #       phone: "telephoneNumber"
+  #       picture: ""
+  #       memberof: "memberOf"
+  #       user_defined: ""
+  #   behavior:
+  #     objectclass_group: "group"
+  #     objectclass_user: "person"
+  #     search_common_base_dn: "DC=ad,DC=clouddemo,DC=saggov,DC=local"
+  #     search_groups_base_dn: "OU=groups,OU=Domain_Accounts"
+  #     search_users_base_dn: "OU=users,OU=Domain_Accounts"
+  #     search_groups_filter: "(&(objectClass=*))"
+  #     search_users_filter: "(&(sAMAccountName=*))"
+  #     search_recursion_depth: 1
+  #     search_pagesize: 1000
+  #     search_referrals: "ignore"
+
+rvar_apiportal_configs_saml:
+  # enabled: true
+  # idp_id: ""
+  # sp_id: ""
+  # idp_sso_url: ""
+  # idp_slo_url: ""
+  # binding_type: "POST"
+  # signature:
+  #   assertion_enforce: true
+  #   request_enforce: true
+  #   response_enforce: true
+  #   metadata_enforce: true
+  #   algorithm: "RSAwithSHA256"
+  # keystore:
+  #   file_path: ""
+  #   alias: ""
+  #   password: ""
+  #   type: "JKS"
+  # truststore:
+  #   file_path: ""
+  #   alias: ""
+  #   password: ""
+  #   type: "JKS"
+  # user_attributes:
+  #   firstname: ""
+  #   lastname: ""
+  #   email: ""
+  #   phone: ""
+  #   memberof: ""
+  #   user_defined: ""
+  # advanced:
+  #   login_using_dn: false
+  #   decompose_dn: false
+  #   decompose_dn_login_attribute_in_dn: "uid"
+  #   auth_context_classes:
+  #     - unspecified
+  #     - PasswordProtectedTransport
+  #     - Password
+  #     - X509
+  #     - Windows
+  #     - Kerberos
+  #   auth_context_comparisons: "minimum"
+  #   nameid_format: "unspecified"
+  #   autocreate_user_on_login: true
+  #   clock_skew_seconds: 0
+  #   assertion_lifetime_sec: 10
+  #   assertion_consumer_service_overwrite_url: ""
+  #   default_tenant: "default"

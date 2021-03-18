@@ -2,7 +2,8 @@
 
 - name: Print the params
   debug:
-    msg: "Running AWS command {{ command | default('undefined') }}"
+    msg: "Running CURL command {{ command | default('undefined') }}"
+    verbosity: 1
 
 - name: fail if command not specified
   fail: 

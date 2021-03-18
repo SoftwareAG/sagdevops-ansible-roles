@@ -4,6 +4,7 @@
     debug:
       msg:
       - "getfroms3_bucket_name: {{ getfroms3_bucket_name | default('undefined',true) }}"
+      - "getfroms3_bucket_prefix: {{ getfroms3_bucket_prefix | default('undefined',true) }}"
       - "getfroms3_bucket_path: {{ getfroms3_bucket_path | default('undefined',true) }}"
       - "getfroms3_local_path: {{ getfroms3_local_path | default('undefined',true) }}"
       - "getfroms3_local_path_create_dir_ifnotexist: {{ getfroms3_local_path_create_dir_ifnotexist | default('undefined',true) }}"
@@ -14,11 +15,40 @@
       - "getfroms3_local_path_owner_group: {{ getfroms3_local_path_owner_group | default('undefined',true) }}"
       - "getfroms3_local_path_permission: {{ getfroms3_local_path_permission | default('undefined',true) }}"
       - "getfroms3_force_download: {{ getfroms3_force_download | default('undefined',true) }}"
+      - "getfroms3_throttle: {{ getfroms3_throttle | default('undefined',true) }}"
+      verbosity: 1
       
   - name: fail if getfroms3_bucket_name not specified
     fail: 
       msg: "getfroms3_bucket_name not specified...can't do anything"
     when: getfroms3_bucket_name is not defined or getfroms3_bucket_name == ""
+
+  - name: fail if getfroms3_bucket_path not specified
+    fail: 
+      msg: "getfroms3_bucket_path not specified...can't do anything"
+    when: getfroms3_bucket_path is not defined or getfroms3_bucket_path == ""
+
+  - name: fail if getfroms3_local_path not specified
+    fail: 
+      msg: "getfroms3_local_path not specified...can't do anything"
+    when: getfroms3_local_path is not defined or getfroms3_local_path == ""
+
+  - name: Set bucket full path
+    set_fact: 
+      getfroms3_full_bucket_path: "{{ getfroms3_bucket_path }}"
+    when: getfroms3_bucket_prefix is not defined or getfroms3_bucket_prefix == ""
+
+  - name: Prepend bucket path with bucket_prefix if defined
+    set_fact: 
+      getfroms3_full_bucket_path: "{{ [getfroms3_bucket_prefix,getfroms3_bucket_path] | join('/') }}"
+    when: getfroms3_bucket_prefix is defined and getfroms3_bucket_prefix != ""
+
+  - name: cleanup bucket path
+    set_fact: 
+      getfroms3_full_bucket_path: "{{ getfroms3_full_bucket_path | regex_replace('\\/{2,}', '/') }}"
+
+  - debug: var=getfroms3_full_bucket_path verbosity=1
+  - debug: var=getfroms3_local_path verbosity=1
 
   - name: Check if getfroms3_local_path exists already
     stat: 
@@ -40,6 +70,7 @@
       - name: Print variables
         debug:
           msg: "Local path directory: {{ getfroms3_local_path | dirname }}"
+          verbosity: 2
 
       - name: Create the local path dir on the machine if it does not exist
         file:
@@ -78,13 +109,27 @@
           mode: "{{ getfroms3_local_path_create_dir_permission }}"
         when: getfroms3_local_path_create_dir_permission is defined and getfroms3_local_path_create_dir_permission != ""
         
+      - name: Create the command
+        set_fact:
+          command_to_exec:
+            - "{{ getfroms3_aws_cli_exe }}"
+            - "s3"
+            - "cp"
+            - "s3://{{ getfroms3_bucket_name }}/{{ getfroms3_full_bucket_path }}"
+            - "{{ getfroms3_local_path }}"
+  
+      - name: Print the command that we're going to run
+        debug:
+          msg: "About to run: {{ command_to_exec|join(' ') }}"
+
       - name: run AWS CLI S3 CP command
-        command: "{{ getfroms3_aws_cli_exe }} s3 cp s3://{{ getfroms3_bucket_name }}/{{ getfroms3_bucket_path }} {{ getfroms3_local_path }}"
-        args:
+        command:
+          argv: "{{ command_to_exec }}"
           chdir: "{{ ansible_env.HOME }}"
         async: "{{ getfroms3_async }}"
         poll: "{{ getfroms3_poll }}"
         register: getfroms3_sleeper
+        throttle: "{{ getfroms3_throttle }}"
 
       - name: Check status of AWS CLI S3 CP command
         async_status:
@@ -97,6 +142,7 @@
       - name: Print the job_result to the console.
         debug:
           msg: "{{ job_result.stdout_lines | last }}"
+          verbosity: 2
 
       - name: Check if getfroms3_local_path still does not exist
         stat: 

@@ -1,0 +1,10 @@
+[{%- if rest_response_getall is defined and rest_response_getall.json is defined  -%}
+    {%- for itergroupname in rest_response_filter_names -%}
+        {% set itergroupname_loop = loop %}
+        {%- for responseitem in rest_response_getall.json.groups -%}
+            {%- if responseitem.name == itergroupname -%}
+                {%- if itergroupname_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem.id }}'
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endif -%}]

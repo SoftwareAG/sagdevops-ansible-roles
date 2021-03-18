@@ -1,10 +1,10 @@
 ---
 
-  - debug: var=configure_connx_params_sqlregistry_entry_operation
-  - debug: var=configure_connx_params_sqlregistry_entry_key
-  - debug: var=configure_connx_params_sqlregistry_entry_key_data_type
-  - debug: var=configure_connx_params_sqlregistry_entry_value
-  - debug: var=configure_connx_params_sqlregistry_entry_value_issecure
+  - debug: var=configure_connx_params_sqlregistry_entry_operation verbosity=3
+  - debug: var=configure_connx_params_sqlregistry_entry_key verbosity=3
+  - debug: var=configure_connx_params_sqlregistry_entry_key_data_type verbosity=3
+  - debug: var=configure_connx_params_sqlregistry_entry_value verbosity=3
+  - debug: var=configure_connx_params_sqlregistry_entry_value_issecure verbosity=3
 
   - name: fail if param not specified
     fail: 

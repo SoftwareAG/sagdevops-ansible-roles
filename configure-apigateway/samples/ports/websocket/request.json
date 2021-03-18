@@ -1,0 +1,19 @@
+{
+    "factoryKey": "webMethods/WebSocket",
+    "listenerKey": null,
+    "listenerType": "websocket",
+    "oldPkg": null,
+    "ssl": null,
+    "certChain": "",
+    "enable": "no",
+    "port": "7777",
+    "portAlias": "WS_port",
+    "portDescription": "sdfsd",
+    "pkg": "WmRoot",
+    "bindAddress": "0.0.0.0",
+    "idleTimeout": "60000",
+    "maxQueue": "200",
+    "curDelay": null,
+    "accessMode": "Allow",
+    "ipAccessMode": "Allow"
+}

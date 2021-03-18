@@ -1,0 +1,20 @@
+---
+
+- name: Populate file
+  template:
+    src: reset_node.sh
+    dest: "{{ runtime_instance_home }}/bin/reset_node.sh"
+    mode: "0755"
+  register: "result_content_operation"
+
+- name: execute command
+  command:
+    argv:
+      - "{{ runtime_instance_home }}/bin/reset_node.sh"
+    chdir: "{{ runtime_instance_home }}/bin"
+  register: cmd_result
+
+- name: Print the cmd_result to the console.
+  debug:
+    msg: "{{ cmd_result.stdout_lines | join('\n') }}"
+    verbosity: 3

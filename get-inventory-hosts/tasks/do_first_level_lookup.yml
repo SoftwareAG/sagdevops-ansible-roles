@@ -19,7 +19,7 @@
         - "{{ inventory_pattern }}"
 
   - name: Print the all_inventory_host_items
-    debug: var=all_inventory_host_items
+    debug: var=all_inventory_host_items verbosity=3
 
   - name: Clear the output_inventory_hosts list
     set_fact:
@@ -39,4 +39,4 @@
     when: all_inventory_host_items is defined and (all_inventory_host_items|length>0) and (inventory_hosts_property is not defined or inventory_hosts_property == "") 
 
   - name: Print the final fact output_inventory_hosts
-    debug: var=output_inventory_hosts
+    debug: var=output_inventory_hosts verbosity=3

@@ -86,6 +86,7 @@
   - name: Print elasticsearch.hosts from the config
     debug:
       msg: "Looking at item: {{ kibana_config['elasticsearch.hosts'] }}"
+      verbosity: 2
 
   - name: Change kibana elasticsearch.hosts value to the list of hosts
     set_fact:

@@ -8,23 +8,18 @@
   - name: Install CCE only if it was not installed already
     block:
     
-      - name: Include tasks to fetch the install files from s3
-        import_role:
-          name: provision-with-installer-from-s3
+      - name: Fetch from s3 the install artifacts
+        include_role:
+          name: aws-wrapper
         vars:
-          provision_action: get_files_from_s3
-          webmethods_provisioning_files_download_descritors:
-            - bucket_path: "{{ webmethods_s3repo_installer_filename }}"
-              local_path: "{{ webmethods_localrepo_installer_filename }}"
+          command: get-files-from-s3
+          getfroms3_files_descriptor_list:
+            - "{{ webmethods_install_products_descriptor_list.installer }}"
+          getfroms3_throttle: "{{ rvar_install_downloads_throttle }}"
 
-      - name: Make sure the webmethods_cce_bootstrap_installer file is executable
-        file: 
-          path: "{{ webmethods_cce_bootstrap_installer_exec_dir }}/{{ webmethods_cce_bootstrap_installer }}"
-          mode: "u+rwx"
-        
       - name: Set the params initial
         set_fact:
-          install_command: ['./{{ webmethods_cce_bootstrap_installer }}']
+          install_command: ['{{ webmethods_cce_bootstrap_installer }}']
 
       - name: append webmethods_cce_bootstrap_agreement if exists
         set_fact:
@@ -80,8 +75,8 @@
           argv: "{{ install_command }}"
         args:
           chdir: "{{ webmethods_cce_bootstrap_installer_exec_dir }}"
-        async: 1000
-        poll: 0
+        async: "{{ rvar_install_async_timeout }}"
+        poll: "{{ rvar_install_async_poll }}"
         register: install_ccserver_sleeper
 
       - name: Check status of CCE installation command
@@ -89,18 +84,12 @@
           jid: "{{ install_ccserver_sleeper.ansible_job_id }}"
         register: job_result
         until: job_result.finished
-        retries: 200
-        delay: 20
+        retries: "{{ rvar_install_async_retries }}"
+        delay: "{{ rvar_install_async_delay }}"
       
       - name: Print the job_result to the console.
         debug:
           msg: "{{ job_result.stdout_lines | join('\n') }}"
-
-      - name: cleanup the install artifacts
-        import_role:
-          name: provision-with-installer-from-s3
-        vars:
-          provision_action: cleanup
 
       - name: touch to mark that it's been run
         file:

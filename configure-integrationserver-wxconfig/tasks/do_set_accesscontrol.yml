@@ -1,5 +1,6 @@
 ---
 
+  - debug: var=wxconfig_params_groups_list verbosity=3
 
   - name: Set changed flag to false if not defined
     set_fact: 
@@ -32,7 +33,7 @@
       - name: Populate wxconfig file
         template:
           src: as-accessControl-template.xml
-          dest: "{{ wxconfig_target_package_config_path }}/as-accessControl-{{ wxconfig_params_unique_groupname }}.xml"
+          dest: "{{ wxconfig_target_package_config_path }}/wxconfigs-accessControl-{{ wxconfig_params_unique_groupname | lower }}.xml"
         register: "result_wxconfig_content_operation"
 
       - name: Enable this new config in the main controller file
@@ -43,7 +44,7 @@
           line: "{{ item }}"
         register: "result_wxconfig_controller_operation"
         with_items:
-          - "wx.config.incl=as-accessControl-{{ wxconfig_params_unique_groupname }}.xml"
+          - "wx.config.incl=wxconfigs-accessControl-{{ wxconfig_params_unique_groupname | lower }}.xml"
 
       - name: Set changed flag to true if any mutating operation did change
         set_fact: 
@@ -55,3 +56,4 @@
   - name: Print the changed var
     debug:
       var: configure_integrationserver_wxconfig_set_accesscontrol_changed
+      verbosity: 2

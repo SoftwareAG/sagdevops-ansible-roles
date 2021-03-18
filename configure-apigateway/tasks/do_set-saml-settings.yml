@@ -1,0 +1,65 @@
+---
+
+  - debug: var=rvar_apigateway_saml_settings verbosity=3
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_apigateway_set_saml_settings_changed: false
+    when: configure_apigateway_set_saml_settings_changed is not defined
+
+  - name: Get current SAML config to see if we are going to change it with our configs
+    uri:
+      url: "{{ apigateway_rest_configurations_samlsso }}"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: get_existing_saml
+
+  - name: Current saml settings
+    debug: var=get_existing_saml verbosity=3
+
+  - name: Update saml settings
+    uri:
+      url: "{{ apigateway_rest_configurations_samlsso }}"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      body: "{{ rvar_apigateway_saml_settings | to_json }}"
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: "200"
+      body_format: json
+      timeout: 30
+    register: update_rest_response
+
+  - debug:
+      var: update_rest_response
+      verbosity: 3
+
+  - name: Assign json responses to compare variables
+    set_fact:
+      dict1: "{{ get_existing_saml.json }}"
+      dict2: "{{ update_rest_response.json }}"
+
+  - name: find differences between before and after
+    set_fact:
+      configs_differences: "{{ lookup('template', 'apigateway_restapi_diff_dictionaries.json.j2') }}"
+
+  - name: differences
+    debug: var=configs_differences verbosity=3
+
+  - name: Set changed flag to true if differences were detected
+    set_fact:
+      configure_apigateway_set_saml_settings_changed: "{{ configs_differences is defined and configs_differences|length > 0 }}"
+
+  - name: Print the changed var
+    debug:
+      var: configure_apigateway_set_saml_settings_changed
+      verbosity: 2

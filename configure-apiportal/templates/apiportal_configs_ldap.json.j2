@@ -1,0 +1,132 @@
+{
+  "com.aris.umc.ldap.active": "{{ configs_ldap.enabled | default() | bool | lower }}",
+  "com.aris.umc.ldap.multi.active": "false",
+  "com.aris.umc.ldap.debug": "{{ configs_ldap.enable_debug | default() | bool | lower }}",
+  "com.aris.umc.ldap.user.importOnLogin": "{{ configs_ldap.import_user_on_login | default() | bool | lower }}",
+  "com.aris.umc.ldap.attribute.memberof.resolveOnFirstLogin": "{{ configs_ldap.associate_user_groups_on_login | default() | bool | lower }}",
+  "com.aris.umc.ldap.attributes.paging.enabled": "{{ configs_ldap.attribute_value_paging | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.user.importGroups": "{{ configs_ldap.synchronizing_import_groups | default() | bool | lower }}",
+  "com.aris.umc.ldap.group.import.parent.enabled": "{{ configs_ldap.synchronizing_import_parent_groups | default() | bool | lower }}",
+  "com.aris.umc.ldap.entity.cache.size": "{{ configs_ldap.cache_size }}",
+  "com.aris.umc.ldap.sync.skipOnFault": "{{ configs_ldap.skip_errors | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.useDnAsGuid": "{{ configs_ldap.use_dn_as_guid | default() | bool | lower }}",
+  "com.aris.umc.ldap.auth.only": "{{ configs_ldap.disallow_local_users | default() | bool | lower }}",
+  "com.aris.umc.ldap.sync.members.searchBottomUp": "{{ configs_ldap.use_bottomup_method | default() | bool | lower }}",
+  "com.aris.umc.ldap.connection.concurrent.timeout": "{{ configs_ldap.pool_wait_time_millis }}",
+  "com.aris.umc.ldap.connection.pool.size": "{{ configs_ldap.pool_size }}",
+  "com.aris.umc.ldap.connection.pool.timeout": "{{ configs_ldap.pool_time_millis }}",
+{% if configs_ldap.truststore.file_content is defined and configs_ldap.truststore.file_content != "" %}
+  "com.aris.umc.ldap.ssl.truststore.location": "{{ configs_ldap.truststore.file_content | default('',true) }}",
+  "com.aris.umc.ldap.ssl.truststore.password": "{{ configs_ldap.truststore.password | default('',true) }}",
+  "com.aris.umc.ldap.ssl.truststore.type": "{{ configs_ldap.truststore.type | default('JKS',true) }}",
+{% endif %}
+  "com.aris.umc.ldap.attribute.distinguishedname": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.common.distinguishedname }}"
+  },
+  "com.aris.umc.ldap.attribute.objectclass": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.common.objectclass }}"
+  },
+  "com.aris.umc.ldap.attribute.guid": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.common.guid }}"
+  },
+  "com.aris.umc.ldap.attribute.memberof": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.memberof }}"
+  },
+  "com.aris.umc.ldap.attribute.user.email": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.email }}"
+  },
+  "com.aris.umc.ldap.attribute.user.firstname": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.firstname }}"
+  },
+  "com.aris.umc.ldap.attribute.user.lastname": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.lastname }}"
+  },
+  "com.aris.umc.ldap.attribute.user.name": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.name }}"
+  },
+  "com.aris.umc.ldap.attribute.user.phone": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.phone }}"
+  },
+  "com.aris.umc.ldap.attribute.user.picture": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.picture }}"
+  },
+  "com.aris.umc.ldap.user.attributes.userdefined": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.user.user_defined }}"
+  },
+  "com.aris.umc.ldap.attribute.group.name": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.group.name }}"
+  },
+  "com.aris.umc.ldap.attribute.hasmember": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.group.hasmember }}"
+  },
+  "com.aris.umc.ldap.group.attributes.userdefined": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.attribute_mapping.group.user_defined }}"
+  },
+  "com.aris.umc.ldap.connection.id": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.id }}"
+  },
+  "com.aris.umc.ldap.connection.name": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.name }}"
+  },
+  "com.aris.umc.ldap.url": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.url }}"
+  },
+  "com.aris.umc.ldap.backup.url": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.backup_url }}"
+  },
+  "com.aris.umc.ldap.service.pwd": "{{ configs_ldap.connection.password }}",
+  "com.aris.umc.ldap.service.user": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.principal }}"
+  },
+  "com.aris.umc.ldap.ssl": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.use_ssl | default() | bool | lower }}"
+  },
+  "com.aris.umc.ldap.ssl.certificate.verification.active": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.verify_certificates | default() | bool | lower }}"
+  },
+  "com.aris.umc.ldap.ssl.host.verification.active": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.verify_hostnames | default() | bool | lower }}"
+  },
+  "com.aris.umc.ldap.ssl.mode": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.ssl_mode }}"
+  },
+  "com.aris.umc.ldap.connection.concurrent": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.concurrent_connections }}"
+  },
+  "com.aris.umc.ldap.read.timeout": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.read_timeout_millis }}"
+  },
+  "com.aris.umc.ldap.timeout": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.connection_timeout_millis }}"
+  },
+  "com.aris.umc.ldap.filter.group": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_groups_filter }}"
+  },
+  "com.aris.umc.ldap.filter.user": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_users_filter }}"
+  },
+  "com.aris.umc.ldap.user.objectclass": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.objectclass_user }}"
+  },
+  "com.aris.umc.ldap.group.objectclass": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.objectclass_group }}"
+  },
+  "com.aris.umc.ldap.searchpath": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_common_base_dn }}"
+  },
+  "com.aris.umc.ldap.user.searchpath": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_users_base_dn }}"
+  },
+  "com.aris.umc.ldap.group.searchpath": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_groups_base_dn }}"
+  },
+  "com.aris.umc.ldap.pagesize": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_pagesize }}"
+  },
+  "com.aris.umc.ldap.recursion.depth": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_recursion_depth }}"
+  },
+  "com.aris.umc.ldap.referral": {
+    "{{ configs_ldap.connection.id | lower }}": "{{ configs_ldap.connection.behavior.search_referrals }}"
+  }
+}

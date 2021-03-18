@@ -2,8 +2,8 @@
 
   - name: Set changed flag to false if not defined
     set_fact: 
-      configure_apigateway_set_ui_ssl_changed: false
-    when: configure_apigateway_set_ui_ssl_changed is not defined
+      configure_apigateway_set_mgtui_ssl_changed: false
+    when: configure_apigateway_set_mgtui_ssl_changed is not defined
 
   - name: Set variable defaults
     set_fact: 
@@ -61,6 +61,7 @@
   - name: Print the force_change var
     debug:
       var: configure_apigateway_set_ui_ssl_force_changed
+      verbosity: 1
 
   - name: Set new ssl settings only if values are new
     block:
@@ -99,10 +100,11 @@
 
       - name: Set changed flag to true
         set_fact: 
-          configure_apigateway_set_ui_ssl_changed: true
+          configure_apigateway_set_mgtui_ssl_changed: true
 
     when: configure_apigateway_set_ui_ssl_force_changed | bool
 
   - name: Print the changed var
     debug:
-      var: configure_apigateway_set_ui_ssl_changed
+      var: configure_apigateway_set_mgtui_ssl_changed
+      verbosity: 1

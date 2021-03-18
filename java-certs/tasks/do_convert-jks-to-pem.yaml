@@ -1,0 +1,48 @@
+---
+
+  - name: Print input_file_path var
+    debug: var=input_file_path verbosity=3
+
+  - name: Print output_dir var
+    debug: var=output_dir verbosity=3
+
+  - name: Print output_file var
+    debug: var=output_file verbosity=3
+
+  - name: fail if input_file_path not specified
+    fail: 
+      msg: "input_file_path not specified...cannot do anything."
+    when: input_file_path is not defined or input_file_path == ""
+
+  - name: fail if output_dir not specified
+    fail: 
+      msg: "output_dir not specified...cannot do anything."
+    when: output_dir is not defined or output_dir == ""
+
+  - name: fail if output_file not specified
+    fail: 
+      msg: "output_file not specified...cannot do anything."
+    when: output_file is not defined or output_file == ""
+
+  - name: convert jks to p12
+    include_tasks: "do_keystore-export-key-p12.yaml"
+    vars:
+      keystore_input_file_path: "{{ input_file_path }}"
+      keystore_input_file_password: "{{ input_file_password }}"
+      keystore_input_file_type: "JKS"
+      p12_output_file_path_dir: "{{ output_dir }}"
+      p12_output_file_name: "{{ (input_file_path | basename | splitext)[0] }}.p12"
+      p12_output_file_password: "{{ input_file_password }}"
+
+  - name: convert p12 to pem
+    include_tasks: "do_convert-p12-to-pem.yaml"
+    vars:
+      p12_input_file_path: "{{ output_dir }}/{{ (input_file_path | basename | splitext)[0] }}.p12"
+      p12_input_file_password: "{{ input_file_password }}"
+      pem_output_file_path: "{{ output_dir }}/{{ output_file }}"
+
+  - name: cleanup intermediary p12 file
+    file:
+      path: "{{ output_dir }}/{{ (input_file_path | basename | splitext)[0] }}.p12"
+      state: absent
+    when: cleanup_intermediary_files | bool

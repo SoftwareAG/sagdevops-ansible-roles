@@ -1,0 +1,126 @@
+---
+
+## TODO configure_integrationserver_wxconfig_set_encrypted_values_changed --> because the encrypted values file gets renamed automatically, need to improve this to be able to use it
+
+  - debug: var=rvar_apiportal_configs_saml verbosity=3
+
+  - name: Set changed flag to false if not defined
+    set_fact: 
+      configure_apiportal_saml_changed: false
+    when: configure_apiportal_saml_changed is not defined
+
+  - name: Install configuration only if defined
+    block:
+
+      - name: fail if configs staging dir is not specified
+        fail: 
+          msg: "configs staging dir is not specified, cannot do anything."
+        when: rvar_apiportal_configs_staging_dir is not defined or rvar_apiportal_configs_staging_dir == ""
+        
+      - name: Make sure the staging dir is there
+        file:
+          path: "{{ rvar_apiportal_configs_staging_dir }}"
+          state: directory
+      
+      - name: Set a new var for saml content
+        set_fact:
+          configs_saml_merged: "{{ rvar_apiportal_configs_saml }}"
+
+########## keystore
+
+      - name: convert keystore file path into file content
+        slurp:
+          src: "{{ rvar_apiportal_configs_saml.keystore.file_path }}"
+        register: filecontent_keystore
+        when: rvar_apiportal_configs_saml.keystore.file_path is defined and rvar_apiportal_configs_saml.keystore.file_path != ""
+
+      - debug: var=filecontent_keystore verbosity=3
+      
+      - name: Save the existing group content in the var to update
+        set_fact:
+          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            keystore:
+              file_content: "{{ filecontent_keystore['content'] }}"
+        when: filecontent_keystore['content'] is defined
+
+########## truststore
+
+      - name: convert truststore file path into file content
+        slurp:
+          src: "{{ rvar_apiportal_configs_saml.truststore.file_path }}"
+        register: filecontent_truststore
+        when: rvar_apiportal_configs_saml.truststore.file_path is defined and rvar_apiportal_configs_saml.truststore.file_path != ""
+
+      - debug: var=filecontent_truststore verbosity=3
+
+      - name: Save the existing group content in the var to update
+        set_fact:
+          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            truststore:
+              file_content: "{{ filecontent_truststore['content'] }}"
+        when: filecontent_truststore['content'] is defined
+
+########## encrypt passwords
+
+      - name: Execute encrypt password for truststore password
+        include_tasks: "tenantmgt/encrypt_password.yml"
+        vars:
+          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.truststore.password }}"
+        when: rvar_apiportal_configs_saml.truststore.password is defined
+
+      - name: Save encrypted value for truststore password
+        set_fact:
+          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            truststore:
+              password: "{{ encrypted_value }}"
+        when: rvar_apiportal_configs_saml.truststore.password is defined
+
+      - name: Execute encrypt password for keystore password
+        include_tasks: "tenantmgt/encrypt_password.yml"
+        vars:
+          rvar_apiportal_password_to_encrypt: "{{ rvar_apiportal_configs_saml.keystore.password }}"
+        when: rvar_apiportal_configs_saml.keystore.password is defined
+
+      - name: Save encrypted value for connection user password
+        set_fact:
+          configs_saml_merged: "{{ configs_saml_merged | combine(new_item, recursive=true) }}"
+        vars:
+          new_item:    
+            keystore:
+              password: "{{ encrypted_value }}"
+        when: rvar_apiportal_configs_saml.keystore.password is defined
+
+########## populate configs
+
+      - name: Populate configuration with variables and put in staging dir
+        template:
+          src: apiportal_configs_saml.json.j2
+          dest: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
+        vars:
+          configs_saml: "{{ configs_saml_merged }}"
+        register: "result_content_operation"
+
+########## execute 
+
+      - name: Execute import
+        include_tasks: "tenantmgt/import_configs.yml"
+        vars:
+          rvar_apiportal_tenantmgmt_importconfig_filepath: "{{ rvar_apiportal_configs_staging_dir }}/umc_configs_saml.properties"
+
+      - name: Set changed flag to true if any mutating operation did change
+        set_fact: 
+          configure_apiportal_saml_changed: true
+        when: result_content_operation.changed == true
+
+    when: rvar_apiportal_configs_saml is defined
+
+  - name: Print the changed var
+    debug:
+      var: configure_apiportal_saml_changed
+      verbosity: 2

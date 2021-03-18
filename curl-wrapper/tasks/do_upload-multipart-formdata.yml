@@ -1,5 +1,10 @@
 ---
 
+  - name: fail if group_operation does not have expected value
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: curl_wrapper_target_uri is not defined or curl_wrapper_target_uri == ""
+
   - name: Clear the CURL command params
     set_fact:
       command_to_exec: ['curl']
@@ -8,7 +13,7 @@
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type:multipart/form-data' ]"
 
-  - name: append all form-data params
+  - name: append all header params
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-H' ] + [ '{{ item.key }}:{{ item.value }}' ]"
     with_dict: "{{ curl_wrapper_headers_fields }}"
@@ -17,7 +22,8 @@
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-u' ] + [ '{{ curl_wrapper_basicauth_user }}:{{ curl_wrapper_basicauth_password }}' ]"
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
-    
+    when: curl_wrapper_basicauth_user is defined and curl_wrapper_basicauth_password is defined
+
   - name: append all form-data params
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-F' ] + [ '{{ item.key }}={{ item.value }}' ]"
@@ -40,3 +46,4 @@
   - name: Print the cmd_result to the console.
     debug:
       msg: "{{ cmd_result.stdout_lines | join('\n') }}"
+      verbosity: 3

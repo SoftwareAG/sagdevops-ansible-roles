@@ -41,7 +41,7 @@
       all_params_secure: []
 
   - name: Print the corresponding target hosts for template {{ template }}
-    debug: var=all_hostnames
+    debug: var=all_hostnames verbosity=3
 
   - name: append hostnames to the all_params list
     set_fact:
