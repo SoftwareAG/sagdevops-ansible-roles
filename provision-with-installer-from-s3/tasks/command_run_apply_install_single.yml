@@ -62,3 +62,13 @@
       executable: "{{ webmethods_install_products_descriptor.installer.local_path  }}"
       execute_dir: "{{ webmethods_install_products_descriptor.installer.local_path | dirname }}"
       script_path: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+
+- name: Clean repo after succesfull install
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - "{{ webmethods_install_products_descriptor.script.local_path }}"
+    - "{{ webmethods_install_products_descriptor.binaries_image.local_path }}"
+    - "{{ webmethods_install_products_descriptor.installer.local_path }}"
+  when: webmethods_install_products_descriptor.clean_repo_after_install | default() | bool
