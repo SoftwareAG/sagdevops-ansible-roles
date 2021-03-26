@@ -59,5 +59,6 @@
     path: "{{ item }}"
   with_items:
     - "{{ webmethods_install_patches_descriptor.script.local_path }}"
+    - "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
     - "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
   when: webmethods_install_patches_descriptor.clean_repo_after_install | default() | bool
