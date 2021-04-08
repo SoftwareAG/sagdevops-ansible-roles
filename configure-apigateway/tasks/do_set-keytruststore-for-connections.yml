@@ -2,7 +2,7 @@
 
   - debug: var=webmethods_apigateway_keytruststore_configuration verbosity=3
   
-  - name: Update load balancer urls
+  - name: Update keystore and truststore aliases for inbound messages / outbound connections
     uri:
       url: "{{ apigateway_rest_configurations_keytruststores }}"
       method: PUT
