@@ -46,8 +46,8 @@
   vars:
     webmethods_sum_install_patches_runner:
       sum_home_dir: "{{ webmethods_install_patches_descriptor.sum_home_dir }}"
-      fixes_overinstall: "{{ webmethods_install_patches_descriptor.fixes_overinstall | default() | bool }}"
-      sum_selfupdate: "{{ webmethods_install_patches_descriptor.sum_selfupdate | default() | bool }}"
+      fixes_overinstall: "{{ webmethods_install_patches_descriptor.fixes_overinstall | default() | bool | lower }}"
+      sum_selfupdate: "{{ webmethods_install_patches_descriptor.sum_selfupdate | default() | bool | lower }}"
       execute_dir: "{{ webmethods_install_patches_descriptor.script.local_path | dirname }}"
       script_path: "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
       fixes_image_path: "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
@@ -56,4 +56,9 @@
 - name: Clean repo after succesfull install
   file:
     state: absent
-    path: "{{ webmethods_localrepo_target_dir }}/"
+    path: "{{ item }}"
+  with_items:
+    - "{{ webmethods_install_patches_descriptor.script.local_path }}"
+    - "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
+    - "{{ webmethods_install_patches_descriptor.binaries_image.local_path }}"
+  when: webmethods_install_patches_descriptor.clean_repo_after_install | default() | bool

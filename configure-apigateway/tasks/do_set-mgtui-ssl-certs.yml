@@ -25,15 +25,15 @@
       webmethods_apigateway_ui_props_https_truststore_password: ""
     when: webmethods_apigateway_ui_props_https_truststore_password is not defined
 
-  - name: check if marker file already there
-    stat: 
-      path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker"
-    register: previous_run_marker
-
   - name: Set force_change flag to false if not defined
     set_fact: 
       configure_apigateway_set_ui_ssl_force_changed: false
     when: configure_apigateway_set_ui_ssl_force_changed is not defined
+
+  - name: check if marker file already there
+    stat: 
+      path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker"
+    register: previous_run_marker
 
   - name: Generate new marker based on current passed in values, and write it to a test file
     blockinfile:
@@ -53,13 +53,10 @@
       path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker_test"
     register: new_run_marker
 
-  - set_fact:
+  - name: set change action to true if the old marker file is not there (ie. first time) or the marker files do not match
+    set_fact:
       configure_apigateway_set_ui_ssl_force_changed: "{{ previous_run_marker.stat.exists == false or new_run_marker.stat.checksum != previous_run_marker.stat.checksum }}"
-      
-  - name: Remove the new test file now we know what to do
-    file:
-      path: "{{ apigateway_ui_props_configs_dir }}/.ansible_marker_test"
-      state: absent
+    when: configure_apigateway_set_ui_ssl_force_changed | default() | bool == false
 
   - name: Print the force_change var
     debug:

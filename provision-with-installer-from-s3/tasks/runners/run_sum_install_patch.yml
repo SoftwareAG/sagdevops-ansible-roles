@@ -28,12 +28,12 @@
 
   - name: append image param if defined
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-overInstall' ] + [ '{{ webmethods_sum_install_patches_runner.fixes_overinstall | default(false,true) | bool }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-overInstall' ] + [ '{{ webmethods_sum_install_patches_runner.fixes_overinstall | default(false,true) | bool | lower }}' ]"
     when: webmethods_sum_install_patches_runner.fixes_overinstall is defined
 
   - name: append image param if defined
     set_fact:
-      command_to_exec: "{{ command_to_exec }} + [ '-selfUpdate' ] + [ '{{ webmethods_sum_install_patches_runner.sum_selfupdate | default(false,true) | bool }}' ]"
+      command_to_exec: "{{ command_to_exec }} + [ '-selfUpdate' ] + [ '{{ webmethods_sum_install_patches_runner.sum_selfupdate | default(false,true) | bool | lower }}' ]"
     when: webmethods_sum_install_patches_runner.sum_selfupdate is defined
 
   - name: Print the command that we're going to run
@@ -56,11 +56,11 @@
     until: job_result.finished
     retries: "{{ rvar_install_async_retries }}"
     delay: "{{ rvar_install_async_delay }}"
-    ignore_errors: yes
+    # ignore_errors: yes
     
   - debug: var=job_result verbosity=3
 
-  - name: Fail if return code is not 0 or 20
-    fail:
-      msg: "The command failed due to unexpected success error_code returned"
-    when: job_result.rc != 0 and job_result.rc != 20
+  # - name: Fail if return code is not 0 or 20
+  #   fail:
+  #     msg: "The command failed due to unexpected success error_code returned"
+  #   when: job_result.rc != 0 and job_result.rc != 20
