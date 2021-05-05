@@ -74,6 +74,13 @@
         - "-nodes"
         - "-nocerts"
 
+  - name: extract chain from p12 to pem
+    include_tasks: "do_extract-ca-chain-from-p12.yaml"
+    vars:
+      p12_input_file_path: "{{ httpd_certs_output_dir }}/server_key.p12"
+      p12_input_file_password: "{{ jks_input_file_password }}"
+      pem_output_file_path: "{{ httpd_certs_output_dir }}/ca_bundle_{{ (httpd_certs_output_crt_file | basename | splitext)[0] }}.pem"
+
   - name: cleanup intermediary p12 file
     file:
       path: "{{ httpd_certs_output_dir }}/server_key.p12"

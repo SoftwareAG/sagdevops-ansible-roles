@@ -25,7 +25,7 @@ webmethods_integrationserver_terracotta_license_inzip_src_path:
 ## global JVM settings
 is_jvm_heap_min: 1024
 is_jvm_heap_max: 2048
-is_jvm_params: {}
+wmis_cfgparams_jvm_settings_dict: {}
 
 ## external terracotta
 is_clustering_use_internal_db: false

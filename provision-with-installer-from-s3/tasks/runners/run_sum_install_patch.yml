@@ -49,7 +49,7 @@
     poll: "{{ rvar_install_async_poll }}"
     register: cmd_sleeper
   
-  - name: Check status for the install task
+  - name: Check status for the patching task
     async_status:
       jid: "{{ cmd_sleeper.ansible_job_id }}"
     register: job_result

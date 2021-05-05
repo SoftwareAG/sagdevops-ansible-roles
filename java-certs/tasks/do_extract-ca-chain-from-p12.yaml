@@ -1,0 +1,15 @@
+---
+
+  - name: convert p12 to pem, extracting CA bundle/chain specifically
+    include_tasks: "do_convert-p12-to-pem.yaml"
+    vars:
+      extra_command_params:
+        - -cacerts
+        - -nokeys
+        - -chain
+
+  - name: remove the cert header/footer
+    replace:
+      path: "{{ pem_output_file_path }}"
+      regexp: '^-+(BEGIN CERTIFICATE|END CERTIFICATE)-+$'
+      replace: ''
