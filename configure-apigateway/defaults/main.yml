@@ -135,9 +135,10 @@ apigateway_configparams_rest_usermgt_users:
 apigateway_configparams_rest_usermgt_groups:
   # - name: groupname1
   #   description: group description
-  #   userIds:
-  #     - "uid1"
-  #     - "uid2"
+  #   empty_user_ids: false
+  #   user_loginids_add:
+  #     - "loginid1"
+  #     - "loginid2"
 
 apigateway_configparams_rest_usermgt_accessprofiles:
   # - name: sed consequat
