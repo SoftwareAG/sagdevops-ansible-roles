@@ -19,7 +19,7 @@
   - debug: var=rest_response_group_ids verbosity=3
 
   - name: Get the internal user ids that belong to the group, based on the login ids passed in
-    include_tasks: "groups/get-users-ids-by-loginids.yml"
+    include_tasks: "users/get-users-ids-by-loginids.yml"
     vars:
       apigateway_configparams_rest_usermgt_user_loginids: "{{ apigateway_configparams_rest_usermgt_group_single.user_loginids_add }}"
 
