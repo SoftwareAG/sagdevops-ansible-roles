@@ -1,8 +1,8 @@
 ---
 
-  - name: Get list of groups
+  - name: Get list of users
     uri:
-      url: "{{ apigateway_rest_groups_api }}"
+      url: "{{ apigateway_rest_users_api }}"
       method: GET
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"

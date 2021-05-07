@@ -123,15 +123,14 @@ webmethods_apigateway_ui_props_https_truststore_password:
 
 ## user mgt services payloads
 apigateway_configparams_rest_usermgt_users:
-  # - loginId: Lorem nostrud Ut
-  #   firstName: ''
-  #   lastName: velit commodo magna
+  # - loginId: something.user
+  #   firstName: 'something'
+  #   lastName: 'user'
   #   emailAddresses:
-  #   - cupidatat
-  #   - quis nostrud
+  #     - something@email.com
   #   allowDigestAuth: true
   #   active: true
-  #   language: commodo
+  #   language: english
 
 apigateway_configparams_rest_usermgt_groups:
   # - name: groupname1

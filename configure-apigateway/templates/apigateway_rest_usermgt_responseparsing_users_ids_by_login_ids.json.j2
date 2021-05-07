@@ -1,0 +1,10 @@
+[{%- if rest_response_getall is defined and rest_response_getall.json is defined  -%}
+    {%- for filtername in rest_response_filter_names -%}
+        {% set filtername_loop = loop %}
+        {%- for responseitem in rest_response_getall.json.users -%}
+            {%- if responseitem.loginId == filtername -%}
+                {%- if filtername_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem.id }}'
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endif -%}]

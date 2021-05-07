@@ -3,10 +3,10 @@
   - debug: var=apigateway_configparams_rest_usermgt_user_single verbosity=3
 
   - name: First, get the user ids based on the input names (returned in var rest_response_user_ids)
-    include_tasks: "users/get-users-ids-by-names.yml"
+    include_tasks: "users/get-users-ids-by-loginids.yml"
     vars:
-      apigateway_configparams_rest_usermgt_user_names: 
-        - "{{ apigateway_configparams_rest_usermgt_user_single.name }}"
+      apigateway_configparams_rest_usermgt_user_loginids: 
+        - "{{ apigateway_configparams_rest_usermgt_user_single.loginId }}"
 
   - name: Update the existing user if it existed
     block:
