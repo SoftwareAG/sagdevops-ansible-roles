@@ -1,9 +1,16 @@
 ---
 
-  - debug: var=webmethods_apigateway_loadbalancers_http_urls verbosity=3
-  - debug: var=webmethods_apigateway_loadbalancers_https_urls verbosity=3
-  - debug: var=webmethods_apigateway_loadbalancers_websocket_urls verbosity=3
-  - debug: var=webmethods_apigateway_loadbalancers_webapp_url verbosity=3
+  - name: Set variable defaults
+    set_fact: 
+      webmethods_apigateway_loadbalancer_request_body:
+        httpUrls: "{{ webmethods_apigateway_loadbalancers_http_urls | default([]) | reject('match', '^\\s*$') | list }}"
+        httpsUrls: "{{ webmethods_apigateway_loadbalancers_https_urls | default([]) | reject('match', '^\\s*$') | list }}"
+        websocketUrls: "{{ webmethods_apigateway_loadbalancers_websocket_urls | default([]) | reject('match', '^\\s*$') | list }}"
+        webAppUrl: "{{ webmethods_apigateway_loadbalancers_webapp_url | default('') }}"
+
+  - debug: var=webmethods_apigateway_loadbalancer_request_body verbosity=3
+  
+  # "{{ lookup('template', 'apigateway_restapi_loadbalancer.json.j2') }}"
 
   - name: Update load balancer urls
     uri:
@@ -12,7 +19,7 @@
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
-      body: "{{ lookup('template', 'apigateway_restapi_loadbalancer.json.j2') }}"
+      body: "{{ webmethods_apigateway_loadbalancer_request_body | default({}) | to_json }}"
       force_basic_auth: yes
       validate_certs: false
       status_code: "200"
