@@ -55,6 +55,10 @@
     replace: "{{ item.1.local_path }}"
   with_indexed_items: "{{ webmethods_install_products_descriptor.licenses }}"
 
+- name: Print runtime script file content
+  debug:
+    var: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+
 - name: run the install
   include_tasks: "runners/run_installer.yml"
   vars:
