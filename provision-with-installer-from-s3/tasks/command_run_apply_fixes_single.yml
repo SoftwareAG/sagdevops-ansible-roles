@@ -45,7 +45,7 @@
   debug:
     var: item
   with_file:
-    - "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+    - "{{ webmethods_install_patches_descriptor.script.local_path }}.runtime"
 
 - name: run the install
   include_tasks: "runners/run_sum_install_patch.yml"
