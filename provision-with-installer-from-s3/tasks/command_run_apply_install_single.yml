@@ -57,7 +57,9 @@
 
 - name: Print runtime script file content
   debug:
-    var: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+    var: item
+  with_file:
+    - "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
 
 - name: run the install
   include_tasks: "runners/run_installer.yml"
