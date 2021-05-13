@@ -56,7 +56,6 @@
     until: job_result.finished
     retries: "{{ rvar_install_async_retries }}"
     delay: "{{ rvar_install_async_delay }}"
-    # ignore_errors: yes
     
   - debug: var=job_result verbosity=3
 
