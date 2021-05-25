@@ -77,7 +77,7 @@ apigateway_rest_promotionmgt_stages: "{{ apigateway_rest_base_path }}/stages"
 apigateway_rest_promotionmgt_rollbacks: "{{ apigateway_rest_base_path }}/rollback"
 
 # Archive management (imports, exports)
-apigateway_rest_archives: "{{ apigateway_rest_base_path }}//archive"
+apigateway_rest_archives: "{{ apigateway_rest_base_path }}/archive"
 
 #POST:
 # {"factoryKey":"webMethods/HTTPS","listenerKey":null,"oldPkg":null,"listenerType":null,"ssl":"true","certChain":"","enable":"no","port":"5443","portAlias":"SAGSecurePort","portDescription":null,"pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":null,"useJSSE":"true","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
