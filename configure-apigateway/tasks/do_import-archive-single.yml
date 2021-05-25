@@ -26,7 +26,7 @@
       curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
       curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
       curl_wrapper_multipart_formdata_fields:
-        zipFile: "{{ rvar_apigateway_archive_import_single.path }}"
+        zipFile: "@{{ rvar_apigateway_archive_import_single.path }}"
       curl_wrapper_headers_fields:
         "Accept": "application/json"
         "x-HTTP-Method-Override": "POST"
