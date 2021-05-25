@@ -55,11 +55,12 @@
     replace: "{{ item.1.local_path }}"
   with_indexed_items: "{{ webmethods_install_products_descriptor.licenses }}"
 
-- name: Print runtime script file content
-  debug:
-    var: item
-  with_file:
-    - "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+- name: Slurp runtime file for debug printing
+  slurp:
+    src: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+  register: runtime_file
+
+- debug: msg="{{ runtime_file['content'] | b64decode }}"
 
 - name: run the install
   include_tasks: "runners/run_installer.yml"
