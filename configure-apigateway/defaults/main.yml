@@ -379,5 +379,5 @@ rvar_apigateway_saml_settings: {}
 
 rvar_apigateway_archive_imports: []
   # - path: "<string>"
-  #   overwrite: true
-  #   preserveAssetState: true
+  #   overwrite: "*"
+  #   preserveAssetState: "true"

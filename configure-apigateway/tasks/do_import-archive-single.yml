@@ -29,3 +29,6 @@
         zipFile: "{{ rvar_apigateway_archive_import_single.path }}"
       curl_wrapper_headers_fields:
         "Accept": "application/json"
+        "x-HTTP-Method-Override": "POST"
+
+
