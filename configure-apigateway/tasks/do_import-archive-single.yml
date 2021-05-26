@@ -2,21 +2,6 @@
 
   - debug: var=rvar_apigateway_archive_import_single verbosity=3
 
-  # - name: Import Archive Rest call
-  #   uri:
-  #     url: "{{ apigateway_rest_archives }}?overwrite={{ rvar_apigateway_archive_import_single.overwrite | default('false',true) }}&preserveAssetState={{ rvar_apigateway_archive_import_single.preserveAssetState | default('true',true) }}"
-  #     method: POST
-  #     user: "{{ apigateway_rest_login_username }}"
-  #     password: "{{ apigateway_rest_login_password }}"
-  #     return_content: yes
-  #     src: "{{ rvar_apigateway_archive_import_single.path }}"
-  #     remote_src: yes
-  #     force_basic_auth: yes
-  #     validate_certs: false
-  #     status_code: "200"
-  #     timeout: 30
-  #   register: rest_response
-
   - name: Upload new archive to apigateway
     include_role:
       name: curl-wrapper

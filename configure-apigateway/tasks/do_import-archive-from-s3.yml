@@ -1,0 +1,31 @@
+---
+
+- debug: var=rvar_apigateway_archive_imports_s3_downloads verbosity=1
+
+- name: Downloading the archives files to import
+  import_role:
+    name: aws-wrapper
+  vars:
+    command: get-files-from-s3
+    getfroms3_files_descriptor_list: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+
+- name: Import downloaded archives
+  include_tasks: "do_import-archive-single.yml"
+  vars:
+    rvar_apigateway_archive_import_single:
+      path: "{{ download_item.local_path }}"
+      overwrite: "{{ rvar_apigateway_archive_imports_s3_downloads.overwrite }}"
+      preserveAssetState: "{{ rvar_apigateway_archive_imports_s3_downloads.preserveAssetState }}"
+  when: download_item.local_path is defined and download_item.local_path != ""
+  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+  loop_control:
+    loop_var: download_item
+
+- name: Clear the archives files at the end
+  ansible.builtin.file:
+    path: "{{ download_item.local_path }}"
+    state: absent
+  when: download_item.local_path is defined and download_item.local_path != ""
+  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+  loop_control:
+    loop_var: download_item
