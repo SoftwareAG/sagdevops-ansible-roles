@@ -1,0 +1,77 @@
+---
+
+  - debug: var=rvar_apigateway_alias_single verbosity=1
+
+  - name: First, get the alias id based on the alias names (returned in var rest_response_alias_id)
+    include_tasks: "aliases/get-alias-id-by-name.yml"
+    vars:
+      rvar_alias_name: "{{ rvar_apigateway_alias_single.name }}"
+
+  - name: Update the existing alias if it existed
+    block:
+
+      - name: get the existing alias before updating it
+        uri:
+          url: "{{ apigateway_rest_alias_api }}/{{ rest_response_alias_id }}"
+          method: GET
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_get
+      
+      - name: Print response
+        debug:
+          var: rest_response_get.json
+          verbosity: 1
+
+      - name: Merge the existing alias content with the updated content
+        set_fact:
+          rvar_apigateway_alias_single_toupdate: "{{ rest_response_get.json.alias | combine(rvar_apigateway_alias_single,recursive=True) }}"
+
+      - name: Update the existing alias
+        uri:
+          url: "{{ apigateway_rest_alias_api }}/{{ rest_response_alias_id }}"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ rvar_apigateway_alias_single_toupdate | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_update
+        
+      - name: Response for new updated alias
+        debug: var=rest_response_mutate_update verbosity=1
+
+    when: rest_response_alias_id is defined and rest_response_alias_id != ""
+
+  - name: Create a new alias if it does not exist
+    block:
+
+      - name: Create a new alias
+        uri:
+          url: "{{ apigateway_rest_alias_api }}"
+          method: POST
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ rvar_apigateway_alias_single | default({}) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_mutate_create
+
+      - name: Response for new created alias
+        debug: var=rest_response_mutate_create verbosity=1
+
+    when: rest_response_alias_id is not defined or rest_response_alias_id == ""

@@ -1,0 +1,26 @@
+---
+
+- name: Include tasks
+  include_tasks: "get-aliases.yml"
+
+- name: set empty response if it was not already defined
+  set_fact:
+    rest_response_getall:
+      json: []
+  when: rest_response_getall.json is not defined
+
+- name: Set alias name filter to parse the rest response
+  set_fact:
+    rest_response_filter_names: 
+     - "{{ rvar_alias_name }}"
+
+- name: Parse response and find the id list based on the name
+  set_fact:
+    rest_response_ids: "{{ lookup('template', 'apigateway_rest_aliases_responseparsing_id_by_name.json.j2') }}"
+
+- name: Parse response and find the id based on the name
+  set_fact:
+    rest_response_alias_id: "{{ rest_response_ids | first }}"
+
+- name: id found from the rest response
+  debug: var=rest_response_alias_id verbosity=1

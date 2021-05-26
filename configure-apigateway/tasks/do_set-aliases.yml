@@ -1,0 +1,10 @@
+---
+
+  - name: Aliases to add/update
+    debug: var=rvar_apigateway_aliases verbosity=1
+
+  - name: Include set single alias task
+    include_tasks: "do_set-alias-single.yml"
+    with_items: "{{ rvar_apigateway_aliases }}"
+    loop_control:
+      loop_var: rvar_apigateway_alias_single

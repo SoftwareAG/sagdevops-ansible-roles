@@ -15,5 +15,3 @@
       curl_wrapper_headers_fields:
         "Accept": "application/json"
         "x-HTTP-Method-Override": "POST"
-
-

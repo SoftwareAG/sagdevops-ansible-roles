@@ -41,6 +41,9 @@ apigateway_rest_urlaliases_api: "{{ apigateway_rest_base_path }}/urlaliases"
 apigateway_rest_groups_api: "{{ apigateway_rest_base_path }}/groups"
 apigateway_rest_accessprofiles_api: "{{ apigateway_rest_base_path }}/accessProfiles"
 
+# aliases
+apigateway_rest_alias_api: "{{ apigateway_rest_base_path }}/alias"
+
 # is configs
 apigateway_rest_is_baseapi: "{{ apigateway_rest_base_path }}/is"
 apigateway_rest_is_keystore: "{{ apigateway_rest_is_baseapi }}/keystore"
