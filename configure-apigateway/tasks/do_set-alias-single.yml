@@ -29,6 +29,10 @@
           var: rest_response_get.json
           verbosity: 1
 
+      - name: Create the initial update dictionary
+        set_fact:
+          rvar_apigateway_alias_single_toupdate: {}
+        
       - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
         set_fact:
           rvar_apigateway_alias_single_toupdate: "{{ rvar_apigateway_alias_single_toupdate | combine({item.key: item.value}) }}"
