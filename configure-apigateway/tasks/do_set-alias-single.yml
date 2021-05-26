@@ -29,16 +29,16 @@
           var: rest_response_get.json
           verbosity: 1
 
-      - name: Build the dict to updated, starting with the current object
-        set_fact:
-          rvar_apigateway_alias_single_toupdate: "{{ rest_response_get.json.alias }}"
-
-      - name: Overwrite the values to update over the existing object, removing the isAssociated key in the process
+      - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
         set_fact:
           rvar_apigateway_alias_single_toupdate: "{{ rvar_apigateway_alias_single_toupdate | combine({item.key: item.value}) }}"
-        when: "{{ item.key not in ['isAssociated'] }}"
-        with_dict: "{{ rvar_apigateway_alias_single }}"
+        when: "{{ item.key not in ['id','isAssociated'] }}"
+        with_dict: "{{ rest_response_get.json }}"
 
+      - name: Overwrite the values to update over the existing object
+        set_fact:
+          rvar_apigateway_alias_single_toupdate: "{{ rvar_apigateway_alias_single_toupdate | combine(rvar_apigateway_alias_single,recursive=True) }}"
+        
       - debug: var=rvar_apigateway_alias_single_toupdate verbosity=1
 
       - name: Update the existing alias
