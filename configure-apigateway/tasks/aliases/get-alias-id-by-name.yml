@@ -1,5 +1,4 @@
 ---
-
 - name: Include tasks
   include_tasks: "get-aliases.yml"
 
@@ -11,8 +10,8 @@
 
 - name: Set alias name filter to parse the rest response
   set_fact:
-    rest_response_filter_names: 
-     - "{{ rvar_alias_name }}"
+    rest_response_filter_names:
+      - "{{ rvar_alias_name }}"
 
 - name: Parse response and find the id list based on the name
   set_fact:
