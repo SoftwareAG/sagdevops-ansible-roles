@@ -385,13 +385,10 @@ rvar_apigateway_archive_imports: []
   #   overwrite: "*"
   #   preserveAssetState: "true"
 
+# note: overwrite can have various different values for overwrite: "apis,policies,policyactions,..." or "*" for overwrite all
 rvar_apigateway_archive_imports_s3_downloads: []
-  # overwrite: "*"
-  # preserveAssetState: "true"
-  # downloads_descriptor:  
-  #   - bucket_path: "<string>"
-  #     local_path: "<string>"
-  #     local_path_permission: "0644"
-  #     local_path_create_dir_ifnotexist: true
-  #     local_path_create_dir_permission: "0755"
-  #     force_download: "true"
+  # - bucket_path: "<string>"
+  #   local_path: "<string>"
+  #   overwrite: "*"
+  #   preserveAssetState: "true"
+  #   fixingMissingVersions: "true"

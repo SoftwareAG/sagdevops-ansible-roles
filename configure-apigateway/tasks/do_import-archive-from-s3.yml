@@ -2,22 +2,40 @@
 
 - debug: var=rvar_apigateway_archive_imports_s3_downloads verbosity=1
 
+- name: set some default for the download operation
+  set_fact:
+    getfroms3_downloads: []
+   
+- name: set some default for the download operation
+  set_fact:
+    getfroms3_defaults:
+      local_path_permission: "0644"
+      local_path_create_dir_ifnotexist: true
+      local_path_create_dir_permission: "0755"
+      force_download: "true"
+
+- name: set some default for the download operation
+  set_fact:
+    getfroms3_downloads: '{{ getfroms3_downloads + [ item | combine(getfroms3_defaults) ] }}'
+  with_items: "{{rvar_apigateway_archive_imports_s3_downloads|list}}"
+
 - name: Downloading the archives files to import
   import_role:
     name: aws-wrapper
   vars:
     command: get-files-from-s3
-    getfroms3_files_descriptor_list: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+    getfroms3_files_descriptor_list: "{{ getfroms3_downloads }}"
 
 - name: Import downloaded archives
   include_tasks: "do_import-archive-single.yml"
   vars:
     rvar_apigateway_archive_import_single:
       path: "{{ download_item.local_path }}"
-      overwrite: "{{ rvar_apigateway_archive_imports_s3_downloads.overwrite }}"
-      preserveAssetState: "{{ rvar_apigateway_archive_imports_s3_downloads.preserveAssetState }}"
+      overwrite: "{{ download_item.overwrite | default('',true) }}"
+      preserveAssetState: "{{ download_item.preserveAssetState | default('false',true) }}"
+      fixingMissingVersions: "{{ download_item.fixingMissingVersions | default('false',true) }}"
   when: download_item.local_path is defined and download_item.local_path != ""
-  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads }}"
   loop_control:
     loop_var: download_item
 
@@ -26,6 +44,6 @@
     path: "{{ download_item.local_path }}"
     state: absent
   when: download_item.local_path is defined and download_item.local_path != ""
-  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads.downloads_descriptor }}"
+  with_items: "{{ rvar_apigateway_archive_imports_s3_downloads }}"
   loop_control:
     loop_var: download_item
