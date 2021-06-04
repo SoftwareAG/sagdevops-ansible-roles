@@ -36,7 +36,8 @@
   - name: Print the command that we're going to run
     debug:
       msg: "About to run: {{ command_to_exec|join(' ') }}"
-
+      verbosity: 1
+      
   - name: execute command
     command:
       argv: "{{ command_to_exec }}"
