@@ -43,7 +43,6 @@
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
     register: mutate_update_portalgateway_response
     when: portalgateway_id is defined and portalgateway_id != ""
-    ignore_errors: yes
 
   - name: Response for new mutated Portal Gateway
     debug: var=mutate_update_portalgateway_response verbosity=3
@@ -64,7 +63,6 @@
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
     register: mutate_createnew_portalgateway_response
     when: portalgateway_id is not defined or portalgateway_id == ""
-    ignore_errors: yes
     
   - name: Response for new mutated Portal Gateway
     debug: var=mutate_createnew_portalgateway_response verbosity=3
