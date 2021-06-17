@@ -4,8 +4,6 @@ NODENAME=`cat /etc/hostname`
 export SAG_HOME=/opt/softwareag
 export JAVA_HOME=${SAG_HOME}/jvm/jvm
 
-/opt/softwareag/API_Portal/server
-
 # shutdown components first
 if [ -f ${SAG_HOME}/API_Portal/server/stop_api.sh ]; then
     ${SAG_HOME}/API_Portal/server/stop_api.sh
