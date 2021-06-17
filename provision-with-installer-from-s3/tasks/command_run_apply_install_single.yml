@@ -69,6 +69,18 @@
       executable: "{{ webmethods_install_products_descriptor.installer.local_path  }}"
       execute_dir: "{{ webmethods_install_products_descriptor.installer.local_path | dirname }}"
       script_path: "{{ webmethods_install_products_descriptor.script.local_path }}.runtime"
+  
+- name: Save current hostname in a file for future use (ie. in case of image creation)
+  copy:
+    dest: "{{ webmethods_install_products_descriptor.target_install_dir }}/installed_hostname"
+    content: |
+      {{ ansible_hostname }}
+
+- name: Save current FQDN in a file for future use (ie. in case of image creation)
+  copy:
+    dest: "{{ webmethods_install_products_descriptor.target_install_dir }}/installed_hostname_fqdn"
+    content: |
+      {{ ansible_fqdn }}
 
 - name: Clean repo after succesfull install
   file:
