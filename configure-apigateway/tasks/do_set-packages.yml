@@ -1,0 +1,10 @@
+---
+
+  - name: var=rvar_apigateway_packages to add/update
+    debug: var=rvar_apigateway_packages verbosity=1
+
+  - name: Include set single plan task
+    include_tasks: "do_set-packages-single.yml"
+    with_items: "{{ rvar_apigateway_packages }}"
+    loop_control:
+      loop_var: rvar_apigateway_packages_single

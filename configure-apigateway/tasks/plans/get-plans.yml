@@ -1,0 +1,20 @@
+---
+
+  - name: Get list of all plans
+    uri:
+      url: "{{ apigateway_rest_plans_api }}"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: rest_response_getall
+
+  - name: Print response
+    debug:
+      var: rest_response_getall.json
+      verbosity: 1
