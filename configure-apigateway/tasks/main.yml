@@ -3,7 +3,12 @@
 - name: Print the params
   debug:
     msg: "Running configure-apigateway with action {{ configs_action | default('undefined') }}"
-    verbosity: 1
+  when: configs_enabled | default('true',true) | bool
+
+- name: Print the params
+  debug:
+    msg: "Requested configure-apigateway with action {{ configs_action | default('undefined') }} but will not run due to configs_enabled == false"
+  when: configs_enabled | default('true',true) | bool == false
 
 - name: fail if configs_action not specified
   fail: 
@@ -12,3 +17,4 @@
 
 - name: Include tasks
   include_tasks: "do_{{ configs_action }}.yml"
+  when: configs_enabled | default('true',true) | bool
