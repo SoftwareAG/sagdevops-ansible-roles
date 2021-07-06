@@ -1,5 +1,4 @@
 ---
-
 ## Config files
 product_instance_name: "default"
 runtime_profile_home: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}"
@@ -60,7 +59,7 @@ apigateway_rest_is_ports_ipaccessmode: "{{ apigateway_rest_is_ports }}/global/ip
 
 #listenerKey="<protocol | upper case><Listener | case sensitive>@<port>"
 # Request URL: https://apigateway105-ui-ssainfra-devops.clouddemo.saggov.com/apigatewayui/apigateway/ports?listenerKey=HTTPSListener@6444&pkg=WmRoot
-# >> do the request... 
+# >> do the request...
 # >>> if unqieuID is not there, the port does not exist and it's a new one...
 # >>> if unqieuID is there, the port does exist and it's an update
 
@@ -90,7 +89,6 @@ apigateway_rest_archives: "{{ apigateway_rest_base_path }}/archive"
 # {"factoryKey":"webMethods/HTTPS","listenerKey":null,"oldPkg":null,"listenerType":null,"ssl":"true","certChain":"","enable":"no","port":"5443","portAlias":"SAGSecurePort","portDescription":null,"pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":null,"useJSSE":"true","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
 # PUT:
 # {"factoryKey":"webMethods/HTTP","listenerKey":"HTTPSListener@5443","oldPkg":"WmRoot","listenerType":"Regular","ssl":"true","certChain":"","enable":"no","port":5443,"portAlias":"SAGSecurePort","portDescription":"Integration Server HTTPS port: 5443","pkg":"WmRoot","bindAddress":null,"maxQueue":"200","keepAliveTimeout":"20000","threadPool":"true","minThread":"1","maxThread":"5","threadPriority":"5","curDelay":"0","useJSSE":"yes","clientAuth":"none","idProvider":"","krbJaasContext":null,"krbClientPrincipal":null,"krbClientPassword":null,"retype_krbClientPassword":null,"krbServicePrincipalForm":"username","krbServicePrincipal":null,"keyStore":"SAGKeystore","alias":"1","trustStore":"SAGTruststore"}
-
 
 ####################################
 ## default config values
@@ -206,7 +204,7 @@ webmethods_apigateway_portalgateway:
   # version: "<string>"
   # stageName: "<string>"
   # published: "<boolean>"
-  # externalPortal: 
+  # externalPortal:
   #   endpointTenant: "<string>"
   #   endpointURL: "<string>"
   #   endpointUsername: "<string>"
@@ -232,40 +230,40 @@ webmethods_apigateway_promotions_stages:
 webmethods_apigateway_ports_types_internals:
   regular_https:
     factoryKey: webMethods/HTTPS
-    ssl: 'true'
-    useJSSE: 'true'
+    ssl: "true"
+    useJSSE: "true"
     pkg: WmRoot
     protocol: HTTPS
     listenerType: Regular
   regular_http:
     factoryKey: webMethods/HTTP
-    ssl: 'false'
+    ssl: "false"
     pkg: WmRoot
     protocol: HTTP
     listenerType: Regular
   external_http:
     factoryKey: webMethods/HTTP
-    ssl: 'false'
+    ssl: "false"
     pkg: WmRoot
     protocol: HTTP
     listenerType: revinvoke
   external_https:
     factoryKey: webMethods/HTTPS
-    ssl: 'true'
-    useJSSE: 'true'
+    ssl: "true"
+    useJSSE: "true"
     pkg: WmRoot
     protocol: HTTPS
     listenerType: revinvoke
   internal_http:
     factoryKey: webMethods/HTTP
-    ssl: 'false'
+    ssl: "false"
     pkg: WmRoot
     protocol: HTTP
     listenerType: regularinternal
   internal_https:
     factoryKey: webMethods/HTTPS
-    ssl: 'true'
-    useJSSE: 'true'
+    ssl: "true"
+    useJSSE: "true"
     pkg: WmRoot
     protocol: HTTPS
     listenerType: regularinternal
@@ -302,7 +300,7 @@ webmethods_apigateway_ports_list:
   #     krbServicePrincipalForm: username
   #     krbServicePrincipal:
   #     keyStore:
-  #     alias: 
+  #     alias:
   #     trustStore:
   #   access_mode:
   #     accessMode: allow
@@ -319,7 +317,8 @@ webmethods_apigateway_extended_settings_isruntime_watt_keys: {}
 webmethods_apigateway_extended_settings_coregateway_extended_keys: {}
 
 ## ldap settings
-webmethods_apigateway_ldap_settings: {}
+webmethods_apigateway_ldap_settings:
+  {}
   # ldapConfig:
   #   cacheSize: "<string>"
   #   cacheTTL: "<string>"
@@ -360,13 +359,15 @@ webmethods_apigateway_ldap_settings: {}
   #   cdsRunning: "<boolean>"
 
 ## saml settings
-rvar_apigateway_saml_groups_mapping_list: []
+rvar_apigateway_saml_groups_mapping_list:
+  []
   # - saml_group_name: <string>
   #   local_group_name: <string>
   # - saml_group_name: <string>
   #   local_group_name: <string>
 
-rvar_apigateway_saml_settings: {}
+rvar_apigateway_saml_settings:
+  {}
   # saml_enabled: "<boolean>"
   # saml_redirect: "/saml/sso/login"
   # saml_sp_id: "<string>"
@@ -384,15 +385,58 @@ rvar_apigateway_saml_settings: {}
   # saml_encrypkey_alias: "<string>"
   # saml_encrypkey_pwd: "<string>"
 
-rvar_apigateway_archive_imports: []
+rvar_apigateway_archive_imports:
+  []
   # - path: "<string>"
   #   overwrite: "*"
   #   preserveAssetState: "true"
 
 # note: overwrite can have various different values for overwrite: "apis,policies,policyactions,..." or "*" for overwrite all
-rvar_apigateway_archive_imports_s3_downloads: []
+rvar_apigateway_archive_imports_s3_downloads:
+  []
   # - bucket_path: "<string>"
   #   local_path: "<string>"
   #   overwrite: "*"
   #   preserveAssetState: "true"
   #   fixingMissingVersions: "true"
+
+# api packages to add or update
+# the following attributes with "names" will be transformed to corresponding attributes of internal ids:
+# - apisNamesVersions --> apiIds
+# - planNamesVersions --> planIds
+# - policiesNames --> policyIds
+rvar_apigateway_packages:
+  - name: package_name
+    version: "1.0"
+    deprecated: false
+    apisNamesVersions: []
+    # apiIds: []
+    planNamesVersions: []
+    # planIds: []
+    publishedPortals: []
+    policiesNames: []
+    # policyIds: []
+    active: false
+
+# api plans to add or update
+# the following attributes with "names" will be transformed to corresponding attributes of internal ids:
+# - policiesNames --> policies
+# - quota.enforcementPolicyName --> quota.enforcementPolicy
+# - packageNamesVersion --> packageIds
+rvar_apigateway_plans:
+  - name: plan_name
+    version: "1.0"
+    deprecated: false
+    isProtected: false
+    policiesNames: []
+    # policies: []
+    cost:
+      currency:
+      value:
+      duration:
+    quota:
+      enforcementPolicyName: ""
+      # enforcementPolicy: ""
+    protected: false
+    packageNamesVersion: []
+    # packageIds: []
