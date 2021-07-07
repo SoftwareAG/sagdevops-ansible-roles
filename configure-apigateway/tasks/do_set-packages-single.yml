@@ -92,5 +92,57 @@
 
       - name: Response for new created package
         debug: var=rest_response_mutate_create verbosity=1
+      
+      - name: Create the initial update dictionary
+        set_fact:
+          rest_response_object_id: "{{ rest_response_mutate_create.json.packageResponse.id }}"
 
     when: rest_response_object_id is not defined or rest_response_object_id == ""
+
+  - name: Overwrite the values to update over the existing object
+    set_fact:
+      activate_package: "rvar_apigateway_packages_single.active | default('false', true) | bool"
+
+  - name: Activate the package if flag active = true
+    block:
+
+      - name: Activate the package
+        uri:
+          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}/activate"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_activate
+
+      - name: Response for activated package
+        debug: var=rest_response_activate verbosity=1
+
+    when: activate_package == true
+
+  - name: Deactivate the package if flag active = false or does not exist
+    block:
+
+      - name: Deactivate the package
+        uri:
+          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}/deactivate"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_deactivate
+
+      - name: Response for deactivated package
+        debug: var=rest_response_deactivate verbosity=1
+
+    when: activate_package == false
