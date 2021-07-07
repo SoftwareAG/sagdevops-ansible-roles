@@ -3,8 +3,10 @@
         {% set filter_loop = loop %}
         {% if rest_response_getall.json.apiResponse is iterable and (rest_response_getall.json.apiResponse is not string and rest_response_getall.json.apiResponse is not mapping) %}
             {%- for responseitem in rest_response_getall.json.apiResponse -%}
-                {%- if responseitem.api.name == filter_item.name and responseitem.api.version == filter_item.version -%}
-                    {%- if filter_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem.api.id }}'
+                {%- if responseitem.api is defined -%}
+                    {%- if responseitem.api.name == filter_item.name and responseitem.api.version == filter_item.version -%}
+                        {%- if filter_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem.api.id }}'
+                    {%- endif -%}
                 {%- endif -%}
             {%- endfor -%}
         {%- endif -%}
