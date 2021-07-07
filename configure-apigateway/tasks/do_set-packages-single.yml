@@ -34,16 +34,22 @@
           current_package: "{{ rest_response_get.json.packageResponse }}"
           rvar_apigateway_packages_single_toupdate: {}
         
+      - name: Overwrite the values to update over the existing object
+        set_fact:
+          current_package: "{{ current_package | combine(rvar_apigateway_packages_single,recursive=True) }}"
+
+      - debug: var=current_package verbosity=1
+
+      - name: TODOs
+        debug:
+          msg: "TODO: need to lookup the 'names_version' variable values ('apisNamesVersions','planNamesVersions','policiesNames') and get their respective IDs"
+
       - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
         set_fact:
           rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine({item.key: item.value}) }}"
-        when: item.key not in ['id']
+        when: item.key not in ['id','apisNamesVersions','planNamesVersions','policiesNames']
         with_dict: "{{ current_package }}"
 
-      - name: Overwrite the values to update over the existing object
-        set_fact:
-          rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine(rvar_apigateway_packages_single,recursive=True) }}"
-        
       - debug: var=rvar_apigateway_packages_single_toupdate verbosity=1
 
       - name: Update the existing package
