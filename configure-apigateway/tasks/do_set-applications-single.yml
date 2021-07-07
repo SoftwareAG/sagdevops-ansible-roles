@@ -1,20 +1,32 @@
 ---
 
   - debug: var=rvar_apigateway_applications_single verbosity=1
+  
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apigateway_applications_single.name }}"
+      - "{{ rvar_apigateway_applications_single.version }}"
 
-  - name: First, get the id based on the filter (returned in var rest_response_object_id)
+  - name: First, get the object id based on the filter (returned in var rest_response_object_id)
     include_tasks: "applications/get-single-id.yml"
     vars:
       rvar_object_filter:
         name: "{{ rvar_apigateway_applications_single.name }}"
         version: "{{ rvar_apigateway_applications_single.version }}"
 
-  - name: Update the existing application if it existed (ie. if the rest_response_object_id is not empty)
+  - name: Assign returned object id to custom var
+    set_fact:
+      currentobj_application_id: "{{ rest_response_object_id }}"
+  
+  - name: Update the existing application if it existed (ie. if the currentobj_application_id is not empty)
     block:
 
       - name: get the existing application before updating it
         uri:
-          url: "{{ apigateway_rest_applications_api }}/{{ rest_response_object_id }}"
+          url: "{{ apigateway_rest_applications_api }}/{{ currentobj_application_id }}"
           method: GET
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -56,7 +68,7 @@
 
       - name: Update the existing application
         uri:
-          url: "{{ apigateway_rest_applications_api }}/{{ rest_response_object_id }}"
+          url: "{{ apigateway_rest_applications_api }}/{{ currentobj_application_id }}"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -72,9 +84,9 @@
       - name: Response for new updated application
         debug: var=rest_response_mutate_update verbosity=1
 
-    when: rest_response_object_id is defined and rest_response_object_id != ""
+    when: currentobj_application_id is defined and currentobj_application_id != ""
 
-  - name: Create a new application if it does not exist (ie. if the rest_response_object_id is empty)
+  - name: Create a new application if it does not exist (ie. if the currentobj_application_id is empty)
     block:
 
       - name: Create a new application
@@ -95,12 +107,48 @@
       - name: Response for new created application
         debug: var=rest_response_mutate_create verbosity=1
       
-      - name: Assign the rest_response_object_id value to be consistent with the create
+      - name: Assign the currentobj_application_id value to be consistent with the create
         set_fact:
-          rest_response_object_id: "{{ rest_response_mutate_create.json.id }}"
+          currentobj_application_id: "{{ rest_response_mutate_create.json.id }}"
 
-    when: rest_response_object_id is not defined or rest_response_object_id == ""
+    when: currentobj_application_id is not defined or currentobj_application_id == ""
 
   - debug:
-      msg: "Final Object ID added/updated: {{ rest_response_object_id }}"
+      msg: "Final Object ID added/updated: {{ currentobj_application_id }}"
       verbosity: 1
+
+########## register APIs to application
+
+  - name: Get the internal API IDs identified in custom_registerAPIsByFilter list
+    include_tasks: "apis/getall-ids.yml"
+    vars:
+      rvar_object_filters: "{{ rvar_apigateway_applications_single.custom_registerAPIsByFilter }}"
+
+  - name: Assign returned object ids to custom var
+    set_fact:
+      custom_registerAPIsIDs: "{{ rest_response_object_ids }}"
+  
+  - debug: var=custom_registerAPIsIDs verbosity=1
+
+  - name: Application API registration block
+    block:
+
+      - name: Register the APIs to the application
+        uri:
+          url: "{{ apigateway_rest_applications_api }}/{{ currentobj_application_id }}/apis"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ custom_registerAPIsIDs | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_api_registration
+        
+      - name: Response for new registered APIs
+        debug: var=rest_response_api_registration verbosity=1
+
+    when: custom_registerAPIsIDs is defined and custom_registerAPIsIDs | length > 0
