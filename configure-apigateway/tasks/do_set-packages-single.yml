@@ -99,9 +99,11 @@
 
     when: rest_response_object_id is not defined or rest_response_object_id == ""
 
-  - name: Overwrite the values to update over the existing object
+  - name: Set activate_package var
     set_fact:
       activate_package: "rvar_apigateway_packages_single.active | default('false', true) | bool"
+  
+  - debug: var=activate_package verbosity=1
 
   - name: Activate the package if flag active = true
     block:
