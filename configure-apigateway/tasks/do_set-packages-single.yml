@@ -1,20 +1,57 @@
 ---
 
   - debug: var=rvar_apigateway_packages_single verbosity=1
+  
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apigateway_packages_single.name }}"
+      - "{{ rvar_apigateway_packages_single.version }}"
 
-  - name: First, get the id based on the filter (returned in var rest_response_object_id)
-    include_tasks: "packages/get-single-package-id.yml"
+  - name: Get object id if not specified
+    block:
+
+      - name: get the id based on the filter (returned in var rest_response_object_id)
+        include_tasks: "packages/get-single-package-id.yml"
+        vars:
+          rvar_object_filter:
+            name: "{{ rvar_apigateway_packages_single.name }}"
+            version: "{{ rvar_apigateway_packages_single.version }}"
+
+      - name: Assign returned object id to custom var
+        set_fact:
+          currentobj_package_id: "{{ rest_response_object_id }}"
+
+    when: currentobj_package_id is defined and currentobj_package_id != ""
+
+######## fetch the APIs IDs
+
+  - name: Get the internal API IDs identified in custom_registerAPIsByFilter list
+    include_tasks: "apis/getall-ids.yml"
     vars:
-      rvar_object_filter:
-        name: "{{ rvar_apigateway_packages_single.name }}"
-        version: "{{ rvar_apigateway_packages_single.version }}"
+      rvar_object_filters: "{{ rvar_apigateway_packages_single.custom_registerAPIsByFilter }}"
 
-  - name: Update the existing package if it existed (ie. if the rest_response_object_id is not empty)
+  - name: Assign returned object ids to custom var
+    set_fact:
+      custom_registerAPIsIDs: 
+        apiIds: "{{ rest_response_object_ids }}"
+
+  - debug: var=custom_registerAPIsIDs verbosity=1
+
+  - name: Overwrite the values to update over the existing object
+    set_fact:
+      rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
+
+######## Add or Update
+
+  - name: Update the existing package if it existed (ie. if the currentobj_package_id is not empty)
     block:
 
       - name: get the existing package before updating it
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}"
+          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}"
           method: GET
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -42,21 +79,17 @@
 
       - debug: var=current_package verbosity=1
 
-      - name: TODOs
-        debug:
-          msg: "TODO: need to lookup the 'names_version' variable values ('apisNamesVersions','planNamesVersions','policiesNames') and get their respective IDs"
-
       - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
         set_fact:
           rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine({item.key: item.value}) }}"
-        when: item.key not in ['id','apisNamesVersions','planNamesVersions','policiesNames']
+        when: item.key not in ['id','custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
         with_dict: "{{ current_package }}"
 
       - debug: var=rvar_apigateway_packages_single_toupdate verbosity=1
 
       - name: Update the existing package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}"
+          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -72,9 +105,9 @@
       - name: Response for new updated package
         debug: var=rest_response_mutate_update verbosity=1
 
-    when: rest_response_object_id is defined and rest_response_object_id != ""
+    when: currentobj_package_id is defined and currentobj_package_id != ""
 
-  - name: Create a new package if it does not exist (ie. if the rest_response_object_id is empty)
+  - name: Create a new package if it does not exist (ie. if the currentobj_package_id is empty)
     block:
 
       - name: Create a new package
@@ -95,60 +128,13 @@
       - name: Response for new created package
         debug: var=rest_response_mutate_create verbosity=1
       
-      - name: Assign the rest_response_object_id value to be consistent with the create
+      - name: Assign the currentobj_package_id value to be consistent with the create
         set_fact:
-          rest_response_object_id: "{{ rest_response_mutate_create.json.packageResponse.id }}"
+          currentobj_package_id: "{{ rest_response_mutate_create.json.packageResponse.id }}"
 
-    when: rest_response_object_id is not defined or rest_response_object_id == ""
+    when: currentobj_package_id is not defined or currentobj_package_id == ""
 
-  - name: Set activate_package var
-    set_fact:
-      activate_package: "{{ rvar_apigateway_packages_single.active | default('false', true) | bool }}"
+
+########## activate package or not
   
-  - debug: var=activate_package verbosity=1
-
-  - name: Activate the package if flag active = true
-    block:
-
-      - name: Activate the package
-        uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}/activate"
-          method: PUT
-          user: "{{ apigateway_rest_login_username }}"
-          password: "{{ apigateway_rest_login_password }}"
-          return_content: yes
-          force_basic_auth: yes
-          validate_certs: false
-          status_code: [200, 201]
-          timeout: 30
-          headers:
-            Content-Type: application/json
-        register: rest_response_activate
-
-      - name: Response for activated package
-        debug: var=rest_response_activate verbosity=1
-
-    when: activate_package == true
-
-  - name: Deactivate the package if flag active = false or does not exist
-    block:
-
-      - name: Deactivate the package
-        uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ rest_response_object_id }}/deactivate"
-          method: PUT
-          user: "{{ apigateway_rest_login_username }}"
-          password: "{{ apigateway_rest_login_password }}"
-          return_content: yes
-          force_basic_auth: yes
-          validate_certs: false
-          status_code: [200, 201]
-          timeout: 30
-          headers:
-            Content-Type: application/json
-        register: rest_response_deactivate
-
-      - name: Response for deactivated package
-        debug: var=rest_response_deactivate verbosity=1
-
-    when: activate_package == false
+  - include_tasks: "do_set-packages-activate.yml"

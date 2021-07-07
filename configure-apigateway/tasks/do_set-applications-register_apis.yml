@@ -1,0 +1,63 @@
+---
+
+  - debug: var=rvar_apigateway_applications_single verbosity=1
+  
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apigateway_applications_single.name }}"
+      - "{{ rvar_apigateway_applications_single.version }}"
+      - "{{ rvar_apigateway_applications_single.custom_registerAPIsByFilter }}"
+
+  - name: Get object id if not specified
+    block:
+
+      - name: First, get the object id based on the filter (returned in var rest_response_object_id)
+        include_tasks: "applications/get-single-id.yml"
+        vars:
+          rvar_object_filter:
+            name: "{{ rvar_apigateway_applications_single.name }}"
+            version: "{{ rvar_apigateway_applications_single.version }}"
+
+      - name: Assign returned object id to custom var
+        set_fact:
+          currentobj_application_id: "{{ rest_response_object_id }}"
+
+    when: currentobj_application_id is defined and currentobj_application_id != ""
+
+  - name: Get the internal API IDs identified in custom_registerAPIsByFilter list
+    include_tasks: "apis/getall-ids.yml"
+    vars:
+      rvar_object_filters: "{{ rvar_apigateway_applications_single.custom_registerAPIsByFilter }}"
+
+  - name: Assign returned object ids to custom var
+    set_fact:
+      custom_registerAPIsIDs: 
+        apiIDs: "{{ rest_response_object_ids }}"
+
+  - debug: var=custom_registerAPIsIDs verbosity=1
+
+  - name: Application API registration block
+    block:
+
+      - name: Register the APIs to the application
+        uri:
+          url: "{{ apigateway_rest_applications_api }}/{{ currentobj_application_id }}/apis"
+          method: PUT
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ custom_registerAPIsIDs | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: rest_response_api_registration
+        
+      - name: Response for new registered APIs
+        debug: var=rest_response_api_registration verbosity=1
+
+    when: custom_registerAPIsIDs is defined and custom_registerAPIsIDs | length > 0

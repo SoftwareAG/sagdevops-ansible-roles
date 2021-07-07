@@ -400,20 +400,20 @@ rvar_apigateway_archive_imports_s3_downloads:
   #   fixingMissingVersions: "true"
 
 # api packages to add or update
-# the following attributes with "names" will be transformed to corresponding attributes of internal ids:
-# - apisNamesVersions --> apiIds
-# - planNamesVersions --> planIds
-# - policiesNames --> policyIds
+# the following attributes with "custom_" will be transformed to corresponding attributes of internal ids:
+# - custom_apiIdsByFilter --> apiIds
+# - custom_planIdsByFilter --> planIds
+# - custom_policyIdsByFilter --> policyIds
 rvar_apigateway_packages:
   # - name: package_name
   #   version: "1.0"
   #   deprecated: false
-  #   apisNamesVersions: []
+  #   custom_apiIdsByFilter: []
   #   # apiIds: []
-  #   planNamesVersions: []
+  #   custom_planIdsByFilter: []
   #   # planIds: []
   #   publishedPortals: []
-  #   policiesNames: []
+  #   custom_policyIdsByFilter: []
   #   # policyIds: []
   #   active: false
 

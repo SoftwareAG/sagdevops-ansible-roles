@@ -119,37 +119,4 @@
 
 ########## register APIs to application
 
-  - name: Get the internal API IDs identified in custom_registerAPIsByFilter list
-    include_tasks: "apis/getall-ids.yml"
-    vars:
-      rvar_object_filters: "{{ rvar_apigateway_applications_single.custom_registerAPIsByFilter }}"
-
-  - name: Assign returned object ids to custom var
-    set_fact:
-      custom_registerAPIsIDs: 
-        apiIDs: "{{ rest_response_object_ids }}"
-
-  - debug: var=custom_registerAPIsIDs verbosity=1
-
-  - name: Application API registration block
-    block:
-
-      - name: Register the APIs to the application
-        uri:
-          url: "{{ apigateway_rest_applications_api }}/{{ currentobj_application_id }}/apis"
-          method: PUT
-          user: "{{ apigateway_rest_login_username }}"
-          password: "{{ apigateway_rest_login_password }}"
-          return_content: yes
-          body: "{{ custom_registerAPIsIDs | to_json }}"
-          force_basic_auth: yes
-          validate_certs: false
-          status_code: [200, 201]
-          body_format: json
-          timeout: 30
-        register: rest_response_api_registration
-        
-      - name: Response for new registered APIs
-        debug: var=rest_response_api_registration verbosity=1
-
-    when: custom_registerAPIsIDs is defined and custom_registerAPIsIDs | length > 0
+  - include_tasks: "do_set-applications-register_apis.yml"
