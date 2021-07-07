@@ -118,7 +118,6 @@
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
-          body_format: json
           timeout: 30
         register: rest_response_activate
 
@@ -140,7 +139,6 @@
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
-          body_format: json
           timeout: 30
         register: rest_response_deactivate
 
