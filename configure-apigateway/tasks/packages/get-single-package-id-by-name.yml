@@ -8,10 +8,10 @@
       json: []
   when: rest_response_getall.json is not defined
 
-- name: Set alias name filter to parse the rest response
+- name: Set name filter to parse the rest response
   set_fact:
     rest_response_filter_names:
-      - "{{ rvar_alias_name }}"
+      - "{{ rvar_object_name }}"
 
 - name: Parse response and find the id list based on the name
   set_fact:
@@ -22,7 +22,7 @@
 
 - name: fail if response array has more than 1 item
   fail: 
-    msg: "The rest_response_ids array contains more than one result which will lead to un-predictable results. Investigate! (multiple aliases with the same name?)"
+    msg: "The rest_response_ids array contains more than one result which will lead to un-predictable results. Investigate!"
   when: rest_response_ids | length > 1
 
 - name: Init the response var
