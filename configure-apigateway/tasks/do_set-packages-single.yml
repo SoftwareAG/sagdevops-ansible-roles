@@ -101,7 +101,7 @@
 
   - name: Set activate_package var
     set_fact:
-      activate_package: "rvar_apigateway_packages_single.active | default('false', true) | bool"
+      activate_package: "{{ rvar_apigateway_packages_single.active | default('false', true) | bool }}"
   
   - debug: var=activate_package verbosity=1
 
