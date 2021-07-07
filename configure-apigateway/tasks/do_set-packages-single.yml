@@ -119,6 +119,8 @@
           validate_certs: false
           status_code: [200, 201]
           timeout: 30
+          headers:
+            Content-Type: application/json
         register: rest_response_activate
 
       - name: Response for activated package
@@ -140,6 +142,8 @@
           validate_certs: false
           status_code: [200, 201]
           timeout: 30
+          headers:
+            Content-Type: application/json
         register: rest_response_deactivate
 
       - name: Response for deactivated package
