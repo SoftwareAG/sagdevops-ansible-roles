@@ -2,12 +2,14 @@
 
   - debug: var=rvar_apigateway_plans_single verbosity=1
 
-  - name: First, get the id based on the name (returned in var rest_response_object_id)
-    include_tasks: "plans/get-single-plan-id-by-name.yml"
+  - name: First, get the id based on the filter (returned in var rest_response_object_id)
+    include_tasks: "plans/get-single-plan-id.yml"
     vars:
-      rvar_object_name: "{{ rvar_apigateway_plans_single.name }}"
+      rvar_object_filter:
+        name: "{{ rvar_apigateway_plans_single.name }}"
+        version: "{{ rvar_apigateway_plans_single.version }}"
 
-  - name: Update the existing plan if it existed
+  - name: Update the existing plan if it existed (ie. if the rest_response_object_id is not empty)
     block:
 
       - name: get the existing plan before updating it
@@ -31,13 +33,13 @@
 
       - name: Create the initial update dictionary
         set_fact:
-          current_plan: "{{ rest_response_get.json.plan }}"
+          current_plan: "{{ rest_response_get.json.planResponse }}"
           rvar_apigateway_plans_single_toupdate: {}
         
       - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
         set_fact:
           rvar_apigateway_plans_single_toupdate: "{{ rvar_apigateway_plans_single_toupdate | combine({item.key: item.value}) }}"
-        when: item.key not in ['id','isAssociated']
+        when: item.key not in ['id']
         with_dict: "{{ current_plan }}"
 
       - name: Overwrite the values to update over the existing object
@@ -66,7 +68,7 @@
 
     when: rest_response_object_id is defined and rest_response_object_id != ""
 
-  - name: Create a new plan if it does not exist
+  - name: Create a new plan if it does not exist (ie. if the rest_response_object_id is empty)
     block:
 
       - name: Create a new plan
