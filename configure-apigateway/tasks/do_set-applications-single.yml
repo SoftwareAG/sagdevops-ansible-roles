@@ -97,7 +97,7 @@
       
       - name: Assign the rest_response_object_id value to be consistent with the create
         set_fact:
-          rest_response_object_id: "{{ rest_response_mutate_create.json.application.id }}"
+          rest_response_object_id: "{{ rest_response_mutate_create.json.id }}"
 
     when: rest_response_object_id is not defined or rest_response_object_id == ""
 
