@@ -27,6 +27,9 @@
 
 ######## fetch the main object ID if it's not already in the payload
 
+  - debug: 
+      msg: Fetching the package ID if it's not already in the payload
+
   - name: Get object id if it's not already in the payload
     block:
 
@@ -45,6 +48,9 @@
     when: rvar_apigateway_packages_single.id is not defined or rvar_apigateway_packages_single.id == ""
 
 ######## fetch the APIs IDs if custom_apiIdsByFilter is specified
+  
+  - debug: 
+      msg: Fetching the package API IDs if identified in rvar_apigateway_packages_single.custom_apiIdsByFilter list
 
   - name: Get object id if not specified
     block:
@@ -66,6 +72,9 @@
 
 ######## fetch the PLANs IDs if custom_planIdsByFilter is specified
 
+  - debug: 
+      msg: Fetching the package Plan IDs if identified in rvar_apigateway_packages_single.custom_planIdsByFilter list
+
   - name: Get object id if not specified
     block:
 
@@ -83,7 +92,7 @@
 
 ######## Add or Update _apigateway_object_to_save
 
-  - name: Current object to save
+  - name: Current package object to save
     debug: var=_apigateway_object_to_save verbosity=1
 
   - name: Update the existing package if it has a specific ID
