@@ -47,7 +47,7 @@
 
       - debug: var=custom_registerAPIsIDs verbosity=1
 
-      - name: Merge the apiIds array into the object ot save
+      - name: Merge the apiIds array into the object to save
         set_fact:
           rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
 
@@ -81,7 +81,9 @@
         set_fact:
           current_package: "{{ rest_response_get.json.packageResponse }}"
           rvar_apigateway_packages_single_toupdate: {}
-        
+
+      - debug: var=rvar_apigateway_packages_single verbosity=1
+
       - name: Overwrite the values to update over the existing object
         set_fact:
           current_package: "{{ current_package | combine(rvar_apigateway_packages_single,recursive=True) }}"
