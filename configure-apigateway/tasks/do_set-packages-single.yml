@@ -24,7 +24,7 @@
         set_fact:
           currentobj_package_id: "{{ rest_response_object_id }}"
 
-    when: currentobj_package_id is defined and currentobj_package_id != ""
+    when: currentobj_package_id is not defined or currentobj_package_id == ""
 
 ######## fetch the APIs IDs
 
@@ -43,7 +43,7 @@
 
       - debug: var=custom_registerAPIsIDs verbosity=1
 
-      - name: Overwrite the values to update over the existing object
+      - name: Merge the apiIds array into the object ot save
         set_fact:
           rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
 

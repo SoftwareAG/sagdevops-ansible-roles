@@ -25,7 +25,7 @@
         set_fact:
           currentobj_package_id: "{{ rest_response_object_id }}"
 
-    when: currentobj_package_id is defined and currentobj_package_id != ""
+    when: currentobj_package_id is not defined or currentobj_package_id == ""
 
   - name: Set activate_package var
     set_fact:
