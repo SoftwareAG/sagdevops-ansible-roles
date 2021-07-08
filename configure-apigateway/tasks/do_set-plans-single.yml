@@ -3,7 +3,7 @@
   - debug: var=rvar_apigateway_plans_single verbosity=1
 
   - name: First, get the id based on the filter (returned in var rest_response_object_id)
-    include_tasks: "plans/get-single-plan-id.yml"
+    include_tasks: "plans/get-single-id.yml"
     vars:
       rvar_object_filter:
         name: "{{ rvar_apigateway_plans_single.name }}"
