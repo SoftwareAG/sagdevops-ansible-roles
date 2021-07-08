@@ -1,7 +1,11 @@
 ---
 
+  - debug: 
+      msg: Begin tasks in do_set-packages-single.yml
+
   - debug: var=rvar_apigateway_packages_single verbosity=1
-  
+  - debug: var=currentobj_package_id verbosity=1
+
   - name: fail if mandatory params not specified
     fail: 
       msg: "A mandatory param was not defined, cannot do anything."
@@ -143,3 +147,6 @@
 ########## activate package or not
   
   - include_tasks: "do_set-packages-activate.yml"
+
+  - debug: 
+      msg: End tasks in do_set-packages-single.yml
