@@ -13,6 +13,10 @@
     with_items:
       - "{{ rvar_apigateway_packages_single.name }}"
       - "{{ rvar_apigateway_packages_single.version }}"
+      
+  - name: Assign returned object ids to custom var
+    set_fact:
+      _apigateway_package_to_save: {}
 
   - name: Get object id if not specified
     block:
@@ -24,9 +28,16 @@
             name: "{{ rvar_apigateway_packages_single.name }}"
             version: "{{ rvar_apigateway_packages_single.version }}"
 
-      - name: Assign returned object id to custom var
+      - name: Merge the id into the object to save
         set_fact:
           currentobj_package_id: "{{ rest_response_object_id }}"
+          _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({ 'id': rest_response_object_id },recursive=True) }}"
+        when: rest_response_object_id is defined and rest_response_object_id != ""
+
+      # - name: Assign returned object id to custom var
+      #   set_fact:
+      #     _apigateway_package_to_save:
+      #       id: "{{ rest_response_object_id }}"
 
     when: currentobj_package_id is not defined or currentobj_package_id == ""
 
@@ -40,18 +51,31 @@
         vars:
           rvar_object_filters: "{{ rvar_apigateway_packages_single.custom_apiIdsByFilter }}"
 
-      - name: Assign returned object ids to custom var
+      - name: Merge the id into the object to save
         set_fact:
-          custom_registerAPIsIDs: 
-            apiIds: "{{ rest_response_object_ids }}"
+          _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({ 'apiIds': rest_response_object_ids },recursive=True) }}"
+        when: rest_response_object_ids is defined
 
-      - debug: var=custom_registerAPIsIDs verbosity=1
+      # - name: Assign returned object ids to custom var
+      #   set_fact:
+      #     _apigateway_package_to_save: 
+      #       apiIds: "{{ rest_response_object_ids }}"
 
-      - name: Merge the apiIds array into the object to save
-        set_fact:
-          rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
+      # - debug: var=custom_registerAPIsIDs verbosity=1
+
+      # - name: Merge the apiIds array into the object to save
+      #   set_fact:
+      #     rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
 
     when: rvar_apigateway_packages_single.custom_apiIdsByFilter is defined
+
+  - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
+    set_fact:
+      _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({item.key: item.value}) }}"
+    when: item.key not in ['custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
+    with_dict: "{{ rvar_apigateway_packages_single }}"
+
+  - debug: var=_apigateway_package_to_save verbosity=1
 
 ######## Add or Update
 
@@ -82,19 +106,17 @@
           current_package: "{{ rest_response_get.json.packageResponse }}"
           rvar_apigateway_packages_single_toupdate: {}
 
-      - debug: var=rvar_apigateway_packages_single verbosity=1
-
       - name: Overwrite the values to update over the existing object
         set_fact:
-          current_package: "{{ current_package | combine(rvar_apigateway_packages_single,recursive=True) }}"
+          rvar_apigateway_packages_single_toupdate: "{{ current_package | combine(_apigateway_package_to_save,recursive=True) }}"
 
       - debug: var=current_package verbosity=1
 
-      - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
-        set_fact:
-          rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine({item.key: item.value}) }}"
-        when: item.key not in ['id','custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
-        with_dict: "{{ current_package }}"
+      # - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
+      #   set_fact:
+      #     rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine({item.key: item.value}) }}"
+      #   when: item.key not in ['id','custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
+      #   with_dict: "{{ current_package }}"
 
       - debug: var=rvar_apigateway_packages_single_toupdate verbosity=1
 
@@ -128,7 +150,7 @@
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ rvar_apigateway_packages_single | default({}) | to_json }}"
+          body: "{{ _apigateway_package_to_save | default({}) | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
