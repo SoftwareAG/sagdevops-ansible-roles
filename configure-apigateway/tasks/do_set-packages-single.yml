@@ -1,10 +1,8 @@
 ---
 
-  - debug: 
-      msg: Begin tasks in do_set-packages-single.yml
+  - debug: msg=Begin tasks in do_set-packages-single.yml
 
   - debug: var=rvar_apigateway_packages_single verbosity=1
-  - debug: var=currentobj_package_id verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
@@ -14,11 +12,21 @@
       - "{{ rvar_apigateway_packages_single.name }}"
       - "{{ rvar_apigateway_packages_single.version }}"
       
-  - name: Assign returned object ids to custom var
+  - name: First create a new object-to-save object that will get built progressively
     set_fact:
-      _apigateway_package_to_save: {}
+      _apigateway_object_to_save: {}
 
-  - name: Get object id if not specified
+  - name: seconds, copy the passed in dict fields, removing the fields we don't need/want in the process
+    set_fact:
+      _apigateway_object_to_save: "{{ _apigateway_object_to_save | combine({item.key: item.value}) }}"
+    when: item.key not in ['custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
+    with_dict: "{{ rvar_apigateway_packages_single }}"
+
+  - debug: var=_apigateway_object_to_save verbosity=1
+
+######## fetch the main object ID if it's not already in the payload
+
+  - name: Get object id if it's not already in the payload
     block:
 
       - name: get the id based on the filter (returned in var rest_response_object_id)
@@ -30,18 +38,12 @@
 
       - name: Merge the id into the object to save
         set_fact:
-          currentobj_package_id: "{{ rest_response_object_id }}"
-          _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({ 'id': rest_response_object_id },recursive=True) }}"
+          _apigateway_object_to_save: "{{ _apigateway_object_to_save | combine({ 'id': rest_response_object_id },recursive=True) }}"
         when: rest_response_object_id is defined and rest_response_object_id != ""
 
-      # - name: Assign returned object id to custom var
-      #   set_fact:
-      #     _apigateway_package_to_save:
-      #       id: "{{ rest_response_object_id }}"
+    when: rvar_apigateway_packages_single.id is not defined or rvar_apigateway_packages_single.id == ""
 
-    when: currentobj_package_id is not defined or currentobj_package_id == ""
-
-######## fetch the APIs IDs
+######## fetch the APIs IDs if custom_apiIdsByFilter is specified
 
   - name: Get object id if not specified
     block:
@@ -53,38 +55,22 @@
 
       - name: Merge the id into the object to save
         set_fact:
-          _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({ 'apiIds': rest_response_object_ids },recursive=True) }}"
+          _apigateway_object_to_save: "{{ _apigateway_object_to_save | combine({ 'apiIds': rest_response_object_ids },recursive=True) }}"
         when: rest_response_object_ids is defined
-
-      # - name: Assign returned object ids to custom var
-      #   set_fact:
-      #     _apigateway_package_to_save: 
-      #       apiIds: "{{ rest_response_object_ids }}"
-
-      # - debug: var=custom_registerAPIsIDs verbosity=1
-
-      # - name: Merge the apiIds array into the object to save
-      #   set_fact:
-      #     rvar_apigateway_packages_single: "{{ rvar_apigateway_packages_single | combine(custom_registerAPIsIDs,recursive=True) }}"
 
     when: rvar_apigateway_packages_single.custom_apiIdsByFilter is defined
 
-  - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
-    set_fact:
-      _apigateway_package_to_save: "{{ _apigateway_package_to_save | combine({item.key: item.value}) }}"
-    when: item.key not in ['custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
-    with_dict: "{{ rvar_apigateway_packages_single }}"
-
-  - debug: var=_apigateway_package_to_save verbosity=1
+  - name: Current object to save
+    debug: var=_apigateway_object_to_save verbosity=1
 
 ######## Add or Update
 
-  - name: Update the existing package if it existed (ie. if the currentobj_package_id is not empty)
+  - name: Update the existing package if it has a specific ID
     block:
 
       - name: get the existing package before updating it
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}"
+          url: "{{ apigateway_rest_packages_api }}/{{ _apigateway_object_to_save.id }}"
           method: GET
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -104,30 +90,21 @@
       - name: Create the initial update dictionary
         set_fact:
           current_package: "{{ rest_response_get.json.packageResponse }}"
-          rvar_apigateway_packages_single_toupdate: {}
 
-      - name: Overwrite the values to update over the existing object
+      - name: Overwrite the current objects values with the _apigateway_object_to_save
         set_fact:
-          rvar_apigateway_packages_single_toupdate: "{{ current_package | combine(_apigateway_package_to_save,recursive=True) }}"
+          _apigateway_object_to_save: "{{ current_package | combine(_apigateway_object_to_save,recursive=True) }}"
 
-      - debug: var=current_package verbosity=1
-
-      # - name: Build the dict to updated, starting with the current object, removing the fields we don't need/want in the process
-      #   set_fact:
-      #     rvar_apigateway_packages_single_toupdate: "{{ rvar_apigateway_packages_single_toupdate | combine({item.key: item.value}) }}"
-      #   when: item.key not in ['id','custom_apiIdsByFilter','custom_planIdsByFilter','custom_policyIdsByFilter']
-      #   with_dict: "{{ current_package }}"
-
-      - debug: var=rvar_apigateway_packages_single_toupdate verbosity=1
+      - debug: var=_apigateway_object_to_save verbosity=1
 
       - name: Update the existing package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}"
+          url: "{{ apigateway_rest_packages_api }}/{{ _apigateway_object_to_save.id }}"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ rvar_apigateway_packages_single_toupdate | to_json }}"
+          body: "{{ _apigateway_object_to_save | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
@@ -138,9 +115,9 @@
       - name: Response for new updated package
         debug: var=rest_response_mutate_update verbosity=1
 
-    when: currentobj_package_id is defined and currentobj_package_id != ""
+    when: _apigateway_object_to_save.id is defined and _apigateway_object_to_save.id != ""
 
-  - name: Create a new package if it does not exist (ie. if the currentobj_package_id is empty)
+  - name: Create a new package if it does not exist (ie. if the _apigateway_object_to_save.id is empty)
     block:
 
       - name: Create a new package
@@ -150,7 +127,7 @@
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
-          body: "{{ _apigateway_package_to_save | default({}) | to_json }}"
+          body: "{{ _apigateway_object_to_save | default({}) | to_json }}"
           force_basic_auth: yes
           validate_certs: false
           status_code: [200, 201]
@@ -160,17 +137,18 @@
 
       - name: Response for new created package
         debug: var=rest_response_mutate_create verbosity=1
-      
-      - name: Assign the currentobj_package_id value to be consistent with the create
-        set_fact:
-          currentobj_package_id: "{{ rest_response_mutate_create.json.packageResponse.id }}"
 
-    when: currentobj_package_id is not defined or currentobj_package_id == ""
+      - name: Merge the created object id into _apigateway_object_to_save to be consistent
+        set_fact:
+          _apigateway_object_to_save: "{{ _apigateway_object_to_save | combine({ 'id': rest_response_mutate_create.json.packageResponse.id },recursive=True) }}"
+
+    when: _apigateway_object_to_save.id is not defined or _apigateway_object_to_save.id == ""
 
 
 ########## activate package or not
   
   - include_tasks: "do_set-packages-activate.yml"
+    vars:
+      currentobj_id: _apigateway_object_to_save.id
 
-  - debug: 
-      msg: End tasks in do_set-packages-single.yml
+  - debug: msg=End tasks in do_set-packages-single.yml

@@ -7,38 +7,15 @@
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
-      - "{{ rvar_apigateway_packages_single.name }}"
-      - "{{ rvar_apigateway_packages_single.version }}"
+      - "{{ currentobj_id }}"
       - "{{ rvar_apigateway_packages_single.active }}"
-
-  - name: Get object id if not specified
-    block:
-
-      - name: get the id based on the filter (returned in var rest_response_object_id)
-        include_tasks: "packages/get-single-package-id.yml"
-        vars:
-          rvar_object_filter:
-            name: "{{ rvar_apigateway_packages_single.name }}"
-            version: "{{ rvar_apigateway_packages_single.version }}"
-
-      - name: Assign returned object id to custom var
-        set_fact:
-          currentobj_package_id: "{{ rest_response_object_id }}"
-
-    when: currentobj_package_id is not defined or currentobj_package_id == ""
-
-  - name: Set activate_package var
-    set_fact:
-      activate_package: "{{ rvar_apigateway_packages_single.active | default('false', true) | bool }}"
-  
-  - debug: var=activate_package verbosity=1
 
   - name: Activate the package if flag active = true
     block:
 
       - name: Activate the package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}/activate"
+          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_id }}/activate"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -54,14 +31,14 @@
       - name: Response for activated package
         debug: var=rest_response_activate verbosity=1
 
-    when: activate_package == true
+    when: rvar_apigateway_packages_single.active | bool == true
 
   - name: Deactivate the package if flag active = false or does not exist
     block:
 
       - name: Deactivate the package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_package_id }}/deactivate"
+          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_id }}/deactivate"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -77,4 +54,4 @@
       - name: Response for deactivated package
         debug: var=rest_response_deactivate verbosity=1
 
-    when: activate_package == false
+    when: rvar_apigateway_packages_single.active | bool == false
