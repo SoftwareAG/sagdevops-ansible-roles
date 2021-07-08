@@ -1,6 +1,7 @@
 ---
 
-  - debug: msg=Begin tasks in do_set-packages-single.yml
+  - debug: 
+      msg: Begin tasks in do_set-packages-single.yml
 
   - debug: var=rvar_apigateway_packages_single verbosity=1
 
@@ -151,4 +152,5 @@
     vars:
       currentobj_id: _apigateway_object_to_save.id
 
-  - debug: msg=End tasks in do_set-packages-single.yml
+  - debug: 
+      msg: End tasks in do_set-packages-single.yml
