@@ -7,7 +7,7 @@
 # Return a rest_response_object_id var of type string (empty string if ID was not found)
 
 - name: Include tasks
-  include_tasks: "getall-package-ids.yml"
+  include_tasks: "getall-ids.yml"
   vars:
     rvar_object_filters:
       - "{{ rvar_object_filter }}"

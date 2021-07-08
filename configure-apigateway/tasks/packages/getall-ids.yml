@@ -8,7 +8,7 @@
 #     version: "some_version2"
 
 - name: Include tasks
-  include_tasks: "getall-plans.yml"
+  include_tasks: "getall.yml"
 
 - name: set empty response if it was not already defined
   set_fact:
@@ -25,7 +25,7 @@
 
 - name: Parse response and find the id list based on the rest_response_filters
   set_fact:
-    rest_response_object_ids: "{{ lookup('template', 'apigateway_rest_responseparsing_plans_getall_ids.json.j2') }}"
+    rest_response_object_ids: "{{ lookup('template', 'apigateway_rest_responseparsing_packages_getall_ids.json.j2') }}"
 
 - name: All IDs found from the rest response
   debug: var=rest_response_object_ids verbosity=1

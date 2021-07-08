@@ -31,7 +31,7 @@
     block:
 
       - name: get the id based on the filter (returned in var rest_response_object_id)
-        include_tasks: "packages/get-single-package-id.yml"
+        include_tasks: "packages/get-single-id.yml"
         vars:
           rvar_object_filter:
             name: "{{ rvar_apigateway_packages_single.name }}"
@@ -64,7 +64,27 @@
   - name: Current object to save
     debug: var=_apigateway_object_to_save verbosity=1
 
-######## Add or Update
+######## fetch the PLANs IDs if custom_planIdsByFilter is specified
+
+  - name: Get object id if not specified
+    block:
+
+      - name: Get the internal Plan IDs identified in custom_planIdsByFilter list
+        include_tasks: "plans/getall-ids.yml"
+        vars:
+          rvar_object_filters: "{{ rvar_apigateway_packages_single.custom_planIdsByFilter }}"
+
+      - name: Merge the id into the object to save
+        set_fact:
+          _apigateway_object_to_save: "{{ _apigateway_object_to_save | combine({ 'planIds': rest_response_object_ids },recursive=True) }}"
+        when: rest_response_object_ids is defined
+
+    when: rvar_apigateway_packages_single.custom_planIdsByFilter is defined
+
+######## Add or Update _apigateway_object_to_save
+
+  - name: Current object to save
+    debug: var=_apigateway_object_to_save verbosity=1
 
   - name: Update the existing package if it has a specific ID
     block:
