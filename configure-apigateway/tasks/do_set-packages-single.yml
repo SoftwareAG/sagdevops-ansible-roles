@@ -117,15 +117,23 @@
           var: rest_response_get.json
           verbosity: 1
 
-      - name: Create the initial update dictionary
+      - name: Save existing package response into current_package var
         set_fact:
           current_package: "{{ rest_response_get.json.packageResponse }}"
 
-      - name: Overwrite the current objects values with the _apigateway_object_to_save
+      - name: If package is active, deactivate package before edit
+        include_tasks: "do_set-packages-activate.yml"
+        vars:
+          currentobj_id: "{{ _apigateway_object_to_save.id }}"
+          activate: "false"
+        when: current_package.active | bool == true
+
+      - name: Combine current object in gateway (pre-update) with the new requested updates object _apigateway_object_to_save
         set_fact:
           _apigateway_object_to_save: "{{ current_package | combine(_apigateway_object_to_save,recursive=True) }}"
 
-      - debug: var=_apigateway_object_to_save verbosity=1
+      - name: Payload object to be used for the update call
+        debug: var=_apigateway_object_to_save verbosity=1
 
       - name: Update the existing package
         uri:
@@ -177,9 +185,11 @@
 
 ########## activate package or not
   
-  - include_tasks: "do_set-packages-activate.yml"
+  - name: activate or de-activate the package as requested in the update object
+    include_tasks: "do_set-packages-activate.yml"
     vars:
       currentobj_id: "{{ _apigateway_object_to_save.id }}"
+      activate: "{{ _apigateway_object_to_save.active | default('false',true) }}"
 
   - debug: 
       msg: End tasks in do_set-packages-single.yml

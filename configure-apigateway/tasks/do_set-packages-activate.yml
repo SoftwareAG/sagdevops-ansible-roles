@@ -1,6 +1,9 @@
 ---
+  - debug: 
+      msg: Begin tasks in do_set-packages-activate.yml
 
-  - debug: var=rvar_apigateway_packages_single verbosity=1
+  - debug: var=currentobj_id verbosity=1
+  - debug: var=activate verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
@@ -8,7 +11,7 @@
     when: item is not defined
     with_items:
       - "{{ currentobj_id }}"
-      - "{{ rvar_apigateway_packages_single.active }}"
+      - "{{ activate }}"
 
   - name: Activate the package if flag active = true
     block:
@@ -31,7 +34,7 @@
       - name: Response for activated package
         debug: var=rest_response_activate verbosity=1
 
-    when: rvar_apigateway_packages_single.active | bool == true
+    when: activate | bool == true
 
   - name: Deactivate the package if flag active = false or does not exist
     block:
@@ -54,4 +57,4 @@
       - name: Response for deactivated package
         debug: var=rest_response_deactivate verbosity=1
 
-    when: rvar_apigateway_packages_single.active | bool == false
+    when: activate | bool == false
