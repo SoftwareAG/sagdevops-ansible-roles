@@ -1,0 +1,38 @@
+---
+
+# This get the list of object IDs based on provided human-readable filter list
+# rvar_object_filters:
+#   - name: "some_name1"
+#     version: "some_version1"
+#     stageName: "some_stage1"
+#   - name: "some_name2"
+#     version: "some_version2"
+#     stageName: "some_stage2"
+
+- name: Include tasks
+  include_tasks: "getall.yml"
+
+- name: set empty response if it was not already defined
+  set_fact:
+    rest_response_getall:
+      json: []
+  when: rest_response_getall.json is not defined
+
+- name: Set filter used by the rest payload parsing
+  set_fact:
+    rest_response_filters: "{{ rvar_object_filters }}"
+
+- name: Response filters (list of dicts) to be used in the jinja template
+  debug: var=rest_response_filters verbosity=1
+
+- name: Parse response and find the id list based on the rest_response_filters
+  set_fact:
+    rest_response_object_ids: "{{ lookup('template', 'apigateway_rest_responseparsing_portalgateways_getall_ids.json.j2') }}"
+
+- name: All IDs found from the rest response
+  debug: var=rest_response_object_ids verbosity=1
+
+- name: fail if response array has more than the amount of provided filter list
+  fail: 
+    msg: "The rest_response_object_ids array contains more results that the provided filter array... Some records came back multiple time (likely objects with same name/versions). Investigate!"
+  when: rest_response_object_ids | length > rest_response_filters | length

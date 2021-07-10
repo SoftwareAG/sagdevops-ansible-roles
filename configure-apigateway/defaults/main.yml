@@ -473,3 +473,12 @@ rvar_apigateway_applications:
   #   authStrategyIds: []
   #   restrictViewAsset: false
   #   teams: []
+
+# APIs to publish
+rvar_apigateway_api_publish:
+  - custom_apiIdsByFilter:
+      name: ""
+      version: ""
+    communities: []
+    endpoints: []
+    portalGatewayId: ""

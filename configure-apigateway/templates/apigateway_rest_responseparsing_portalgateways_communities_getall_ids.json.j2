@@ -1,0 +1,15 @@
+[{%- if rest_response_getall is defined and rest_response_getall.json is defined  -%}
+    {%- for filter_item in rest_response_filters -%}
+        {% set filter_loop = loop %}
+        {%- if rest_response_getall.json.portalGatewayResponse.communities.portalCommunities is defined -%}
+            {% set rest_response_object_list = rest_response_getall.json.portalGatewayResponse.communities.portalCommunities %}
+            {% if rest_response_object_list is iterable and (rest_response_object_list is not string and rest_response_object_list is not mapping) %}
+                {%- for responseitem in rest_response_object_list -%}
+                    {%- if responseitem.name == filter_item.name -%}
+                        {%- if filter_loop.index0 > 0 -%},{%- endif -%}'{{ responseitem.id }}'
+                    {%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endif -%}]

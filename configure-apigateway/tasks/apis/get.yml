@@ -1,0 +1,29 @@
+---
+
+  - debug: var=rvar_apigateway_api_id verbosity=1
+  
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apigateway_api_id }}"
+
+  - name: Get API by id
+    uri:
+      url: "{{ apigateway_rest_apis_api }}/{{ rvar_apigateway_api_id }}"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: rest_response_get
+
+  - name: Print response
+    debug:
+      var: rest_response_get.json
+      verbosity: 1

@@ -1,0 +1,45 @@
+---
+
+  - debug: 
+      msg: Begin tasks in apis/publish.yml
+
+  - debug: var=rvar_apigateway_api_publish verbosity=1
+
+
+
+communities:
+- Excepteur
+- Duis ut esse et magna
+endpoints:
+- anim amet Ut deserunt nostrud
+- sit
+portalGatewayId: nisi reprehenderit
+
+
+
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ apiId }}"
+      - "{{ activate }}"
+
+  - name: Publish API
+    uri:
+      url: "{{ apigateway_rest_apis_api }}/{{ apiId }}/publish"
+      method: GET
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200]
+      body_format: json
+      timeout: 30
+    register: rest_response_getall
+
+  - name: Print response
+    debug:
+      var: rest_response_getall.json
+      verbosity: 1

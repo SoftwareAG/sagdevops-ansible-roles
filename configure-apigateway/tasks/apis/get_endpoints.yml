@@ -1,0 +1,16 @@
+---
+
+  - name: Get single API by ID
+    include_tasks: "get.yml"
+
+  - name: init return var with empty list
+    set_fact:
+      rest_response_gateway_endpoints: []
+
+  - name: Parse response and find the id list based on the rest_response_filters
+    set_fact:
+      rest_response_gateway_endpoints: "{{ rest_response_get.json.gatewayEndPoints }}"
+    when: rest_response_get.json.gatewayEndPoints is defined
+
+  - name: api endpoints found from the rest response
+    debug: var=rest_response_gateway_endpoints verbosity=1
