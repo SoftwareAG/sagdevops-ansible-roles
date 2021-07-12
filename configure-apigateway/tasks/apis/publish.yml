@@ -43,13 +43,13 @@
 
   - name: Create the request body object
     set_fact:
-      _api_publish_body:
+      _publish_body:
         portalGatewayId: "{{ publish_portalGatewayId }}"
         communities: "{{ publish_communityIds }}"
         endpoints: "{{ _api_gateway_endpoints }}"
 
   - name: debug final api publish body object
-    debug: var=_api_publish_body verbosity=1
+    debug: var=_publish_body verbosity=1
 
 ######## publish the api
 
@@ -60,7 +60,7 @@
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
-      body: "{{ _api_publish_body | to_json }}"
+      body: "{{ _publish_body | to_json }}"
       force_basic_auth: yes
       validate_certs: false
       status_code: [200, 201]
