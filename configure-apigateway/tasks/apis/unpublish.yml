@@ -1,0 +1,32 @@
+---
+
+  - debug: 
+      msg: Begin tasks in apis/unpublish.yml
+
+  - debug: var=apiId verbosity=1
+
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ apiId }}"
+      
+  - name: Un-Publish API
+    uri:
+      url: "{{ apigateway_rest_apis_api }}/{{ apiId }}/unpublish"
+      method: PUT
+      user: "{{ apigateway_rest_login_username }}"
+      password: "{{ apigateway_rest_login_password }}"
+      return_content: yes
+      force_basic_auth: yes
+      validate_certs: false
+      status_code: [200, 201]
+      body_format: json
+      timeout: 30
+    register: rest_response_api_unpublish
+
+  - name: Print response
+    debug:
+      var: rest_response_api_unpublish.json
+      verbosity: 1

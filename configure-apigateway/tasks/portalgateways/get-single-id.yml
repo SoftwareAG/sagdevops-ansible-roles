@@ -1,0 +1,26 @@
+---
+
+# This get a unique object IDs based on provided human-readable filter object
+# rvar_object_filter:
+#   name: "some_name1"
+#   version: "some_version1"
+#   stageName: "some_stage1"
+# Return a rest_response_object_id var of type string (empty string if ID was not found)
+
+- name: Include tasks
+  include_tasks: "getall-ids.yml"
+  vars:
+    rvar_object_filters:
+      - "{{ rvar_object_filter }}"
+
+- name: Init the response var
+  set_fact:
+    rest_response_object_id: ""
+
+- name: Parse response and find the id based on the name
+  set_fact:
+    rest_response_object_id: "{{ rest_response_object_ids | first }}"
+  when: rest_response_object_ids | length > 0
+
+- name: id found from the rest response
+  debug: var=rest_response_object_id verbosity=1

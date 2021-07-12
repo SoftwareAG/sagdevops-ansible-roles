@@ -1,0 +1,94 @@
+---
+
+  - debug: 
+      msg: Begin tasks in do_publish-packages.yml
+
+  - debug: var=rvar_apigateway_packages_publish verbosity=1
+
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_apigateway_packages_publish }}"
+
+  - name: First create a main variables that will get used for the publish call
+    set_fact:
+      _apigateway_portalGatewayId: ""
+      _apigateway_portalCommunityIds: []
+      _apigateway_packageIds: []
+
+######## fetch the portalgatewayid if lookup_portalGatewayId is specified
+
+  - debug: 
+      msg: Fetching the portalGateway ID if identified in rvar_apigateway_packages_publish.lookup_portalGatewayId
+
+  - name: Get portalGateway object id
+    block:
+
+      - include_tasks: "portalgateways/get-single-id.yml"
+        vars:
+          rvar_object_filter: "{{ rvar_apigateway_packages_publish.lookup_portalGatewayId }}"
+
+      - name: Merge the id into the request object
+        set_fact:
+          _apigateway_portalGatewayId: "{{ rest_response_object_id }}"
+        when: rest_response_object_id is defined
+
+    when: rvar_apigateway_packages_publish.lookup_portalGatewayId is defined
+
+######## fetch the Package IDs if lookup_packageIds is specified
+  
+  - debug: 
+      msg: Fetching the API Package IDs if identified in rvar_apigateway_packages_publish.lookup_packageIds list
+
+  - name: Get object id if not specified
+    block:
+
+      - name: Get the internal API Package IDs identified in lookup_packageIds list
+        include_tasks: "packages/getall-ids.yml"
+        vars:
+          rvar_object_filters: "{{ rvar_apigateway_packages_publish.lookup_packageIds }}"
+
+      - name: Merge the id into the request object
+        set_fact:
+          _apigateway_packageIds: "{{ rest_response_object_ids }}"
+        when: rest_response_object_ids is defined
+
+    when: rvar_apigateway_packages_publish.lookup_packageIds is defined
+
+######## fetch the community IDs if lookup_communityIds is specified
+  
+  - debug: 
+      msg: Fetching the community IDs if identified in rvar_apigateway_packages_publish.lookup_communityIds list
+
+  - name: Get object id if not specified
+    block:
+
+      - name: Get the internal community IDs identified in lookup_communityIds list
+        include_tasks: "portalgateways/communities/get-ids.yml"
+        vars:
+          rvar_object_filters: "{{ rvar_apigateway_packages_publish.lookup_communityIds }}"
+          rvar_apigateway_portalgateway_id: "{{ _apigateway_portalGatewayId }}"
+
+      - name: Merge the id into the request object
+        set_fact:
+          _apigateway_portalCommunityIds: "{{ rest_response_object_ids }}"
+        when: rest_response_object_ids is defined
+
+    when: rvar_apigateway_packages_publish.lookup_communityIds is defined
+
+
+########## publish multiple APIs to portal
+
+  - name: publish multiple API Packages to portal
+    include_tasks: "packages/publish.yml"
+    vars:
+      publish_portalGatewayId: "{{ _apigateway_portalGatewayId }}"
+      publish_communityIds: "{{ _apigateway_portalCommunityIds }}"
+    with_items: "{{ _apigateway_packageIds }}"
+    loop_control:
+      loop_var: publish_packageId
+
+  - debug: 
+      msg: End tasks in do_publish-packages.yml

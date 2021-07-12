@@ -1,0 +1,10 @@
+---
+
+  - name: API Packages groups to publish
+    debug: var=rvar_apigateway_packages_publish_groups verbosity=1
+
+  - name: Include publish single api package group task
+    include_tasks: "do_publish-packages.yml"
+    with_items: "{{ rvar_apigateway_packages_publish_groups }}"
+    loop_control:
+      loop_var: rvar_apigateway_packages_publish
