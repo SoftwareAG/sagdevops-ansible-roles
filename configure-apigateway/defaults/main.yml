@@ -503,3 +503,33 @@ rvar_apigateway_apis_publish_groups:
         version: ""
       - name: ""
         version: ""
+
+# Packages to publish
+# each list item will publish a list of Packages to a list of communities using the same portalGatewayId
+rvar_apigateway_packages_publish_groups:
+  - lookup_portalGatewayId:
+      name: ""
+      version: ""
+    lookup_communityIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+    lookup_packageIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+  - lookup_portalGatewayId:
+      name: ""
+      version: ""
+    lookup_communityIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+    lookup_packageIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
