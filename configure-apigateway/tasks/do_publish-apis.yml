@@ -15,7 +15,7 @@
   - name: First create a main variables that will get used for the publish call
     set_fact:
       _apigateway_portalGatewayId: ""
-      _apigateway_communityIds: []
+      _apigateway_portalCommunityIds: []
       _apigateway_apiIds: []
 
 ######## fetch the portalgatewayid if lookup_portalGatewayId is specified
@@ -40,7 +40,7 @@
 ######## fetch the APIs IDs if lookup_apiIds is specified
   
   - debug: 
-      msg: Fetching the package API IDs if identified in rvar_apigateway_apis_publish.lookup_apiIds list
+      msg: Fetching the API IDs if identified in rvar_apigateway_apis_publish.lookup_apiIds list
 
   - name: Get object id if not specified
     block:
@@ -57,10 +57,10 @@
 
     when: rvar_apigateway_apis_publish.lookup_apiIds is defined
 
-######## fetch the comunity IDs if lookup_communityIds is specified
+######## fetch the community IDs if lookup_communityIds is specified
   
   - debug: 
-      msg: Fetching the package API IDs if identified in rvar_apigateway_apis_publish.lookup_communityIds list
+      msg: Fetching the community IDs if identified in rvar_apigateway_apis_publish.lookup_communityIds list
 
   - name: Get object id if not specified
     block:
@@ -69,28 +69,23 @@
         include_tasks: "portalgateways/communities/get-ids.yml"
         vars:
           rvar_object_filters: "{{ rvar_apigateway_apis_publish.lookup_communityIds }}"
+          rvar_apigateway_portalgateway_id: "{{ _apigateway_portalGatewayId }}"
 
       - name: Merge the id into the request object
         set_fact:
-          _apigateway_communityIds: "{{ rest_response_object_ids }}"
+          _apigateway_portalCommunityIds: "{{ rest_response_object_ids }}"
         when: rest_response_object_ids is defined
 
     when: rvar_apigateway_apis_publish.lookup_communityIds is defined
 
 
 ########## publish multiple APIs to portal
-  
-  - name: First create a main variables that will get used for the publish call
-    set_fact:
-      _apigateway_publish_info:
-        portalGatewayId: "{{ _apigateway_portalGatewayId }}"
-        communities: "{{ _apigateway_communityIds }}"
 
   - name: publish multiple APIs to portal
     include_tasks: "apis/publish.yml"
     vars:
       api_publish_portalGatewayId: "{{ _apigateway_portalGatewayId }}"
-      api_publish_communityIds: "{{ _apigateway_communityIds }}"
+      api_publish_communityIds: "{{ _apigateway_portalCommunityIds }}"
     with_items: "{{ _apigateway_apiIds }}"
     loop_control:
       loop_var: api_publish_apiId

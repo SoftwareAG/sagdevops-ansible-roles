@@ -10,6 +10,8 @@
       msg: Begin tasks in apis/publish.yml
 
   - debug: var=api_publish_apiId verbosity=1
+  - debug: var=api_publish_portalGatewayId verbosity=1
+  - debug: var=api_publish_communityIds verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
@@ -34,6 +36,8 @@
     set_fact:
       _apigateway_endpoints: "{{ rest_response_object.gatewayEndPoints | default([],true) }}"
     when: rest_response_object is defined
+
+  - debug: var=_apigateway_endpoints verbosity=1
 
 ######## set publish body object
 
