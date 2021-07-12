@@ -1,5 +1,7 @@
 ---
 
+  - debug: var=webmethods_apigateway_portalgateway verbosity=1
+
   - name: Get current API portal connects
     uri:
       url: "{{ apigateway_rest_configurations_apiportal_connect }}"
@@ -15,17 +17,14 @@
     register: get_all_portalgateways
 
   - name: Response for All Current Portal Gateways
-    debug: var=get_all_portalgateways verbosity=3
+    debug: var=get_all_portalgateways verbosity=1
 
   - name: Parse response and extract id field for the first entry
     set_fact:
       portalgateway_id: "{{ lookup('template', 'apigateway_restapi_portalgateway_parsefirst_id.json.j2') }}"
 
   - name: Current portal gateway ID
-    debug: var=portalgateway_id verbosity=3
-
-  - name: Portal Gateway Data to update
-    debug: var=webmethods_apigateway_portalgateway verbosity=3
+    debug: var=portalgateway_id verbosity=1
 
   - name: Update an existing portal gateways
     uri:
@@ -45,7 +44,7 @@
     when: portalgateway_id is defined and portalgateway_id != ""
 
   - name: Response for new mutated Portal Gateway
-    debug: var=mutate_update_portalgateway_response verbosity=3
+    debug: var=mutate_update_portalgateway_response verbosity=1
 
   - name: Create a new portal gateway
     uri:
@@ -65,4 +64,4 @@
     when: portalgateway_id is not defined or portalgateway_id == ""
     
   - name: Response for new mutated Portal Gateway
-    debug: var=mutate_createnew_portalgateway_response verbosity=3
+    debug: var=mutate_createnew_portalgateway_response verbosity=1
