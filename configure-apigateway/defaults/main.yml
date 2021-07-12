@@ -475,10 +475,12 @@ rvar_apigateway_applications:
   #   teams: []
 
 # APIs to publish
-rvar_apigateway_api_publish:
-  - custom_apiIdsByFilter:
+rvar_apigateway_api_publish_items:
+  - lookup_apiId:
+      name: ""
+      version: ""
+    lookup_portalGatewayId:
       name: ""
       version: ""
     communities: []
-    endpoints: []
-    portalGatewayId: ""
+    

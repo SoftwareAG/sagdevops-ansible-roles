@@ -1,45 +1,44 @@
 ---
 
+## api call body raw format in yaml
+# rvar_apigateway_api_publish_info:
+#   communities:
+#     - community1
+#     - community2
+#   endpoints:
+#     - api_endpoint1
+#     - api_endpoint2
+#   portalGatewayId: "<portalgatewayID>"
+
   - debug: 
       msg: Begin tasks in apis/publish.yml
 
-  - debug: var=rvar_apigateway_api_publish verbosity=1
-
-
-
-communities:
-- Excepteur
-- Duis ut esse et magna
-endpoints:
-- anim amet Ut deserunt nostrud
-- sit
-portalGatewayId: nisi reprehenderit
-
-
+  - debug: var=rvar_apigateway_api_publish_info verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
+      - "{{ rvar_apigateway_api_publish_info }}"
       - "{{ apiId }}"
-      - "{{ activate }}"
-
+      
   - name: Publish API
     uri:
       url: "{{ apigateway_rest_apis_api }}/{{ apiId }}/publish"
-      method: GET
+      method: PUT
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
+      body: "{{ rvar_apigateway_api_publish_info | to_json }}"
       force_basic_auth: yes
       validate_certs: false
-      status_code: [200]
+      status_code: [200, 201]
       body_format: json
       timeout: 30
-    register: rest_response_getall
+    register: rest_response_api_publish
 
   - name: Print response
     debug:
-      var: rest_response_getall.json
+      var: rest_response_api_publish.json
       verbosity: 1
