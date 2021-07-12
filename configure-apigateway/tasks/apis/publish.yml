@@ -1,36 +1,62 @@
 ---
 
-## api call body raw format in yaml
-# rvar_apigateway_api_publish_info:
-#   communities:
-#     - community1
-#     - community2
-#   endpoints:
-#     - api_endpoint1
-#     - api_endpoint2
-#   portalGatewayId: "<portalgatewayID>"
+## publish an api to portal - by default, ALL API gateway endpoints will get published 
+## Parameters:
+# - api_publish_portalGatewayId: the ID of the portal gateway to use
+# - api_publish_apiId: the ID of the API to publish
+# - api_publish_communityIds: the API Portal community IDs to publish the API to
 
   - debug: 
       msg: Begin tasks in apis/publish.yml
 
-  - debug: var=rvar_apigateway_api_publish_info verbosity=1
+  - debug: var=api_publish_apiId verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
-      - "{{ rvar_apigateway_api_publish_info }}"
-      - "{{ apiId }}"
-      
+      - "{{ api_publish_apiId }}"
+      - "{{ api_publish_portalGatewayId }}"
+      - "{{ api_publish_communityIds }}"
+
+######## fetch the api endpoints dynamically from the api id
+
+  - debug: 
+      msg: Fetching the api endpoints for the current api
+
+  - name: Get api gateway endpoints
+    include_tasks: "get.yml"
+    vars:
+      rvar_apigateway_api_id: "{{ api_publish_apiId }}"
+
+  - name: save api gateway endpoints into var
+    set_fact:
+      _apigateway_endpoints: "{{ rest_response_object.gatewayEndPoints | default([],true) }}"
+    when: rest_response_object is defined
+
+######## set publish body object
+
+  - name: Create the request body object
+    set_fact:
+      _api_publish_body:
+        portalGatewayId: "{{ api_publish_portalGatewayId }}"
+        communities: "{{ api_publish_communityIds }}"
+        endpoints: "{{ _apigateway_endpoints }}"
+
+  - name: debug final api publish body object
+    debug: var=_api_publish_body verbosity=1
+
+######## publish the api
+
   - name: Publish API
     uri:
-      url: "{{ apigateway_rest_apis_api }}/{{ apiId }}/publish"
+      url: "{{ apigateway_rest_apis_api }}/{{ api_publish_apiId }}/publish"
       method: PUT
       user: "{{ apigateway_rest_login_username }}"
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
-      body: "{{ rvar_apigateway_api_publish_info | to_json }}"
+      body: "{{ _api_publish_body | to_json }}"
       force_basic_auth: yes
       validate_certs: false
       status_code: [200, 201]

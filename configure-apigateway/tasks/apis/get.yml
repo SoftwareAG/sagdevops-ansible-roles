@@ -25,5 +25,9 @@
 
   - name: Print response
     debug:
-      var: rest_response_get.json
+      var: rest_response_get
       verbosity: 1
+
+  - name: Set response to custom var
+    set_fact:
+      rest_response_object: "{{ rest_response_get.json }}"

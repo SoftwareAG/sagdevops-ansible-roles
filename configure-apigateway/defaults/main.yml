@@ -475,12 +475,31 @@ rvar_apigateway_applications:
   #   teams: []
 
 # APIs to publish
-rvar_apigateway_api_publish_items:
-  - lookup_apiId:
+# each list item will publish a list of APIs to a list of communities using the same portalGatewayId
+rvar_apigateway_apis_publish_groups:
+  - lookup_portalGatewayId:
       name: ""
       version: ""
-    lookup_portalGatewayId:
+    lookup_communityIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+    lookup_apiIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+  - lookup_portalGatewayId:
       name: ""
       version: ""
-    communities: []
-    
+    lookup_communityIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""
+    lookup_apiIds:
+      - name: ""
+        version: ""
+      - name: ""
+        version: ""

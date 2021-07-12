@@ -1,0 +1,10 @@
+---
+
+  - name: Aliases to add/update
+    debug: var=rvar_apigateway_apis_publish_groups verbosity=1
+
+  - name: Include publish single api group task
+    include_tasks: "do_publish-apis.yml"
+    with_items: "{{ rvar_apigateway_apis_publish_groups }}"
+    loop_control:
+      loop_var: rvar_apigateway_apis_publish
