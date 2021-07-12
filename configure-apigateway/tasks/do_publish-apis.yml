@@ -28,7 +28,7 @@
 
       - include_tasks: "portalgateways/get-single-id.yml"
         vars:
-          rvar_object_filters: "{{ rvar_apigateway_apis_publish.lookup_portalGatewayId }}"
+          rvar_object_filter: "{{ rvar_apigateway_apis_publish.lookup_portalGatewayId }}"
 
       - name: Merge the id into the request object
         set_fact:
