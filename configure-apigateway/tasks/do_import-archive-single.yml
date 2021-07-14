@@ -7,7 +7,7 @@
       name: curl-wrapper
     vars:
       command: upload-multipart-formdata
-      curl_wrapper_target_uri: "{{ apigateway_rest_archives }}?overwrite={{ rvar_apigateway_archive_import_single.overwrite | default('false',true) }}&preserveAssetState={{ rvar_apigateway_archive_import_single.preserveAssetState | default('true',true) }}"
+      curl_wrapper_target_uri: "{{ apigateway_rest_archives }}?overwrite={{ rvar_apigateway_archive_import_single.overwrite | default('',true) }}&preserveAssetState={{ rvar_apigateway_archive_import_single.preserveAssetState | default('false',true) }}&fixingMissingVersions={{ rvar_apigateway_archive_import_single.fixingMissingVersions | default('false',true) }}"
       curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
       curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
       curl_wrapper_multipart_formdata_fields:
