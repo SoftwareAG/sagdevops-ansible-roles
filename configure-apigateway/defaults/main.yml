@@ -14,6 +14,7 @@ apigateway_saml_group_mapping_file_path: "{{ runtime_instance_home }}/packages/W
 apigateway_external_configs_source_dir: "{{ runtime_instance_home }}/packages/WmAPIGateway/resources/configuration"
 apigateway_external_configs_file_path: "{{ apigateway_external_configs_source_dir }}/custom-configs.yml"
 apigateway_external_configs_source_file_path: "{{ apigateway_external_configs_source_dir }}/config-sources.yml"
+configs_enabled: true
 
 ####################################
 ## gateway UI URLs
