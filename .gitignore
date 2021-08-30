@@ -3,3 +3,4 @@
 build/
 nohup.out
 *.code-workspace
+.vscode/

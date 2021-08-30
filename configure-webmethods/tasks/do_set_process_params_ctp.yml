@@ -1,0 +1,7 @@
+---
+
+    - name: Run tasks in set-wrapper-jvm-params
+      include_tasks: "set-wrapper-jvm-params.yml"
+      vars:
+        custom_wrapper_file: "{{ webmethods_install_dir }}/profiles/CTP/configuration/custom_wrapper.conf"
+        jvm_params: "{{ process_params }}"
