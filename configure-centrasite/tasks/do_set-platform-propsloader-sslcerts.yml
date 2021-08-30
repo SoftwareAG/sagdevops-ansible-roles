@@ -9,12 +9,17 @@
     set_fact: 
       rvar_centrasite_props_https_keystore_path: ""
     when: rvar_centrasite_props_https_keystore_path is not defined
-  
+    
   - name: Set variable defaults
     set_fact: 
       rvar_centrasite_props_https_keystore_password: ""
     when: rvar_centrasite_props_https_keystore_password is not defined
   
+  - name: Set variable defaults
+    set_fact: 
+      rvar_centrasite_props_https_keystore_type: ""
+    when: rvar_centrasite_props_https_keystore_type is not defined
+    
   - name: Set variable defaults
     set_fact: 
       rvar_centrasite_props_https_truststore_path: ""
@@ -25,6 +30,11 @@
       rvar_centrasite_props_https_truststore_password: ""
     when: rvar_centrasite_props_https_truststore_password is not defined
 
+  - name: Set variable defaults
+    set_fact: 
+      rvar_centrasite_props_https_truststore_type: ""
+    when: rvar_centrasite_props_https_truststore_type is not defined
+    
   - name: Set force_change flag to false if not defined
     set_fact: 
       rvar_centrasite_props_https_force_change: false
@@ -44,8 +54,10 @@
       block: |
         {{ rvar_centrasite_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         {{ rvar_centrasite_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+        {{ rvar_centrasite_props_https_keystore_type | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         {{ rvar_centrasite_props_https_truststore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         {{ rvar_centrasite_props_https_truststore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+        {{ rvar_centrasite_props_https_truststore_type | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: Get md5 from the new test file
@@ -92,8 +104,10 @@
         with_dict:
           "keystoreFile": "{{ rvar_centrasite_props_https_keystore_path }}"
           "@secure.keystorePass": "{{ rvar_centrasite_props_https_keystore_password }}"
+          "keystoreType": "{{ rvar_centrasite_props_https_keystore_type }}"
           "truststoreFile": "{{ rvar_centrasite_props_https_truststore_path }}"
           "@secure.truststorePass": "{{ rvar_centrasite_props_https_truststore_password }}"
+          "truststoreType": "{{ rvar_centrasite_props_https_truststore_type }}"
 
       - name: Generate changed marker and write it to file
         blockinfile:
@@ -104,8 +118,10 @@
           block: |
             {{ rvar_centrasite_props_https_keystore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
             {{ rvar_centrasite_props_https_keystore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+            {{ rvar_centrasite_props_https_keystore_type | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
             {{ rvar_centrasite_props_https_truststore_path | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
             {{ rvar_centrasite_props_https_truststore_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
+            {{ rvar_centrasite_props_https_truststore_type | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
         no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
       - name: Pause for 5 seconds to give a bit of time for the password encryptions to happen
