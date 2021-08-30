@@ -94,7 +94,7 @@
 
       - name: "Update config file with custom SSL certs"
         lineinfile:
-          path: "{{ platform_propsloader_https_file.files | first }}"
+          path: "{{ platform_propsloader_https_file.files[0].path }}"
           regexp: '^{{ item.key }}'
           insertafter: '^#{{ item.key }}'
           line: "{{ item.key }}={{ item.value }}"
