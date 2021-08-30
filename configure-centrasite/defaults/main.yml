@@ -1,6 +1,8 @@
 ---
 
 configure_centrasite_params_home_dir: "{{ webmethods_install_dir }}/CentraSite"
+configure_centrasite_params_runtime_profiles_dir: "{{ webmethods_install_dir }}/profiles/CTP"
+configure_centrasite_params_platform_propsloader_dir: "{{ configure_centrasite_params_runtime_profiles_dir }}/configuration/com.softwareag.platform.config.propsloader"
 configure_centrasite_params_tools_dir: "{{ configure_centrasite_params_home_dir }}/utilities"
 configure_centrasite_params_tools_exec_command: "./CentraSiteCommand.sh"
 configure_centrasite_params_java_home: "{{ webmethods_install_dir }}/jvm/jvm"
