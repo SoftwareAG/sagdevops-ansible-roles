@@ -122,10 +122,10 @@
           current_package: "{{ rest_response_get.json.packageResponse }}"
 
       - name: If package is active, deactivate package before edit
-        include_tasks: "do_set-packages-activate.yml"
+        include_tasks: "packages/activate.yml"
         vars:
-          currentobj_id: "{{ _apigateway_object_to_save.id }}"
-          activate: "false"
+          packages_currentobj_id: "{{ _apigateway_object_to_save.id }}"
+          packages_activate: "false"
         when: current_package.active | bool == true
 
       - name: Combine current object in gateway (pre-update) with the new requested updates object _apigateway_object_to_save
@@ -186,10 +186,10 @@
 ########## activate package or not
   
   - name: activate or de-activate the package as requested in the update object
-    include_tasks: "do_set-packages-activate.yml"
+    include_tasks: "packages/activate.yml"
     vars:
-      currentobj_id: "{{ _apigateway_object_to_save.id }}"
-      activate: "{{ _apigateway_object_to_save.active | default('false',true) }}"
+      packages_currentobj_id: "{{ _apigateway_object_to_save.id }}"
+      packages_activate: "{{ _apigateway_object_to_save.active | default('false',true) }}"
 
   - debug: 
       msg: End tasks in do_set-packages-single.yml

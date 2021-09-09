@@ -1,24 +1,24 @@
 ---
   - debug: 
-      msg: Begin tasks in do_set-packages-activate.yml
+      msg: Begin tasks in packages/activate.yml
 
-  - debug: var=currentobj_id verbosity=1
-  - debug: var=activate verbosity=1
+  - debug: var=packages_currentobj_id verbosity=1
+  - debug: var=packages_activate verbosity=1
 
   - name: fail if mandatory params not specified
     fail: 
       msg: "A mandatory param was not defined, cannot do anything."
     when: item is not defined
     with_items:
-      - "{{ currentobj_id }}"
-      - "{{ activate }}"
+      - "{{ packages_currentobj_id }}"
+      - "{{ packages_activate }}"
 
   - name: Activate the package if flag active = true
     block:
 
       - name: Activate the package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_id }}/activate"
+          url: "{{ apigateway_rest_packages_api }}/{{ packages_currentobj_id }}/activate"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -29,19 +29,16 @@
           timeout: 30
           headers:
             Content-Type: application/json
-        register: rest_response_activate
+        register: rest_packages_activate_response
 
-      - name: Response for activated package
-        debug: var=rest_response_activate verbosity=1
-
-    when: activate | bool == true
+    when: packages_activate | bool == true
 
   - name: Deactivate the package if flag active = false or does not exist
     block:
 
       - name: Deactivate the package
         uri:
-          url: "{{ apigateway_rest_packages_api }}/{{ currentobj_id }}/deactivate"
+          url: "{{ apigateway_rest_packages_api }}/{{ packages_currentobj_id }}/deactivate"
           method: PUT
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -52,9 +49,9 @@
           timeout: 30
           headers:
             Content-Type: application/json
-        register: rest_response_deactivate
+        register: rest_packages_activate_response
 
-      - name: Response for deactivated package
-        debug: var=rest_response_deactivate verbosity=1
+    when: packages_activate | bool == false
 
-    when: activate | bool == false
+  - name: Response
+    debug: var=rest_packages_activate_response verbosity=1
