@@ -57,49 +57,73 @@
     debug: var=get_existing_port verbosity=3
 
   - name: If current API Gateway port exists, update it
-    set_fact:
-      webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_detail.pkg},recursive=True) }}"
-      webmethods_apigateway_port_method: PUT
+    block:
+
+      - name: Update body object
+        set_fact:
+          webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_detail.pkg},recursive=True) }}"
+
+      - name: First, disable the port before updating it
+        include_tasks: "ports/enable.yml"
+        vars:
+          ports_listenerkey: "{{ webmethods_apigateway_port_listenerkey }}"
+          ports_pkg: "{{ webmethods_apigateway_port_detail.pkg }}"
+          ports_enable: false
+
+      - name: Update api gateway port
+        uri:
+          url: "{{ apigateway_rest_is_ports }}"
+          method: "PUT"
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ webmethods_apigateway_port_detail | default({}) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: webmethods_apigateway_port_saved
+  
+      - name: Response check - For an UPDATE, fail if json response does not contain the newlistenerKey field
+        fail: 
+          msg: "unexpected json response...something wrong happened"
+        when: webmethods_apigateway_port_saved.json.newlistenerKey is not defined
+
+      - name: re-enable the port
+        include_tasks: "ports/enable.yml"
+        vars:
+          ports_listenerkey: "{{ webmethods_apigateway_port_listenerkey }}"
+          ports_pkg: "{{ webmethods_apigateway_port_detail.pkg }}"
+          ports_enable: true
+
     when: get_existing_port.json.uniqueID is defined
 
+
   - name: If current API Gateway port does not exists, add it
-    set_fact:
-      webmethods_apigateway_port_method: POST
+    block:
+
+      - name: Save api gateway port
+        uri:
+          url: "{{ apigateway_rest_is_ports }}"
+          method: "POST"
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          body: "{{ webmethods_apigateway_port_detail | default({}) | to_json }}"
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200, 201]
+          body_format: json
+          timeout: 30
+        register: webmethods_apigateway_port_saved
+
+      - name: Response check - For a new ADD, fail if json response status is not success
+        fail: 
+          msg: "unexpected json response...something wrong happened"
+        when: webmethods_apigateway_port_saved.json.status != "success"
+
     when: get_existing_port.json.uniqueID is not defined
-
-  - name: API Gateway port object to save
-    debug: var=webmethods_apigateway_port_detail verbosity=3
-
-  - name: API Gateway port object to save
-    debug: var=webmethods_apigateway_port_method verbosity=3
-
-  - name: Save api gateway port
-    uri:
-      url: "{{ apigateway_rest_is_ports }}"
-      method: "{{ webmethods_apigateway_port_method }}"
-      user: "{{ apigateway_rest_login_username }}"
-      password: "{{ apigateway_rest_login_password }}"
-      return_content: yes
-      body: "{{ webmethods_apigateway_port_detail | default({}) | to_json }}"
-      force_basic_auth: yes
-      validate_certs: false
-      status_code: [200, 201]
-      body_format: json
-      timeout: 30
-    register: webmethods_apigateway_port_saved
-
-  - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_saved verbosity=3
-
-  - name: Response check - For a new ADD, fail if json response status is not success
-    fail: 
-      msg: "unexpected json response...something wrong happened"
-    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_saved.json.status != "success"
-
-  - name: Response check - For an UPDATE, fail if json response does not contain the newlistenerKey field
-    fail: 
-      msg: "unexpected json response...something wrong happened"
-    when: get_existing_port.json.uniqueID is defined and (webmethods_apigateway_port_saved.json.newlistenerKey is not defined)
 
   - name: Save access mode for the port
     uri:
