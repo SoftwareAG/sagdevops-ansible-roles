@@ -63,12 +63,13 @@
         set_fact:
           webmethods_apigateway_port_detail: "{{ webmethods_apigateway_port_detail | combine({'listenerKey': webmethods_apigateway_port_listenerkey, 'oldPkg': webmethods_apigateway_port_detail.pkg},recursive=True) }}"
 
-      - name: First, disable the port before updating it
+      - name: First, if port is enabled, disable the port before updating it
         include_tasks: "ports/enable.yml"
         vars:
           ports_listenerkey: "{{ webmethods_apigateway_port_listenerkey }}"
           ports_pkg: "{{ webmethods_apigateway_port_detail.pkg }}"
           ports_enable: false
+        when: get_existing_port.json.enabled | bool
 
       - name: Update api gateway port
         uri:
@@ -90,12 +91,13 @@
           msg: "unexpected json response...something wrong happened"
         when: webmethods_apigateway_port_saved.json.newlistenerKey is not defined
 
-      - name: re-enable the port
+      - name: re-enable the port if it was enabled pre-update
         include_tasks: "ports/enable.yml"
         vars:
           ports_listenerkey: "{{ webmethods_apigateway_port_listenerkey }}"
           ports_pkg: "{{ webmethods_apigateway_port_detail.pkg }}"
           ports_enable: true
+        when: get_existing_port.json.enabled | bool
 
     when: get_existing_port.json.uniqueID is defined
 
