@@ -30,14 +30,11 @@
   - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
-  
-  - name: port listenerkey
-    debug: var=webmethods_apigateway_port_listenerkey verbosity=3
-  
-  - name: fail if webmethods_apigateway_port_listenerkey is empty
-    fail: 
-      msg: "webmethods_apigateway_port_listenerkey is empty...cannot do anything."
-    when: webmethods_apigateway_port_listenerkey == ""
+    vars:
+      __wmport_type: "{{ webmethods_apigateway_port_type }}"
+      __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
+      __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
+      __wmport_bindAddress: "{{ webmethods_apigateway_port_detail.bindAddress }}"
 
   - name: Get current API Gateway port based on listenerkey
     uri:
@@ -52,6 +49,33 @@
       body_format: json
       timeout: 30
     register: get_existing_port
+
+  - name: If get_existing_port not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
+    block:
+
+      - name: Create ports listenerkey without the bindAddress
+        set_fact:
+          webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
+        vars:
+          __wmport_type: "{{ webmethods_apigateway_port_type }}"
+          __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
+          __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
+
+      - name: Get current API Gateway port based on listenerkey without bind address
+        uri:
+          url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey }}"
+          method: GET
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200]
+          body_format: json
+          timeout: 30
+        register: get_existing_port
+
+    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
 
   - name: Response for current API Gateway port based on listenerkey
     debug: var=get_existing_port verbosity=3

@@ -1,5 +1,11 @@
-{%- if webmethods_apigateway_port_type in ("internal_http","internal_https")  -%}
-    {{ webmethods_apigateway_port_detail.protocol }}Listener@{{ webmethods_apigateway_port_detail.port }}@{{ webmethods_apigateway_port_detail.proxyHost }}
-{%- elif webmethods_apigateway_port_type in ("regular_http","regular_https","external_http","external_https","websocket") -%}
-    {{ webmethods_apigateway_port_detail.protocol }}Listener@{{ webmethods_apigateway_port_detail.port }}@{{ webmethods_apigateway_port_detail.bindAddress | default('0.0.0.0',true) }}
+{%- if __wmport_type in ("internal_http","internal_https")  -%}
+    {{ __wmport_protocol }}Listener@{{ __wmport_port }}
+    {%- if __wmport_proxyHost is defined and __wmport_proxyHost != "" -%}
+        @{{ __wmport_proxyHost }}
+    {%- endif -%}
+{%- elif __wmport_type in ("regular_http","regular_https","external_http","external_https","websocket") -%}
+    {{ __wmport_protocol }}Listener@{{ __wmport_port }}
+    {%- if __wmport_bindAddress is defined and __wmport_bindAddress != "" -%}
+        @{{ __wmport_bindAddress }}
+    {%- endif -%}
 {%- endif -%}

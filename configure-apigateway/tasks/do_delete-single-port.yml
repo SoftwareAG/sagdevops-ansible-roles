@@ -16,7 +16,12 @@
   - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
-  
+    vars:
+      __wmport_type: "{{ webmethods_apigateway_port_type }}"
+      __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
+      __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
+      __wmport_bindAddress: "{{ webmethods_apigateway_port_detail.bindAddress }}"
+
   - name: port listenerkey
     debug: var=webmethods_apigateway_port_listenerkey verbosity=3
   
