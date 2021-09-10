@@ -49,14 +49,14 @@
       status_code: [200]
       body_format: json
       timeout: 30
-    register: get_existing_port_1sttry
+    register: get_existing_port
 
-  - name: If get_existing_port_1sttry not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
+  - name: If get_existing_port not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
     block:
 
       - name: Create ports listenerkey without the bindAddress
         set_fact:
-          webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
+          webmethods_apigateway_port_listenerkey_2ndtry: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
         vars:
           __wmport_type: "{{ webmethods_apigateway_port_type }}"
           __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
@@ -64,7 +64,7 @@
 
       - name: Get current API Gateway port based on listenerkey without bind address
         uri:
-          url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey }}"
+          url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey_2ndtry }}"
           method: GET
           user: "{{ apigateway_rest_login_username }}"
           password: "{{ apigateway_rest_login_password }}"
@@ -79,15 +79,12 @@
       - name: Response for current API Gateway port based on listenerkey without the bindAddress
         debug: var=get_existing_port_2ndtry verbosity=1
 
-    when: get_existing_port_1sttry.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
-
-  - name: Create existing port object with the 1st try calls response
-    set_fact:
-      get_existing_port: "{{ get_existing_port_1sttry }}"
+    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
 
   - name: Update existing port object if the 2nd try did find something
     set_fact:
       get_existing_port: "{{ get_existing_port_2ndtry }}"
+      webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_listenerkey_2ndtry }}"
     when: get_existing_port_2ndtry.json.uniqueID is defined
 
   - name: Final response object for current API Gateway port
@@ -128,6 +125,10 @@
           msg: "unexpected json response...something wrong happened"
         when: webmethods_apigateway_port_saved.json.newlistenerKey is not defined
 
+      - name: Set listener key based on the response object
+        set_fact:
+          webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_saved.json.newlistenerKey }}"
+
       - name: re-enable the port if it was enabled pre-update
         include_tasks: "ports/enable.yml"
         vars:
@@ -157,10 +158,19 @@
           timeout: 30
         register: webmethods_apigateway_port_saved
 
-      - name: Response check - For a new ADD, fail if json response status is not success
+      - name: Response check1 - For a new ADD, fail if json response status is not success
         fail: 
-          msg: "unexpected json response...something wrong happened"
+          msg: "unexpected json response - status != success - something wrong happened"
         when: webmethods_apigateway_port_saved.json.status != "success"
+
+      - name: Response check2 - Fail if json response does not contain the listenerKey field
+        fail: 
+          msg: "unexpected json response - listenerKey field does not exist - something wrong happened"
+        when: webmethods_apigateway_port_saved.json.listenerKey is not defined
+
+      - name: Set listener key based on the response object
+        set_fact:
+          webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_saved.json.listenerKey }}"
 
     when: get_existing_port.json.uniqueID is not defined
 
