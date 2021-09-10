@@ -73,9 +73,17 @@
           status_code: [200]
           body_format: json
           timeout: 30
-        register: get_existing_port
+        register: get_existing_port_2ndtry
+
+      - name: Response for current API Gateway port based on listenerkey without the bindAddress
+        debug: var=get_existing_port_2ndtry verbosity=1
 
     when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
+
+  - name: Update existing port object if the 2nd try did find something
+    set_fact:
+      get_existing_port: "{{ get_existing_port_2ndtry }}"
+    when: get_existing_port_2ndtry is defined
 
   - name: Response for current API Gateway port based on listenerkey
     debug: var=get_existing_port verbosity=1
