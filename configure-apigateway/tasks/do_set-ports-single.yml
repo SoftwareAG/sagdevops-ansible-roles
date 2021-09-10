@@ -48,9 +48,9 @@
       status_code: [200]
       body_format: json
       timeout: 30
-    register: get_existing_port
+    register: get_existing_port_1sttry
 
-  - name: If get_existing_port not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
+  - name: If get_existing_port_1sttry not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
     block:
 
       - name: Create ports listenerkey without the bindAddress
@@ -78,7 +78,11 @@
       - name: Response for current API Gateway port based on listenerkey without the bindAddress
         debug: var=get_existing_port_2ndtry verbosity=1
 
-    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
+    when: get_existing_port_1sttry.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
+
+  - name: Create existing port object with the 1st try calls response
+    set_fact:
+      get_existing_port: "{{ get_existing_port_1sttry }}"
 
   - name: Update existing port object if the 2nd try did find something
     set_fact:
