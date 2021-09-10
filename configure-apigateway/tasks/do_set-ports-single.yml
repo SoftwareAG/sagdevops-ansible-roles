@@ -34,8 +34,8 @@
       __wmport_type: "{{ webmethods_apigateway_port_type }}"
       __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
       __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
-      __wmport_bindAddress: "{{ webmethods_apigateway_port_detail.bindAddress }}"
-      __wmport_proxyHost: "{{ webmethods_apigateway_port_detail.proxyHost }}"
+      __wmport_bindAddress: "{{ webmethods_apigateway_port_detail.bindAddress | default('',true) }}"
+      __wmport_proxyHost: "{{ webmethods_apigateway_port_detail.proxyHost | default('',true) }}"
 
   - name: Get current API Gateway port based on listenerkey
     uri:
