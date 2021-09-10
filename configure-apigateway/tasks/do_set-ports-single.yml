@@ -87,9 +87,9 @@
   - name: Update existing port object if the 2nd try did find something
     set_fact:
       get_existing_port: "{{ get_existing_port_2ndtry }}"
-    when: get_existing_port_2ndtry is defined
+    when: get_existing_port_2ndtry.json.uniqueID is defined
 
-  - name: Response for current API Gateway port based on listenerkey
+  - name: Final response object for current API Gateway port
     debug: var=get_existing_port verbosity=1
 
   - name: If current API Gateway port exists, update it
