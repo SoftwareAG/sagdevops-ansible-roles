@@ -1,7 +1,7 @@
 ---
 
-  - debug: var=rvar_resetnode_search_hostname_pattern verbosity=3
-  - debug: var=rvar_resetnode_replacement_hostname_pattern verbosity=3
+  - debug: var=rvar_resetnode_search_hostname_pattern verbosity=1
+  - debug: var=rvar_resetnode_replacement_hostname_pattern verbosity=1
 
   - name: Populate file
     template:
@@ -23,4 +23,4 @@
   - name: Print the cmd_result to the console.
     debug:
       msg: "{{ cmd_result.stdout_lines | join('\n') }}"
-      verbosity: 3
+      verbosity: 1

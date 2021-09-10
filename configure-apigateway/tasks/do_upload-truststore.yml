@@ -15,14 +15,14 @@
     register: get_all_truststores
 
   - name: Response for All Current truststores
-    debug: var=get_all_truststores verbosity=3
+    debug: var=get_all_truststores verbosity=1
 
   - name: Parse response and extract name fields
     set_fact:
       get_all_truststore_names: "{{ lookup('template', 'apigateway_restapi_get_truststore_names.json.j2') }}"
 
   - name: All current truststore names
-    debug: var=get_all_truststore_names verbosity=3
+    debug: var=get_all_truststore_names verbosity=1
 
   - name: If new truststore data does not exist, then URI is the generic one
     set_fact:
@@ -35,7 +35,7 @@
     when: webmethods_apigateway_truststore.keyStoreName in get_all_truststore_names
 
   - name: CURL URI
-    debug: var=curl_wrapper_target_uri verbosity=3
+    debug: var=curl_wrapper_target_uri verbosity=1
 
   - name: tasks for newer versions of ansible that support form-multipart
     block:
@@ -55,7 +55,7 @@
           timeout: 30
         register: update_keystore
 
-      - debug: var=update_keystore verbosity=3
+      - debug: var=update_keystore verbosity=1
 
     when: ansible_version.major > 2 or (ansible_version.major == 2 and ansible_version.minor >= 10)
 

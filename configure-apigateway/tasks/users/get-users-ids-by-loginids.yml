@@ -18,4 +18,4 @@
     rest_response_user_ids: "{{ lookup('template', 'apigateway_rest_usermgt_responseparsing_users_ids_by_login_ids.json.j2') }}"
 
 - name: user ids found from the rest response
-  debug: var=rest_response_user_ids verbosity=3
+  debug: var=rest_response_user_ids verbosity=1

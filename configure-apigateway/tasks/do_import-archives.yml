@@ -1,7 +1,7 @@
 ---
 
   - name: List of Apigateway Archives to imports
-    debug: var=rvar_apigateway_archive_imports verbosity=3
+    debug: var=rvar_apigateway_archive_imports verbosity=1
 
   - name: Include import tasks for a single archive 
     include_tasks: "do_import-archive-single.yml"

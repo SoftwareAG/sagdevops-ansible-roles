@@ -1,7 +1,7 @@
 ---
 
   - name: Ports to update
-    debug: var=webmethods_apigateway_ports_list verbosity=3
+    debug: var=webmethods_apigateway_ports_list verbosity=1
 
   - name: Include Update ports tasks
     include_tasks: "do_set-ports-single.yml"

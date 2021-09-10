@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=apigateway_configparams_rest_usermgt_user_single verbosity=3
+  - debug: var=apigateway_configparams_rest_usermgt_user_single verbosity=1
 
   - name: First, get the user ids based on the input names (returned in var rest_response_user_ids)
     include_tasks: "users/get-users-ids-by-loginids.yml"
@@ -28,7 +28,7 @@
       - name: Print response
         debug:
           var: rest_response_get.json
-          verbosity: 3
+          verbosity: 1
 
       - name: Merge the existing user content with the updated content
         set_fact:
@@ -50,7 +50,7 @@
         register: rest_response_mutate_update
         
       - name: Response for new updated user
-        debug: var=rest_response_mutate_update verbosity=3
+        debug: var=rest_response_mutate_update verbosity=1
 
     when: rest_response_user_ids is defined and rest_response_user_ids | length > 0
 
@@ -73,6 +73,6 @@
         register: rest_response_mutate_create
 
       - name: Response for new created user
-        debug: var=rest_response_mutate_create verbosity=3
+        debug: var=rest_response_mutate_create verbosity=1
 
     when: rest_response_user_ids is not defined or rest_response_user_ids | length == 0

@@ -36,7 +36,7 @@
       - name: Print the raw elasticsearch config
         debug:
           var: kibana_config_yml.stdout_lines
-          verbosity: 3
+          verbosity: 1
 
       - set_fact:
           kibana_config: "{{ kibana_config_yml.stdout | from_yaml }}"
@@ -44,12 +44,12 @@
       - name: Print the ingested kibana_config
         debug:
           var: kibana_config
-          verbosity: 3
+          verbosity: 1
 
       - name: Print elasticsearch.hosts from the config
         debug:
           msg: "Looking at item: {{ kibana_config['elasticsearch.hosts'] }}"
-          verbosity: 3
+          verbosity: 1
 
       - name: Change kibana elasticsearch.hosts value to the list of hosts
         set_fact:
@@ -58,7 +58,7 @@
       - name: Print the updated content
         debug: 
           var: content_yml
-          verbosity: 3
+          verbosity: 1
     
       - name: Write the updated content back to the same YAML file.
         template:

@@ -1,7 +1,7 @@
 ---
 
   - name: Port to update
-    debug: var=webmethods_apigateway_port verbosity=3
+    debug: var=webmethods_apigateway_port verbosity=1
 
   - name: fail if webmethods_apigateway_port.port_type not specified
     fail: 
@@ -78,7 +78,7 @@
     when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
 
   - name: Response for current API Gateway port based on listenerkey
-    debug: var=get_existing_port verbosity=3
+    debug: var=get_existing_port verbosity=1
 
   - name: If current API Gateway port exists, update it
     block:
@@ -168,7 +168,7 @@
     when: webmethods_apigateway_port.access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_accessmode_saved verbosity=3
+    debug: var=webmethods_apigateway_port_accessmode_saved verbosity=1
 
   - name: Save IP access mode for the port
     uri:
@@ -187,4 +187,4 @@
     when: webmethods_apigateway_port.ip_access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_ipaccessmode_saved verbosity=3
+    debug: var=webmethods_apigateway_port_ipaccessmode_saved verbosity=1

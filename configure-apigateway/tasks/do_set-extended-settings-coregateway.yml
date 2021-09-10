@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_extended_settings_coregateway_extended_keys verbosity=3
+  - debug: var=webmethods_apigateway_extended_settings_coregateway_extended_keys verbosity=1
   
   - name: Prepare request body content
     set_fact:
@@ -9,7 +9,7 @@
           wattKeys: {}
           extendedKeys: "{{ webmethods_apigateway_extended_settings_coregateway_extended_keys }}"
 
-  - debug: var=webmethods_apigateway_extended_settings_request_body verbosity=3
+  - debug: var=webmethods_apigateway_extended_settings_request_body verbosity=1
 
   - name: Update extended settings
     uri:
@@ -29,4 +29,4 @@
   - name: Print response
     debug:
       var: rest_response.json
-      verbosity: 3
+      verbosity: 1

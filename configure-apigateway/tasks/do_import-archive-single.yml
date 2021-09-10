@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=rvar_apigateway_archive_import_single verbosity=3
+  - debug: var=rvar_apigateway_archive_import_single verbosity=1
 
   - name: Upload new archive to apigateway
     include_role:

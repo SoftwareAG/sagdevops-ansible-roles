@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=apigateway_configparams_rest_usermgt_group_single verbosity=3
+  - debug: var=apigateway_configparams_rest_usermgt_group_single verbosity=1
       
   - name: fail if mandatory params not specified
     fail: 
@@ -16,14 +16,14 @@
       apigateway_configparams_rest_usermgt_group_names: 
         - "{{ apigateway_configparams_rest_usermgt_group_single.name }}"
 
-  - debug: var=rest_response_group_ids verbosity=3
+  - debug: var=rest_response_group_ids verbosity=1
 
   - name: Get the internal user ids that belong to the group, based on the login ids passed in
     include_tasks: "users/get-users-ids-by-loginids.yml"
     vars:
       apigateway_configparams_rest_usermgt_user_loginids: "{{ apigateway_configparams_rest_usermgt_group_single.user_loginids_add }}"
 
-  - debug: var=rest_response_user_ids verbosity=3
+  - debug: var=rest_response_user_ids verbosity=1
 
   - name: Update the existing group if it existed
     block:
@@ -45,7 +45,7 @@
       - name: Print response
         debug:
           var: rest_response_get.json
-          verbosity: 3
+          verbosity: 1
 
       - name: fail if group cannot be found at this point
         fail: 
@@ -79,7 +79,7 @@
             description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
             userIds: "{{ __updated_group_userids }}"
 
-      - debug: var=__group_toupdate verbosity=3
+      - debug: var=__group_toupdate verbosity=1
 
       - name: Update the existing group
         uri:
@@ -97,7 +97,7 @@
         register: rest_response_mutate_update
         
       - name: Response for new updated group
-        debug: var=rest_response_mutate_update verbosity=3
+        debug: var=rest_response_mutate_update verbosity=1
 
     when: rest_response_group_ids is defined and rest_response_group_ids | length > 0
 
@@ -111,7 +111,7 @@
             description: "{{ apigateway_configparams_rest_usermgt_group_single.description }}"
             userIds: "{{ rest_response_user_ids | default([],true) }}"
 
-      - debug: var=__group_tocreate verbosity=3
+      - debug: var=__group_tocreate verbosity=1
 
       - name: Create a new group
         uri:
@@ -129,6 +129,6 @@
         register: rest_response_mutate_create
 
       - name: Response for new created group
-        debug: var=rest_response_mutate_create verbosity=3
+        debug: var=rest_response_mutate_create verbosity=1
 
     when: rest_response_group_ids is not defined or rest_response_group_ids | length == 0

@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=rvar_configapigateway_externalconfigs verbosity=3
+  - debug: var=rvar_configapigateway_externalconfigs verbosity=1
 
   - name: Set changed flag to false if not defined
     set_fact: 

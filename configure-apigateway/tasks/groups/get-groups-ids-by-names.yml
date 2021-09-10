@@ -18,4 +18,4 @@
     rest_response_group_ids: "{{ lookup('template', 'apigateway_rest_usermgt_responseparsing_groups_ids_by_name.json.j2') }}"
 
 - name: group ids found from the rest response
-  debug: var=rest_response_group_ids verbosity=3
+  debug: var=rest_response_group_ids verbosity=1

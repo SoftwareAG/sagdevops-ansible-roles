@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single verbosity=3
+  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single verbosity=1
 
   - name: Get the group ids based on the input names (returned in var rest_response_group_ids)
     include_tasks: "groups/get-groups-ids-by-names.yml"
@@ -18,7 +18,7 @@
       apigateway_configparams_rest_usermgt_accessprofile_single_enriched: "{{ apigateway_configparams_rest_usermgt_accessprofile_single | combine(apigateway_configparams_rest_usermgt_accessprofile_single_enrichment,recursive=True) }}"
     when: apigateway_configparams_rest_usermgt_accessprofile_single_enrichment is defined
 
-  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single_enriched verbosity=3
+  - debug: var=apigateway_configparams_rest_usermgt_accessprofile_single_enriched verbosity=1
 
   - name: First, get all accessprofiles to determine if the access profile with same name exists
     uri:
@@ -37,7 +37,7 @@
   - name: Print response
     debug:
       var: rest_response_getall.json
-      verbosity: 3
+      verbosity: 1
 
   - name: Set name filter to parse the rest response
     set_fact:
@@ -49,7 +49,7 @@
       rest_response_ids: "{{ lookup('template', 'apigateway_rest_usermgt_responseparsing_accessprofiles_ids_by_name.json.j2') }}"
 
   - name: ids found from the rest response
-    debug: var=rest_response_ids verbosity=3
+    debug: var=rest_response_ids verbosity=1
 
   - name: Update the existing if it existed
     block:
@@ -71,7 +71,7 @@
       - name: Print response
         debug:
           var: rest_response_get.json
-          verbosity: 3
+          verbosity: 1
 
       - name: Merge the existing access profile content with the updated content
         set_fact:
@@ -93,7 +93,7 @@
         register: rest_response_mutate_update
         
       - name: Response for new updated access profile
-        debug: var=rest_response_mutate_update verbosity=3
+        debug: var=rest_response_mutate_update verbosity=1
 
     when: rest_response_ids is defined and rest_response_ids | length > 0
 
@@ -116,6 +116,6 @@
         register: rest_response_mutate_create
 
       - name: Response for new created access profile
-        debug: var=rest_response_mutate_create verbosity=3
+        debug: var=rest_response_mutate_create verbosity=1
 
     when: rest_response_ids is not defined or rest_response_ids | length == 0

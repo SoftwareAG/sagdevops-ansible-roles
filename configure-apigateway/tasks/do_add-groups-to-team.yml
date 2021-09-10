@@ -1,7 +1,7 @@
 ---
 
   - name: Groups to update
-    debug: var=webmethods_apigateway_groups_list verbosity=3
+    debug: var=webmethods_apigateway_groups_list verbosity=1
 
   - name: Include group tasks
     include_tasks: "do_set-single-group.yml"
