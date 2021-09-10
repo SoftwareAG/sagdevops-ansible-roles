@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys verbosity=3
+  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys verbosity=1
 
   - import_role:
       name: configure-integrationserver

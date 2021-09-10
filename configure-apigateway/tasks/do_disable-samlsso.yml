@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_samlsso_settings verbosity=3
+  - debug: var=webmethods_apigateway_samlsso_settings verbosity=1
 
   - name: Disable SAML SSO
     uri:
@@ -20,4 +20,4 @@
   - name: Print response
     debug:
       var: rest_response.json
-      verbosity: 3
+      verbosity: 1

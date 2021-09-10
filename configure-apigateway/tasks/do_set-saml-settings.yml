@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=rvar_apigateway_saml_settings verbosity=3
+  - debug: var=rvar_apigateway_saml_settings verbosity=1
 
   - name: Set changed flag to false if not defined
     set_fact: 
@@ -22,7 +22,7 @@
     register: get_existing_saml
 
   - name: Current saml settings
-    debug: var=get_existing_saml verbosity=3
+    debug: var=get_existing_saml verbosity=1
 
   - name: Update saml settings
     uri:
@@ -41,7 +41,7 @@
 
   - debug:
       var: update_rest_response
-      verbosity: 3
+      verbosity: 1
 
   - name: Assign json responses to compare variables
     set_fact:
@@ -53,7 +53,7 @@
       configs_differences: "{{ lookup('template', 'apigateway_restapi_diff_dictionaries.json.j2') }}"
 
   - name: differences
-    debug: var=configs_differences verbosity=3
+    debug: var=configs_differences verbosity=1
 
   - name: Set changed flag to true if differences were detected
     set_fact:

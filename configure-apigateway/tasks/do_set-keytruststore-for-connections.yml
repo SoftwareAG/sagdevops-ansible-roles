@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=webmethods_apigateway_keytruststore_configuration verbosity=3
+  - debug: var=webmethods_apigateway_keytruststore_configuration verbosity=1
   
   - name: Update keystore and truststore aliases for inbound messages / outbound connections
     uri:
@@ -20,4 +20,4 @@
   - name: Print response
     debug:
       var: rest_response.json
-      verbosity: 3
+      verbosity: 1

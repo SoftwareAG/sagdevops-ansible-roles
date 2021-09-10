@@ -1,7 +1,7 @@
 ---
 
   - name: Port to update
-    debug: var=webmethods_apigateway_port verbosity=3
+    debug: var=webmethods_apigateway_port verbosity=1
 
   - name: fail if webmethods_apigateway_port.port_type not specified
     fail: 
@@ -30,14 +30,12 @@
   - name: Create ports listenerkey based on the key values in webmethods_apigateway_port
     set_fact:
       webmethods_apigateway_port_listenerkey: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
-  
-  - name: port listenerkey
-    debug: var=webmethods_apigateway_port_listenerkey verbosity=3
-  
-  - name: fail if webmethods_apigateway_port_listenerkey is empty
-    fail: 
-      msg: "webmethods_apigateway_port_listenerkey is empty...cannot do anything."
-    when: webmethods_apigateway_port_listenerkey == ""
+    vars:
+      __wmport_type: "{{ webmethods_apigateway_port_type }}"
+      __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
+      __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
+      __wmport_bindAddress: "{{ webmethods_apigateway_port_detail.bindAddress | default('',true) }}"
+      __wmport_proxyHost: "{{ webmethods_apigateway_port_detail.proxyHost | default('',true) }}"
 
   - name: Get current API Gateway port based on listenerkey
     uri:
@@ -53,8 +51,44 @@
       timeout: 30
     register: get_existing_port
 
-  - name: Response for current API Gateway port based on listenerkey
-    debug: var=get_existing_port verbosity=3
+  - name: If get_existing_port not found, and bindAddress was 0.0.0.0, try to find one more time without bindAddress
+    block:
+
+      - name: Create ports listenerkey without the bindAddress
+        set_fact:
+          webmethods_apigateway_port_listenerkey_2ndtry: "{{ lookup('template', 'apigateway_restapi_ports_create_listenerkey.json.j2') }}"
+        vars:
+          __wmport_type: "{{ webmethods_apigateway_port_type }}"
+          __wmport_protocol: "{{ webmethods_apigateway_port_detail.protocol }}"
+          __wmport_port: "{{ webmethods_apigateway_port_detail.port }}"
+
+      - name: Get current API Gateway port based on listenerkey without bind address
+        uri:
+          url: "{{ apigateway_rest_is_ports }}?listenerKey={{ webmethods_apigateway_port_listenerkey_2ndtry }}"
+          method: GET
+          user: "{{ apigateway_rest_login_username }}"
+          password: "{{ apigateway_rest_login_password }}"
+          return_content: yes
+          force_basic_auth: yes
+          validate_certs: false
+          status_code: [200]
+          body_format: json
+          timeout: 30
+        register: get_existing_port_2ndtry
+
+      - name: Response for current API Gateway port based on listenerkey without the bindAddress
+        debug: var=get_existing_port_2ndtry verbosity=1
+
+    when: get_existing_port.json.uniqueID is not defined and webmethods_apigateway_port_detail.bindAddress == "0.0.0.0"
+
+  - name: Update existing port object if the 2nd try did find something
+    set_fact:
+      get_existing_port: "{{ get_existing_port_2ndtry }}"
+      webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_listenerkey_2ndtry }}"
+    when: get_existing_port_2ndtry.json.uniqueID is defined
+
+  - name: Final response object for current API Gateway port
+    debug: var=get_existing_port verbosity=1
 
   - name: If current API Gateway port exists, update it
     block:
@@ -91,6 +125,10 @@
           msg: "unexpected json response...something wrong happened"
         when: webmethods_apigateway_port_saved.json.newlistenerKey is not defined
 
+      - name: Set listener key based on the response object
+        set_fact:
+          webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_saved.json.newlistenerKey }}"
+
       - name: re-enable the port if it was enabled pre-update
         include_tasks: "ports/enable.yml"
         vars:
@@ -120,10 +158,19 @@
           timeout: 30
         register: webmethods_apigateway_port_saved
 
-      - name: Response check - For a new ADD, fail if json response status is not success
+      - name: Response check1 - For a new ADD, fail if json response status is not success
         fail: 
-          msg: "unexpected json response...something wrong happened"
+          msg: "unexpected json response - status != success - something wrong happened"
         when: webmethods_apigateway_port_saved.json.status != "success"
+
+      - name: Response check2 - Fail if json response does not contain the listenerKey field
+        fail: 
+          msg: "unexpected json response - listenerKey field does not exist - something wrong happened"
+        when: webmethods_apigateway_port_saved.json.listenerKey is not defined
+
+      - name: Set listener key based on the response object
+        set_fact:
+          webmethods_apigateway_port_listenerkey: "{{ webmethods_apigateway_port_saved.json.listenerKey }}"
 
     when: get_existing_port.json.uniqueID is not defined
 
@@ -144,7 +191,7 @@
     when: webmethods_apigateway_port.access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_accessmode_saved verbosity=3
+    debug: var=webmethods_apigateway_port_accessmode_saved verbosity=1
 
   - name: Save IP access mode for the port
     uri:
@@ -163,4 +210,4 @@
     when: webmethods_apigateway_port.ip_access_mode is defined
 
   - name: Response for the saved object
-    debug: var=webmethods_apigateway_port_ipaccessmode_saved verbosity=3
+    debug: var=webmethods_apigateway_port_ipaccessmode_saved verbosity=1

@@ -26,4 +26,4 @@
   - name: Print response
     debug:
       var: rest_response.json
-      verbosity: 3
+      verbosity: 1

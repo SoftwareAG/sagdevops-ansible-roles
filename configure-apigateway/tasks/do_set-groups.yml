@@ -1,7 +1,7 @@
 ---
 
   - name: Groups to add/update
-    debug: var=apigateway_configparams_rest_usermgt_groups verbosity=3
+    debug: var=apigateway_configparams_rest_usermgt_groups verbosity=1
 
   - name: Include group tasks
     include_tasks: "do_set-groups-single.yml"

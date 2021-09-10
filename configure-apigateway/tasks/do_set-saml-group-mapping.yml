@@ -1,6 +1,6 @@
 ---
 
-  - debug: var=rvar_apigateway_saml_groups_mapping_list verbosity=3
+  - debug: var=rvar_apigateway_saml_groups_mapping_list verbosity=1
 
   - name: fail if group mapping list is not defined
     fail: 
