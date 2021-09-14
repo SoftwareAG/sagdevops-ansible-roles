@@ -26,7 +26,7 @@
           line: "{{ item.key }}={{ item.value }}"
         with_dict:
           apigw.kibana.autostart: "false"
-          apigw.es.url: "{{ elasticsearch_hosts_list }}"
+          apigw.es.url: "{{ elasticsearch_hosts_list | join(',') }}"
 
       #### second update: kibana yml file
       - name: Get content of elastic search config
