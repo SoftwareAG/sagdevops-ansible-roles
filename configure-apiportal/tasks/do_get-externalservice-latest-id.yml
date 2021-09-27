@@ -20,10 +20,6 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "list external services"
 
-  - name: Print the cmd_result to the console.
-    debug:
-      msg: "{{ cmd_result.stdout_lines }}"
-
   - name: Create temporary file
     ansible.builtin.tempfile:
       state: file
@@ -32,7 +28,7 @@
 
   - name: put the command output into a temp file for further processing
     copy:
-      content: "{{ cmd_result.stdout_lines }}"
+      content: "{{ cmd_result.stdout_lines | join('\n') }}"
       dest: "{{ tempfile_1.path }}"
 
   - name: Ansible grep pattern for extservice type
