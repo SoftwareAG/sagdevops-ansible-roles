@@ -78,11 +78,13 @@
     vars:
       configs_extdb: "{{ rvar_apiportal_configs_externaldb }}"
 
+  # adding the no_log entry here because the output of the command shows the DB password
   - import_role: 
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "file"
       webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.tp"
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: Remove command file
     ansible.builtin.file:
@@ -90,6 +92,9 @@
       state: absent
 
 ## 4 - Assign the tenant to the service
+
+  - name: Get external service
+    include_tasks: "do_get-externalservice_id.yml"
 
   - debug: 
       msg: 
