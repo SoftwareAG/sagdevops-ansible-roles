@@ -9,6 +9,16 @@
       msg: "runnable_suffix not specified...cannot do anything."
     when: runnable_suffix is not defined or runnable_suffix == ""
 
+  - name: fail if rvar_apiportal_configs_externaldb not specified
+    fail: 
+      msg: "rvar_apiportal_configs_externaldb not specified...cannot do anything."
+    when: rvar_apiportal_configs_externaldb is not defined
+
+  - name: fail if dbtype not specified or not valid
+    fail: 
+      msg: "rvar_apiportal_configs_externaldb.db_type not valid...must be one of ('oracle','mssql','postgres'). Cannot do anything."
+    when: not (rvar_apiportal_configs_externaldb.db_type | default()) in ('oracle','mssql','postgres')
+
 ## 1 - stopall, deconfigure postgres, start zookeeper only
 
   - import_role: 
@@ -52,6 +62,7 @@
   - debug: 
       msg: 
         - "Warning: could not JDBC enhance the runnable because the JDBC jar {{ rvar_apiportal_configs_externaldb.jdbc_jar_path | default('undefined') }} was not found."
+    when: stat_jdbc_jar.stat.exists == false
 
 ## 3 - Register the DB service in zookeeper
 
