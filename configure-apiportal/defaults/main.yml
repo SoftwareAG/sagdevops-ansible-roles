@@ -181,3 +181,12 @@ rvar_apiportal_configs_saml:
   #   assertion_lifetime_sec: 10
   #   assertion_consumer_service_overwrite_url: ""
   #   default_tenant: "default"
+
+rvar_apiportal_configs_externaldb:
+  db_type: oracle
+  jdbc_jar_path:
+  hostname:
+  port:
+  dbname:
+  username:
+  password:
