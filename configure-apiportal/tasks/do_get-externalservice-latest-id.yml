@@ -34,11 +34,18 @@
   - name: Ansible grep pattern for extservice type
     shell: "cat {{ tempfile_1.path }} | grep DB | grep external | awk {'print $3'} | sort | tail -n1"
     register: grep_output
-
-  - debug:
-      var: grep_output
-
+  
   - name: Delete the temp file
     ansible.builtin.file:
       path: "{{ tempfile_1.path }}"
       state: absent
+
+  - debug:
+      var: grep_output
+
+  - name: set latest id value in var
+    set_fact:
+      externalservice_latest_id: "{{ grep_output.stdout }}"
+
+  - debug:
+      var: externalservice_latest_id
