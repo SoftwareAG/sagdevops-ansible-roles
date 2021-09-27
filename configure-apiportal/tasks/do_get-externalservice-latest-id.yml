@@ -36,7 +36,7 @@
       dest: "{{ tempfile_1.path }}"
 
   - name: Ansible grep pattern for extservice type
-    shell: "cat {{ tempfile_1.path }} | grep DB | grep external"
+    shell: "cat {{ tempfile_1.path }} | grep DB | grep external | awk {'print $3'} | sort | tail -n1"
     register: grep_output
 
   - debug:
