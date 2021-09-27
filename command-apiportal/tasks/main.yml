@@ -23,9 +23,13 @@
     - "{{ webmethods_apiportal_acc_host }}"
     - "{{ webmethods_apiportal_acc_port }}"
     - "{{ webmethods_apiportal_acc_user }}"
-    - "{{ webmethods_apiportal_acc_command }}"
 
-- name: Init the command
+- name: fail if neither a command or a command file was provided
+  fail: 
+    msg: "A command or command file was not provided"
+  when: (webmethods_apiportal_acc_command is not defined or webmethods_apiportal_acc_command == "") and (webmethods_apiportal_acc_commandfile is not defined or webmethods_apiportal_acc_commandfile == "")
+
+- name: Create the command to execute, with a adhoc command
   set_fact:
     command_to_exec:
       - "/bin/bash"
@@ -40,6 +44,25 @@
       - "{{webmethods_apiportal_acc_port}}"
       - "{{webmethods_apiportal_acc_command}}"
   no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+  when: webmethods_apiportal_acc_command is defined and webmethods_apiportal_acc_command != ""
+
+- name: Create the command to execute, with a command file
+  set_fact:
+    command_to_exec:
+      - "/bin/bash"
+      - "acc.sh"
+      - "-h"
+      - "{{webmethods_apiportal_acc_host}}"
+      - "-u"
+      - "{{webmethods_apiportal_acc_user}}"
+      - "-pwd"
+      - "{{webmethods_apiportal_acc_password}}"
+      - "-p"
+      - "{{webmethods_apiportal_acc_port}}"
+      - "-f"
+      - "{{webmethods_apiportal_acc_commandfile}}"
+  no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+  when: (webmethods_apiportal_acc_commandfile is defined and webmethods_apiportal_acc_commandfile != "") and (webmethods_apiportal_acc_command is not defined or webmethods_apiportal_acc_command == "")
 
 - name: execute command
   command:
