@@ -22,13 +22,27 @@
 
   - name: Print the cmd_result to the console.
     debug:
-      msg: "{{ cmd_result.stdout }}"
+      msg: "{{ cmd_result.stdout_lines }}"
+
+  - name: Create temporary file
+    ansible.builtin.tempfile:
+      state: file
+      suffix: temp
+    register: tempfile_1
+
+  - name: put the command output into a temp file for further processing
+    copy:
+      content: "{{ cmd_result.stdout_lines }}"
+      dest: "{{ tempfile_1.path }}"
 
   - name: Ansible grep pattern for extservice type
-    shell: "echo \"{{ cmd_result.stdout }}\" | grep DB | grep external"
+    shell: "cat {{ tempfile_1.path }} | grep DB | grep external"
     register: grep_output
-    ignore_errors: true
 
   - debug:
-      var: grep_output.stdout_lines
-    when: grep_output.stdout != "
+      var: grep_output
+
+  - name: Delete the temp file
+    ansible.builtin.file:
+      path: "{{ tempfile_1.path }}"
+      state: absent
