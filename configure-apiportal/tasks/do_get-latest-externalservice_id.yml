@@ -9,6 +9,11 @@
       msg: "runnable_suffix not specified...cannot do anything."
     when: runnable_suffix is not defined or runnable_suffix == ""
 
+  - name: fail if rvar_apiportal_configs_externalservice_type not specified
+    fail: 
+      msg: "rvar_apiportal_configs_externalservice_type not specified...cannot do anything."
+    when: rvar_apiportal_configs_externalservice_type is not defined
+
   - import_role: 
       name: command-apiportal
     vars:
