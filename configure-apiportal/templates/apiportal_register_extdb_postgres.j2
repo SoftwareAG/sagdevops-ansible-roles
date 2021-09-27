@@ -1,0 +1,18 @@
+register external service db \
+host="{{ configs_extdb.hostname }}" \
+url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}" \
+driverClassName="org.postgresql.Driver" \
+username="{{ configs_extdb.username }}" \
+password="{{ configs_extdb.password }}" \
+maxIdle=15 \
+maxActive=300 \
+maxWait=10000 \
+removeAbandoned=false \
+removeAbandonedTimeout=600 \
+logAbandoned=true \
+initialSize=0 \
+testOnBorrow=true \
+validationQuery="select 1 from dual" \
+defaultAutoCommit=false \
+rollbackOnReturn=true \
+jmxEnabled=true
