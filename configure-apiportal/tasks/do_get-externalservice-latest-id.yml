@@ -23,3 +23,12 @@
   - name: Print the cmd_result to the console.
     debug:
       msg: "{{ cmd_result.stdout }}"
+
+  - name: Ansible grep pattern for extservice type
+    shell: "grep -r 'DB\\|external' {{ cmd_result.stdout }}"
+    register: grep_output
+    ignore_errors: true
+
+  - debug:
+      var: grep_output.stdout_lines
+    when: grep_output.stdout != "
