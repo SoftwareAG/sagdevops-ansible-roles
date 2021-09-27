@@ -25,7 +25,7 @@
       msg: "{{ cmd_result.stdout }}"
 
   - name: Ansible grep pattern for extservice type
-    shell: "grep -r 'DB\\|external' {{ cmd_result.stdout }}"
+    shell: "echo \"{{ cmd_result.stdout }}\" | grep DB | grep external"
     register: grep_output
     ignore_errors: true
 
