@@ -73,3 +73,8 @@
       mode: "0644"
     vars:
       configs_extdb: "{{ rvar_apiportal_configs_externaldb }}"
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.tp"
