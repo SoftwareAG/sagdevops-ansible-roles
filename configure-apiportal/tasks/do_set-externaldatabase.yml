@@ -24,12 +24,14 @@
   - import_role: 
       name: command-apiportal
     vars:
+      webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "stopall"
   
   ## we chose here to just deactivate the runnable, as opposed to "deconfigure" (which would delete all the data) 
   - import_role: 
       name: command-apiportal
     vars:
+      webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "deactivate postgres_{{ runnable_suffix }}"
   
   - debug: 
@@ -40,6 +42,7 @@
   - import_role: 
       name: command-apiportal
     vars:
+      webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "start zoo_{{ runnable_suffix }}"
 
 ## 2 - Enhancing the runnable with the JDBC jar
@@ -55,6 +58,7 @@
       - import_role: 
           name: command-apiportal
         vars:
+          webmethods_apiportal_acc_command_type: "command"
           webmethods_apiportal_acc_command: "enhance apiportalbundle_{{ runnable_suffix }} with commonsClasspath local file \"{{ rvar_apiportal_configs_externaldb.jdbc_jar_path }}\""
 
     when: stat_jdbc_jar.stat.exists
@@ -77,4 +81,5 @@
   - import_role: 
       name: command-apiportal
     vars:
+      webmethods_apiportal_acc_command_type: "file"
       webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.tp"
