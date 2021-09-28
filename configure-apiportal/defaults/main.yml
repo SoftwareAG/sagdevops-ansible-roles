@@ -185,7 +185,6 @@ rvar_apiportal_configs_saml:
 ## jdbc url will get dynamically contructed from db_type,hostname,port,dbname,jdbc_url_params
 ## if jdbc_url param is set, it will take precedence and be the value used.
 rvar_apiportal_configs_externaldb:
-  enabled: true
   db_type: oracle
   jdbc_jar_path:
   hostname:
