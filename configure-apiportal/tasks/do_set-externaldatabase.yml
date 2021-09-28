@@ -27,6 +27,8 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "stopall"
   
+  # TODO: I need to make sure it's all stopped...(ie. if it's starting, stopall is not going to stop it)
+
   ## we chose here to just deactivate the runnable, as opposed to "deconfigure" (which would delete all the data) 
   - import_role: 
       name: command-apiportal
@@ -134,11 +136,23 @@
   #     webmethods_apiportal_acc_command_type: "command"
   #     webmethods_apiportal_acc_command: "startall"
   
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STARTED of apiportalbundle_{{ runnable_suffix }} timeout 900"
 
 ## 6 - cleanup
 
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "deregister external service {{ __old_externalservice_latest_id }}"
+  - name: Cleanup old DB service
+    block:
+
+      - import_role: 
+          name: command-apiportal
+        vars:
+          webmethods_apiportal_acc_command_type: "command"
+          webmethods_apiportal_acc_command: "deregister external service {{ __old_externalservice_latest_id }}"
+
+    when: __old_externalservice_latest_id is defined and __old_externalservice_latest_id != ""
+
+
