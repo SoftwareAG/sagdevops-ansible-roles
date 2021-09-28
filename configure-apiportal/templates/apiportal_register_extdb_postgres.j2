@@ -1,10 +1,10 @@
 register external service db \
 host="{{ configs_extdb.hostname }}" \
-{%- if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  -%}
+{% if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  %}
 url="{{ configs_extdb.jdbc_url }}" \
-{%- else -%}
+{% else %}
 url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}" \
-{%- endif -%}
+{% endif %}
 driverClassName="{{ configs_extdb.driverClassName | default('org.postgresql.Driver') }}" \
 username="{{ configs_extdb.username }}" \
 password="{{ configs_extdb.password }}" \
