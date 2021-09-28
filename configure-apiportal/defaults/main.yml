@@ -182,11 +182,16 @@ rvar_apiportal_configs_saml:
   #   assertion_consumer_service_overwrite_url: ""
   #   default_tenant: "default"
 
+## jdbc url will get dynamically contructed from db_type,hostname,port,dbname,jdbc_url_params
+## if jdbc_url param is set, it will take precedence and be the value used.
 rvar_apiportal_configs_externaldb:
+  enabled: true
   db_type: oracle
   jdbc_jar_path:
   hostname:
   port:
   dbname:
+  jdbc_url_params:
+  jdbc_url:
   username:
   password:
