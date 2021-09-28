@@ -27,6 +27,8 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "stopall"
   
+  # TODO: I need to make sure it's all stopped...(ie. if it's starting, stopall is not going to stop it)
+
   ## we chose here to just deactivate the runnable, as opposed to "deconfigure" (which would delete all the data) 
   - import_role: 
       name: command-apiportal
@@ -70,6 +72,15 @@
 
 ## 3 - Register the DB service in zookeeper
 
+  - name: Get external service id
+    include_tasks: "do_get-externalservice-latest-id.yml"
+    vars:
+      rvar_apiportal_configs_externalservice_type: DB
+  
+  - name: save current external service id
+    set_fact:
+      __old_externalservice_latest_id: "{{ externalservice_latest_id }}"
+
   - name: Populate ACC command file
     template:
       src: apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.j2
@@ -94,11 +105,9 @@
 ## 4 - Assign the tenant to the service
 
   - name: Get external service
-    include_tasks: "do_get-externalservice_id.yml"
-
-  - debug: 
-      msg: 
-        - "TODO: fetch the latest service ID on the fly!!"
+    include_tasks: "do_get-externalservice-latest-id.yml"
+    vars:
+      rvar_apiportal_configs_externalservice_type: DB
 
   - name: Populate ACC command file
     template:
@@ -106,7 +115,7 @@
       dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
       mode: "0644"
     vars:
-      __ext_service_id: "db0000000000"
+      __ext_service_id: "{{ externalservice_latest_id }}"
 
   - import_role: 
       name: command-apiportal
@@ -121,9 +130,29 @@
 
 ## 5 - startall
 
-  # - import_role: 
-  #     name: command-apiportal
-  #   vars:
-  #     webmethods_apiportal_acc_command_type: "command"
-  #     webmethods_apiportal_acc_command: "startall"
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "startall"
   
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "wait for STARTED of apiportalbundle_{{ runnable_suffix }} timeout 900"
+
+## 6 - cleanup
+
+  - name: Cleanup old DB service
+    block:
+
+      - import_role: 
+          name: command-apiportal
+        vars:
+          webmethods_apiportal_acc_command_type: "command"
+          webmethods_apiportal_acc_command: "deregister external service {{ __old_externalservice_latest_id }}"
+
+    when: __old_externalservice_latest_id is defined and __old_externalservice_latest_id != ""
+
+
