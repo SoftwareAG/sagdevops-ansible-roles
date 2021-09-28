@@ -3,12 +3,13 @@ host="{{ configs_extdb.hostname }}" \
 {% if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  %}
 url="{{ configs_extdb.jdbc_url }}" \
 {% else %}
-url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}"
+url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}
 {%- if configs_extdb.jdbc_url_params is defined and configs_extdb.jdbc_url_params != ""  -%}
-?{{ configs_extdb.jdbc_url_params | default() }} \
+?{{ configs_extdb.jdbc_url_params | default() }}"
 {%- else -%}
- \
+"
 {%- endif -%}
+ \
 {% endif %}
 driverClassName="{{ configs_extdb.driverClassName | default('org.postgresql.Driver') }}" \
 username="{{ configs_extdb.username }}" \
