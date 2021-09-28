@@ -72,6 +72,8 @@
 
   - name: Get external service id
     include_tasks: "do_get-externalservice-latest-id.yml"
+    vars:
+      rvar_apiportal_configs_externalservice_type: DB
   
   - name: save current external service id
     set_fact:
@@ -102,6 +104,8 @@
 
   - name: Get external service
     include_tasks: "do_get-externalservice-latest-id.yml"
+    vars:
+      rvar_apiportal_configs_externalservice_type: DB
 
   - name: Populate ACC command file
     template:
