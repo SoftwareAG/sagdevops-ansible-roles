@@ -5,7 +5,7 @@ url="{{ configs_extdb.jdbc_url }}" \
 {% else %}
 url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}
 {%- if configs_extdb.jdbc_url_params is defined and configs_extdb.jdbc_url_params != ""  -%}
-?{{ configs_extdb.jdbc_url_params | default() }}"
+?{{ configs_extdb.jdbc_url_params }}"
 {%- else -%}
 "
 {%- endif -%}
