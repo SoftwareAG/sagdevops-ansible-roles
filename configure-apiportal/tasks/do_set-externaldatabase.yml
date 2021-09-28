@@ -97,17 +97,22 @@
       webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.tp"
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
-  - name: Remove command file
+  - name: Get external service that was just created
+    include_tasks: "do_get-externalservice-latest-id.yml"
+    vars:
+      rvar_apiportal_configs_externalservice_type: DB
+
+  - name: fail if no new external service was created
+    fail: 
+      msg: "A new External service was not created, which is abnormal at this point in the playbook...investigate..."
+    when: externalservice_latest_id is not defined or externalservice_latest_id == "" or externalservice_latest_id == __old_externalservice_latest_id
+
+  - name: Remove command file if external service was created fine
     ansible.builtin.file:
       path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_register_extdb_{{ rvar_apiportal_configs_externaldb.db_type | default() | lower }}.tp"
       state: absent
 
 ## 4 - Assign the tenant to the service
-
-  - name: Get external service
-    include_tasks: "do_get-externalservice-latest-id.yml"
-    vars:
-      rvar_apiportal_configs_externalservice_type: DB
 
   - name: Populate ACC command file
     template:
