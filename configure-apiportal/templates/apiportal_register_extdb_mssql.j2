@@ -1,10 +1,10 @@
 register external service db \
 host="{{ configs_extdb.hostname }}" \
-{%- if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  -%}
+{% if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  %}
 url="{{ configs_extdb.jdbc_url }}" \
-{%- else -%}
+{% else %}
 url="jdbc:sqlserver://{{ configs_extdb.hostname }}:{{ configs_extdb.port }};DatabaseName={{ configs_extdb.dbname }}" \
-{%- endif -%}
+{% endif %}
 driverClassName="{{ configs_extdb.driverClassName | default('com.microsoft.sqlserver.jdbc.SQLServerDriver') }}" \
 username="{{ configs_extdb.username }}" \
 password="{{ configs_extdb.password }}" \
@@ -16,7 +16,7 @@ removeAbandonedTimeout={{ configs_extdb.removeAbandonedTimeout | default('600') 
 logAbandoned={{ configs_extdb.logAbandoned | default('false') }} \
 initialSize={{ configs_extdb.initialSize | default('0') }} \
 testOnBorrow={{ configs_extdb.testOnBorrow | default('true') }} \
-validationQuery={{ configs_extdb.validationQuery | default('select 1 from dual') }} \
+validationQuery="{{ configs_extdb.validationQuery | default('select 1 from dual') }}" \
 defaultAutoCommit={{ configs_extdb.defaultAutoCommit | default('false') }} \
 rollbackOnReturn={{ configs_extdb.rollbackOnReturn | default('true') }} \
 jmxEnabled={{ configs_extdb.jmxEnabled | default('true') }}

@@ -3,7 +3,7 @@ host="{{ configs_extdb.hostname }}" \
 {% if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  %}
 url="{{ configs_extdb.jdbc_url }}" \
 {% else %}
-url="jdbc:oracle:thin:@{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}" \
+url="jdbc:oracle:thin:@{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}?{{ configs_extdb.jdbc_url_querystring | default() }}" \
 {% endif %}
 driverClassName="{{ configs_extdb.driverClassName | default('oracle.jdbc.driver.OracleDriver') }}" \
 username="{{ configs_extdb.username }}" \
@@ -16,7 +16,7 @@ removeAbandonedTimeout={{ configs_extdb.removeAbandonedTimeout | default('600') 
 logAbandoned={{ configs_extdb.logAbandoned | default('false') }} \
 initialSize={{ configs_extdb.initialSize | default('0') }} \
 testOnBorrow={{ configs_extdb.testOnBorrow | default('true') }} \
-validationQuery={{ configs_extdb.validationQuery | default('select 1 from dual') }} \
+validationQuery="{{ configs_extdb.validationQuery | default('select 1 from dual') }}" \
 defaultAutoCommit={{ configs_extdb.defaultAutoCommit | default('false') }} \
 rollbackOnReturn={{ configs_extdb.rollbackOnReturn | default('true') }} \
 jmxEnabled={{ configs_extdb.jmxEnabled | default('true') }}
