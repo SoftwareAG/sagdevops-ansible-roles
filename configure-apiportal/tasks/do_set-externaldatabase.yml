@@ -19,13 +19,13 @@
       msg: "rvar_apiportal_configs_externaldb.db_type not valid...must be one of ('oracle','mssql','postgres'). Cannot do anything."
     when: not (rvar_apiportal_configs_externaldb.db_type | default()) in ('oracle','mssql','postgres')
 
-## 1 - stopall, deconfigure postgres, start zookeeper only
+## 1 - killall, deconfigure postgres, start zookeeper only
 
   - import_role: 
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "stopall"
+      webmethods_apiportal_acc_command: "killall"
 
   # TODO: we should not wait for STOPPED if postgres is already in DEACTIVATED state...we need a way to check for state before hand
   - include_role: 
@@ -179,11 +179,18 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "startall"
   
-  - import_role: 
+  - include_role: 
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STARTED of apiportalbundle_{{ runnable_suffix }} timeout 900"
+      webmethods_apiportal_acc_command: "wait for STARTED of {{ item }}_{{ runnable_suffix }} timeout 300"
+    with_items:
+      - zoo
+      - cloudsearch
+      - elastic
+      - kibana
+      - apiportalbundle
+      - loadbalancer
 
 ## 6 - cleanup
 
