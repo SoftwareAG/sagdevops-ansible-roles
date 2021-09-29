@@ -1,9 +1,12 @@
 ---
 
-- name: Print the params
-  debug:
-    msg: "Running apiportal with command {{ webmethods_apiportal_acc_command | default('undefined') }}"
-    verbosity: 1
+- debug:
+    msg: "Running apiportal ACC command {{ webmethods_apiportal_acc_command | default('undefined') }}"
+  when: webmethods_apiportal_acc_command_type == "command"
+
+- debug:
+    msg: "Running apiportal ACC command file {{ webmethods_apiportal_acc_commandfile | default('undefined') }}"
+  when: webmethods_apiportal_acc_command_type == "file"
 
 - name: Check that the exec file exists
   stat:
@@ -101,7 +104,7 @@
 
   when: webmethods_apiportal_acc_command_type == "file"
 
-- name: execute command
+- name: execute ACC command
   command:
     argv: "{{ command_to_exec }}"
     chdir: "{{ webmethods_apiportal_acc_exec_dir }}"
@@ -110,7 +113,7 @@
   register: cmd_async
   no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
-- name: "Check status for command"
+- name: check status for ACC command
   async_status:
     jid: "{{ cmd_async.ansible_job_id }}"
   register: cmd_result
