@@ -12,7 +12,7 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STARTED of {{ item }}_{{ runnable_suffix }} timeout 300"
+      webmethods_apiportal_acc_command: "wait for STARTED or DEACTIVATED of {{ item }}_{{ runnable_suffix }} timeout 300"
     with_items:
       - zoo
       - postgres

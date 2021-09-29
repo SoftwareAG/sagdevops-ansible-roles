@@ -21,27 +21,10 @@
 
 ## 1 - killall, deconfigure postgres, start zookeeper only
 
-  - import_role: 
-      name: command-apiportal
+  - name: stop all runnables
+    include_tasks: "do_set-stopall.yml"
     vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "killall"
-
-  # TODO: we should not wait for STOPPED if postgres is already in DEACTIVATED state...we need a way to check for state before hand
-  - include_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of {{ runnable_type_item }}_{{ runnable_suffix }} timeout 300"
-    with_items:
-      - loadbalancer
-      - apiportalbundle
-      - kibana
-      - elastic
-      - cloudsearch
-      - zoo
-    loop_control:
-      loop_var: runnable_type_item
+      force: true
 
   ## we chose here to just deactivate the runnable, as opposed to "deconfigure" (which would delete all the data) 
   - import_role: 
@@ -175,26 +158,10 @@
 
 ## 6 - startall
 
-  - import_role: 
-      name: command-apiportal
+  - name: start all runnables
+    include_tasks: "do_set-startall.yml"
     vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "startall"
-  
-  - include_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STARTED of {{ runnable_type_item }}_{{ runnable_suffix }} timeout 300"
-    with_items:
-      - zoo
-      - cloudsearch
-      - elastic
-      - kibana
-      - apiportalbundle
-      - loadbalancer
-    loop_control:
-      loop_var: runnable_type_item
+      force: true
 
 ## 6 - cleanup
 

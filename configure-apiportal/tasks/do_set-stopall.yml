@@ -4,6 +4,13 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command: stopall
+    when: force | default() | bool == false
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command: killall
+    when: force | default() | bool == true
 
 ## TODO: we should fetch the items that are not disabled...
 ## TODO: and maybe we should detect the ones that are in STOPPING or STARTING state and act accordingly?
@@ -12,7 +19,7 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of {{ item }}_{{ runnable_suffix }} timeout 300"
+      webmethods_apiportal_acc_command: "wait for STOPPED or DOWN or FAILED or DEACTIVATED of {{ runnable_type_item }}_{{ runnable_suffix }} timeout 300"
     with_items:
       - loadbalancer
       - apiportalbundle
@@ -21,3 +28,5 @@
       - cloudsearch
       - postgres
       - zoo
+    loop_control:
+      loop_var: runnable_type_item
