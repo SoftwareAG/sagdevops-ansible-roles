@@ -18,11 +18,13 @@
 - name: fail if mandatory param not specified
   fail: 
     msg: "A mandatory param was not defined, cannot do anything."
-  when: item is not defined
+  when: mandatory_item is not defined
   with_items:
     - "{{ webmethods_apiportal_acc_host }}"
     - "{{ webmethods_apiportal_acc_port }}"
     - "{{ webmethods_apiportal_acc_user }}"
+  loop_control:
+    loop_var: mandatory_item
 
 - name: First default to type=command if the type is not defined
   set_fact:

@@ -22,7 +22,7 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of {{ item }}_{{ runnable_suffix }} timeout 300"
+      webmethods_apiportal_acc_command: "wait for STOPPED of {{ runnable_type_item }}_{{ runnable_suffix }} timeout 300"
     with_items:
       - loadbalancer
       - apiportalbundle
@@ -30,6 +30,8 @@
       - elastic
       - cloudsearch
       - zoo
+    loop_control:
+      loop_var: runnable_type_item
 
   - import_role: 
       name: command-apiportal
@@ -122,7 +124,7 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STARTED of {{ item }}_{{ runnable_suffix }} timeout 300"
+      webmethods_apiportal_acc_command: "wait for STARTED of {{ runnable_type_item }}_{{ runnable_suffix }} timeout 300"
     with_items:
       - zoo
       - postgres
@@ -131,3 +133,5 @@
       - kibana
       - apiportalbundle
       - loadbalancer
+    loop_control:
+      loop_var: runnable_type_item
