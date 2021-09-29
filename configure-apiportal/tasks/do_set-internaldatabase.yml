@@ -22,6 +22,12 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "activate postgres_{{ runnable_suffix }}"
 
+  - include_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "wait for STOPPED of postgres_{{ runnable_suffix }} timeout 300"
+    
   - import_role: 
       name: command-apiportal
     vars:

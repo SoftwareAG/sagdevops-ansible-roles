@@ -33,6 +33,12 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "deactivate postgres_{{ runnable_suffix }}"
   
+  - include_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "wait for DEACTIVATED of postgres_{{ runnable_suffix }} timeout 300"
+    
   - debug: 
       msg: 
         - "The internal postgres runnable was just 'deactivated' to avoid accidental deletion of all the internal postgres data until this point."
