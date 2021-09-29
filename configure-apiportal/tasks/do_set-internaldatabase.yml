@@ -17,42 +17,54 @@
       webmethods_apiportal_acc_command_type: "command"
       webmethods_apiportal_acc_command: "stopall"
   
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of apiportalbundle_{{ runnable_suffix }} timeout 300"
-  
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of kibana_{{ runnable_suffix }} timeout 300"
-  
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of elastic_{{ runnable_suffix }} timeout 300"
-  
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of cloudsearch_{{ runnable_suffix }} timeout 300"
-
   # TODO: we should not wait for STOPPED if postgres is already in DEACTIVATED state...we need a way to check for state before hand
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "wait for STOPPED of {{ item }}_{{ runnable_suffix }} timeout 300"
+    with_items:
+      - apiportalbundle
+      - kibana
+      - elastic
+      - cloudsearch
+      - zoo
+
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STOPPED of apiportalbundle_{{ runnable_suffix }} timeout 300"
+  
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STOPPED of kibana_{{ runnable_suffix }} timeout 300"
+  
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STOPPED of elastic_{{ runnable_suffix }} timeout 300"
+  
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STOPPED of cloudsearch_{{ runnable_suffix }} timeout 300"
+
   # - import_role: 
   #     name: command-apiportal
   #   vars:
   #     webmethods_apiportal_acc_command_type: "command"
   #     webmethods_apiportal_acc_command: "wait for STOPPED of postgres_{{ runnable_suffix }} timeout 300"
 
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "command"
-      webmethods_apiportal_acc_command: "wait for STOPPED of zoo_{{ runnable_suffix }} timeout 300"
+  # - import_role: 
+  #     name: command-apiportal
+  #   vars:
+  #     webmethods_apiportal_acc_command_type: "command"
+  #     webmethods_apiportal_acc_command: "wait for STOPPED of zoo_{{ runnable_suffix }} timeout 300"
 
   - import_role: 
       name: command-apiportal
