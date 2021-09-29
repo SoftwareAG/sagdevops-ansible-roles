@@ -4,3 +4,20 @@
       name: command-apiportal
     vars:
       webmethods_apiportal_acc_command: startall
+
+## TODO: we should fetch the items that are not disabled...
+## TODO: and maybe we should detect the ones that are in STOPPING or STARTING state and act accordingly?
+
+  - include_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "wait for STARTED of {{ item }}_{{ runnable_suffix }} timeout 300"
+    with_items:
+      - zoo
+      - postgres
+      - cloudsearch
+      - elastic
+      - kibana
+      - apiportalbundle
+      - loadbalancer
