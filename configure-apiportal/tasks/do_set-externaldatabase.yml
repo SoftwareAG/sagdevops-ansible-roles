@@ -185,11 +185,11 @@
         when: stat_cloudsearch_data.stat.exists
 
       - name: Move elasticsearch data dir to a backup
-        stat: path={{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes
+        stat: path={{ webmethods_apiportal_work_elastic_dir }}/data/nodes
         register: stat_elasticsearch_data
 
       - name: Move cloudsearch data to bak
-        command: mv {{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes {{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes.{{ ansible_date_time.iso8601_basic_short }}.bak
+        command: mv {{ webmethods_apiportal_work_elastic_dir }}/data/nodes {{ webmethods_apiportal_work_elastic_dir }}/data/nodes.{{ ansible_date_time.iso8601_basic_short }}.bak
         when: stat_elasticsearch_data.stat.exists
 
     when: (rvar_apiportal_configs_externaldb.cleanupdata | default('true') | bool) == true
