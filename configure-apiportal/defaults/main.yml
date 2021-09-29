@@ -3,6 +3,10 @@
 webmethods_apiportal_work_dir: "{{ webmethods_install_dir }}/API_Portal/server/bin/work"
 webmethods_apiportal_work_postgres_dir: "{{ webmethods_apiportal_work_dir }}/work_postgres_{{ webmethods_apiportal_acc_install_size_code }}"
 webmethods_apiportal_work_apiportalbundle_dir: "{{ webmethods_apiportal_work_dir }}/work_apiportalbundle_{{ webmethods_apiportal_acc_install_size_code }}"
+webmethods_apiportal_work_elastic_dir: "{{ webmethods_apiportal_work_dir }}/work_elastic_{{ webmethods_apiportal_acc_install_size_code }}"
+webmethods_apiportal_work_kibana_dir: "{{ webmethods_apiportal_work_dir }}/work_kibana_{{ webmethods_apiportal_acc_install_size_code }}"
+webmethods_apiportal_work_cloudsearch_dir: "{{ webmethods_apiportal_work_dir }}/work_cloudsearch_{{ webmethods_apiportal_acc_install_size_code }}"
+webmethods_apiportal_work_zookeeper_dir: "{{ webmethods_apiportal_work_dir }}/work_zoo_{{ webmethods_apiportal_acc_install_size_code }}"
 
 webmethods_apiportal_postgresdata_dir: "{{ webmethods_apiportal_work_postgres_dir }}/pgworkdata"
 webmethods_apiportal_tools_dir: "{{ webmethods_apiportal_work_apiportalbundle_dir }}/tools/bin"

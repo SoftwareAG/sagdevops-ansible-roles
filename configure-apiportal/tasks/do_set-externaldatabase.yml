@@ -168,7 +168,33 @@
       path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
       state: absent
 
-## 5 - startall
+## 5 - Cleanup transient data in eladtic search and cloudsearch
+
+  - name: Cleanup transient data (true by default)
+    block:
+
+      - debug: 
+          msg: "Warning: cleaning up data in elasticsearch and cloudsearch (will backup the data though)"
+        
+      - name: Move cloudsearch data dir to a backup
+        stat: path={{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex
+        register: stat_cloudsearch_data
+
+      - name: Move cloudsearch data to bak
+        command: mv {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex.{{ ansible_date_time.iso8601_basic_short }}.bak
+        when: stat_cloudsearch_data.stat.exists
+
+      - name: Move elasticsearch data dir to a backup
+        stat: path={{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes
+        register: stat_elasticsearch_data
+
+      - name: Move cloudsearch data to bak
+        command: mv {{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes {{ webmethods_apiportal_work_elasticsearch_dir }}/data/nodes.{{ ansible_date_time.iso8601_basic_short }}.bak
+        when: stat_elasticsearch_data.stat.exists
+
+    when: (rvar_apiportal_configs_externaldb.cleanupdata | default('true') | bool) == true
+
+## 6 - startall
 
   - import_role: 
       name: command-apiportal
