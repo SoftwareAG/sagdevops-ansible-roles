@@ -126,6 +126,7 @@
     include_tasks: "services/do_unassign_service.yml"
     vars:
       __service_id: "db0000000000"
+    ignore_errors: yes
 
 ## 5 - Cleanup old services
 
