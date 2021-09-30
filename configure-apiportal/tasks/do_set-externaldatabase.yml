@@ -124,9 +124,10 @@
 
   - name: Un-assign the tenants from the internal service
     include_tasks: "services/do_unassign_service.yml"
+    apply:
+      ignore_errors: yes
     vars:
       __service_id: "db0000000000"
-    ignore_errors: yes
 
 ## 5 - Cleanup old services
 
