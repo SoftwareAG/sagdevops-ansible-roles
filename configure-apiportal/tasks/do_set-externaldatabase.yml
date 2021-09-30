@@ -41,7 +41,7 @@
     
   - debug: 
       msg: 
-        - "The internal postgres runnable was just 'deactivated' to avoid accidental deletion of all the internal postgres data until this point."
+        - "The internal postgres runnable was only 'deactivated' to avoid accidental deletion of all the internal postgres data until this point."
         - "If you are sure you want to delete postgres and all its data, manually run the command 'deconfigure postgres_{{ runnable_suffix }}'"
 
   - import_role: 
