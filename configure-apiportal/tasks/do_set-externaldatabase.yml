@@ -136,7 +136,39 @@
       path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
       state: absent
 
-## 5 - Cleanup transient data in eladtic search and cloudsearch
+## 5 - Cleanup old services
+
+  - name: unassign the tenants from the old service + delete old services
+    block:
+
+      - name: Populate ACC command file
+        template:
+          src: apiportal_extdb_unassign_tenant.j2
+          dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+          mode: "0644"
+        vars:
+          __ext_service_id: "{{ __old_externalservice_latest_id }}"
+
+      - import_role: 
+          name: command-apiportal
+        vars:
+          webmethods_apiportal_acc_command_type: "file"
+          webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+
+      - name: Remove command file
+        ansible.builtin.file:
+          path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+          state: absent
+
+      - import_role: 
+          name: command-apiportal
+        vars:
+          webmethods_apiportal_acc_command_type: "command"
+          webmethods_apiportal_acc_command: "deregister external service {{ __old_externalservice_latest_id }}"
+
+    when: __old_externalservice_latest_id is defined and __old_externalservice_latest_id != ""
+
+## 6 - Cleanup transient data in eladtic search and cloudsearch
 
   - name: Cleanup transient data (true by default)
     block:
@@ -168,18 +200,3 @@
     include_tasks: "do_set-startall.yml"
     vars:
       force: true
-
-## 6 - cleanup
-
-  - name: Cleanup old DB service
-    block:
-
-      - import_role: 
-          name: command-apiportal
-        vars:
-          webmethods_apiportal_acc_command_type: "command"
-          webmethods_apiportal_acc_command: "deregister external service {{ __old_externalservice_latest_id }}"
-
-    when: __old_externalservice_latest_id is defined and __old_externalservice_latest_id != ""
-
-
