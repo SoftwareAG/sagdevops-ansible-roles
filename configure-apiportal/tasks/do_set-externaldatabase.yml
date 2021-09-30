@@ -76,7 +76,7 @@
 ## 3 - Register the DB service in zookeeper
 
   - name: Get external service id
-    include_tasks: "do_get-externalservice-latest-id.yml"
+    include_tasks: "services/do_get-externalservice-latest-id.yml"
     vars:
       rvar_apiportal_configs_externalservice_type: DB
   
@@ -101,7 +101,7 @@
     no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
 
   - name: Get external service that was just created
-    include_tasks: "do_get-externalservice-latest-id.yml"
+    include_tasks: "services/do_get-externalservice-latest-id.yml"
     vars:
       rvar_apiportal_configs_externalservice_type: DB
 
@@ -117,48 +117,20 @@
 
 ## 4 - Assign the tenant to the service
 
-  - name: Populate ACC command file
-    template:
-      src: apiportal_extdb_assign_tenant.j2
-      dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
-      mode: "0644"
+  - name: Assign the new ext service id to the tenants
+    include_tasks: "services/do_assign_service.yml"
     vars:
-      __ext_service_id: "{{ externalservice_latest_id }}"
-
-  - import_role: 
-      name: command-apiportal
-    vars:
-      webmethods_apiportal_acc_command_type: "file"
-      webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
-
-  - name: Remove command file
-    ansible.builtin.file:
-      path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_assign_tenant.tp"
-      state: absent
+      __externalservice_latest_id: "{{ externalservice_latest_id }}"
 
 ## 5 - Cleanup old services
 
   - name: unassign the tenants from the old service + delete old services
     block:
 
-      - name: Populate ACC command file
-        template:
-          src: apiportal_extdb_unassign_tenant.j2
-          dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
-          mode: "0644"
+      - name: Un-assign the new ext service id to the tenants
+        include_tasks: "services/do_unassign_service.yml"
         vars:
-          __ext_service_id: "{{ __old_externalservice_latest_id }}"
-
-      - import_role: 
-          name: command-apiportal
-        vars:
-          webmethods_apiportal_acc_command_type: "file"
-          webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
-
-      - name: Remove command file
-        ansible.builtin.file:
-          path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
-          state: absent
+          __externalservice_latest_id: "{{ __old_externalservice_latest_id }}"
 
       - import_role: 
           name: command-apiportal

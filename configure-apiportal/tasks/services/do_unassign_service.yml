@@ -1,0 +1,34 @@
+---
+
+  - name: set initial facts
+    set_fact:
+      runnable_suffix: "{{ webmethods_apiportal_acc_install_size_code }}"
+
+  - name: fail if runnable_suffix not specified
+    fail: 
+      msg: "runnable_suffix not specified...cannot do anything."
+    when: runnable_suffix is not defined or runnable_suffix == ""
+
+  - name: fail if __externalservice_latest_id not specified
+    fail: 
+      msg: "__externalservice_latest_id not specified...cannot do anything."
+    when: __externalservice_latest_id is not defined
+
+  - name: Populate ACC command file
+    template:
+      src: apiportal_extdb_unassign_tenant.j2
+      dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+      mode: "0644"
+    vars:
+      __ext_service_id: "{{ __externalservice_latest_id }}"
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "file"
+      webmethods_apiportal_acc_commandfile: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+
+  - name: Remove command file
+    ansible.builtin.file:
+      path: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
+      state: absent
