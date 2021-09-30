@@ -9,10 +9,10 @@
       msg: "runnable_suffix not specified...cannot do anything."
     when: runnable_suffix is not defined or runnable_suffix == ""
 
-  - name: fail if __externalservice_latest_id not specified
+  - name: fail if __service_id not specified
     fail: 
-      msg: "__externalservice_latest_id not specified...cannot do anything."
-    when: __externalservice_latest_id is not defined
+      msg: "__service_id not specified...cannot do anything."
+    when: __service_id is not defined
 
   - name: Populate ACC command file
     template:
@@ -20,7 +20,7 @@
       dest: "{{ webmethods_apiportal_acc_exec_dir }}/apiportal_extdb_unassign_tenant.tp"
       mode: "0644"
     vars:
-      __ext_service_id: "{{ __externalservice_latest_id }}"
+      __ext_service_id: "{{ __service_id }}"
 
   - import_role: 
       name: command-apiportal

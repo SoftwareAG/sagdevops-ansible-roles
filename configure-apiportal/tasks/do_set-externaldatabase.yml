@@ -120,7 +120,12 @@
   - name: Assign the new ext service id to the tenants
     include_tasks: "services/do_assign_service.yml"
     vars:
-      __externalservice_latest_id: "{{ externalservice_latest_id }}"
+      __service_id: "{{ externalservice_latest_id }}"
+
+  - name: Un-assign the tenants from the internal service
+    include_tasks: "services/do_unassign_service.yml"
+    vars:
+      __service_id: "db0000000000"
 
 ## 5 - Cleanup old services
 
@@ -130,7 +135,7 @@
       - name: Un-assign the new ext service id to the tenants
         include_tasks: "services/do_unassign_service.yml"
         vars:
-          __externalservice_latest_id: "{{ __old_externalservice_latest_id }}"
+          __service_id: "{{ __old_externalservice_latest_id }}"
 
       - import_role: 
           name: command-apiportal
@@ -140,7 +145,36 @@
 
     when: __old_externalservice_latest_id is defined and __old_externalservice_latest_id != ""
 
-## 6 - Cleanup transient data in eladtic search and cloudsearch
+## 6 list final details on external services
+  
+  - debug: 
+      msg: "Listing all external services"
+      
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "list external services"
+
+  - debug: 
+      msg: "Full Details on the latest in use DB external service"
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "show external service {{ externalservice_latest_id }}"
+
+  - debug: 
+      msg: "List mapping of tenants to services"
+
+  - import_role: 
+      name: command-apiportal
+    vars:
+      webmethods_apiportal_acc_command_type: "command"
+      webmethods_apiportal_acc_command: "list tenants for services"
+
+## 7 - Cleanup transient data in eladtic search and cloudsearch
 
   - name: Cleanup transient data (true by default)
     block:
@@ -166,7 +200,7 @@
 
     when: (rvar_apiportal_configs_externaldb.cleanupdata | default('true') | bool) == true
 
-## 6 - startall
+## 8 - startall
 
   - name: start all runnables
     include_tasks: "do_set-startall.yml"

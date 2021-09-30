@@ -35,7 +35,7 @@
   - name: Assign the tenants back to the internal service
     include_tasks: "services/do_assign_service.yml"
     vars:
-      __externalservice_latest_id: "db0000000000"
+      __service_id: "db0000000000"
 
 ## 4 - De-register external service if it was defined (TODO: we could use a loop to deregister all the db service if there was multiple)
 
