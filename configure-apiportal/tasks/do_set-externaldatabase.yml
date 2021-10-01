@@ -201,7 +201,7 @@
         command: mv {{ webmethods_apiportal_work_elastic_dir }}/data/nodes {{ webmethods_apiportal_work_elastic_dir }}/data/nodes.{{ ansible_date_time.iso8601_basic_short }}.bak
         when: stat_elasticsearch_data.stat.exists
 
-    when: (rvar_apiportal_configs_externaldb.cleanupdata | default('true') | bool) == true
+    when: rvar_apiportal_configs_externaldb.cleanupdata is defined and (rvar_apiportal_configs_externaldb.cleanupdata | default() | bool) == true
 
 ## 8 - startall
 
