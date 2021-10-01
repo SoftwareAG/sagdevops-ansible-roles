@@ -198,3 +198,5 @@ rvar_apiportal_configs_externaldb:
   jdbc_url:
   username:
   password:
+  cleanup_csdata: false
+  cleanup_esdata: false
