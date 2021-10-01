@@ -179,19 +179,11 @@
 
 ## 7 - Cleanup transient data in eladtic search and cloudsearch
 
-  - name: Cleanup transient data (true by default)
+  - name: Cleanup transient data in elastic search
     block:
 
       - debug: 
-          msg: "Warning: cleaning up data in elasticsearch and cloudsearch (will backup the data though)"
-        
-      - name: Move cloudsearch data dir to a backup
-        stat: path={{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex
-        register: stat_cloudsearch_data
-
-      - name: Move cloudsearch data to bak
-        command: mv {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex.{{ ansible_date_time.iso8601_basic_short }}.bak
-        when: stat_cloudsearch_data.stat.exists
+          msg: "Warning: Clearning up data in elasticsearch (will just rename the data folder to not lose the data)"
 
       - name: Move elasticsearch data dir to a backup
         stat: path={{ webmethods_apiportal_work_elastic_dir }}/data/nodes
@@ -201,7 +193,23 @@
         command: mv {{ webmethods_apiportal_work_elastic_dir }}/data/nodes {{ webmethods_apiportal_work_elastic_dir }}/data/nodes.{{ ansible_date_time.iso8601_basic_short }}.bak
         when: stat_elasticsearch_data.stat.exists
 
-    when: rvar_apiportal_configs_externaldb.cleanupdata is defined and (rvar_apiportal_configs_externaldb.cleanupdata | default() | bool) == true
+    when: rvar_apiportal_configs_externaldb.cleanup_esdata is defined and (rvar_apiportal_configs_externaldb.cleanup_esdata | default() | bool) == true
+
+  - name: Cleanup transient data in cloudsearch
+    block:
+
+      - debug: 
+          msg: "Warning: Clearning up data in cloudsearch (will just rename the data folder to not lose the data)"
+
+      - name: Move cloudsearch data dir to a backup
+        stat: path={{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex
+        register: stat_cloudsearch_data
+
+      - name: Move cloudsearch data to bak
+        command: mv {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex {{ webmethods_apiportal_work_cloudsearch_dir }}/rsindex.{{ ansible_date_time.iso8601_basic_short }}.bak
+        when: stat_cloudsearch_data.stat.exists
+
+    when: rvar_apiportal_configs_externaldb.cleanup_csdata is defined and (rvar_apiportal_configs_externaldb.cleanup_csdata | default() | bool) == true
 
 ## 8 - startall
 
