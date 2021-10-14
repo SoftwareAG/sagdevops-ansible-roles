@@ -1,5 +1,10 @@
 ---
 
+- name: First default to type=command if the type is not defined
+  set_fact:
+    webmethods_apiportal_acc_command_type: "command"
+  when: webmethods_apiportal_acc_command_type is not defined
+
 - debug:
     msg: "Running apiportal ACC command {{ webmethods_apiportal_acc_command | default('undefined') }}"
   when: webmethods_apiportal_acc_command_type == "command"
@@ -14,12 +19,12 @@
   register: acc_exists
 
 - name: fail if exec file does not exist
-  fail: 
+  fail:
     msg: "ACC executable does not exist..."
   when: not acc_exists.stat.exists
 
 - name: fail if mandatory param not specified
-  fail: 
+  fail:
     msg: "A mandatory param was not defined, cannot do anything."
   when: mandatory_item is not defined
   with_items:
@@ -29,13 +34,8 @@
   loop_control:
     loop_var: mandatory_item
 
-- name: First default to type=command if the type is not defined
-  set_fact:
-    webmethods_apiportal_acc_command_type: "command"
-  when: webmethods_apiportal_acc_command_type is not defined
-
 - name: fail if command type is not valid
-  fail: 
+  fail:
     msg: "webmethods_apiportal_acc_command_type not valid...must be one of ('command','file'). Cannot do anything."
   when: not (webmethods_apiportal_acc_command_type | default()) in ('command','file')
 
@@ -43,7 +43,7 @@
   block:
 
     - name: fail if a command was NOT provided
-      fail: 
+      fail:
         msg: "A command or command file was not provided"
       when:  webmethods_apiportal_acc_command is not defined or webmethods_apiportal_acc_command == ""
 
@@ -70,7 +70,7 @@
   block:
 
     - name: fail if a command FILE was NOT provided
-      fail: 
+      fail:
         msg: "A command file was not provided"
       when: webmethods_apiportal_acc_commandfile is not defined or webmethods_apiportal_acc_commandfile == ""
 
@@ -80,7 +80,7 @@
       register: stat_command_file
 
     - name: fail if a command FILE does not exist on the file system
-      fail: 
+      fail:
         msg: "The command file at {{ webmethods_apiportal_acc_commandfile }} does not exist on the file system"
       when: stat_command_file.stat.exists == false
 
