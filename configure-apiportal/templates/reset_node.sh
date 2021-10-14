@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NODENAME=`cat /etc/hostname`
-export SAG_HOME=/opt/softwareag
+export SAG_HOME={{ webmethods_install_dir }}
 export JAVA_HOME=${SAG_HOME}/jvm/jvm
 
 # shutdown components first
