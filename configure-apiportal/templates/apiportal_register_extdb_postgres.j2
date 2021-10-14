@@ -3,7 +3,12 @@ host="{{ configs_extdb.hostname }}" \
 {% if configs_extdb.jdbc_url is defined and configs_extdb.jdbc_url != ""  %}
 url="{{ configs_extdb.jdbc_url }}" \
 {% else %}
-url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}/{{ configs_extdb.dbname }}
+url="jdbc:postgresql://{{ configs_extdb.hostname }}:{{ configs_extdb.port }}
+{%- if configs_extdb.backupdb is defined and configs_extdb.backupdb != "" and configs_extdb.backupdb_port is defined and configs_extdb.backupdb_port != "" -%}
+,{{ configs_extdb.backupdb }}:{{ configs_extdb.backupdb_port }}/{{ configs_extdb.dbname }}
+{%- else -%}
+/{{ configs_extdb.dbname }}
+{%- endif -%}
 {%- if configs_extdb.jdbc_url_params is defined and configs_extdb.jdbc_url_params != ""  -%}
 ?{{ configs_extdb.jdbc_url_params }}"
 {%- else -%}
