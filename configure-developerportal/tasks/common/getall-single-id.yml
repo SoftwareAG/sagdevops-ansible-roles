@@ -5,11 +5,24 @@
 #   name: "some_name1"
 # Return a rest_response_object_id var of type string (empty string if ID was not found)
 
+- debug:
+    msg: Begin tasks common/getall-single-id.yml
+
+- name: Object filters
+  debug: var=rvar_object_filter_single
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ rvar_object_filter_single }}"
+
 - name: Include tasks
   include_tasks: "getall-ids.yml"
   vars:
     rvar_object_filters:
-      - "{{ rvar_object_filter }}"
+      - "{{ rvar_object_filter_single }}"
 
 - name: Init the response var
   set_fact:

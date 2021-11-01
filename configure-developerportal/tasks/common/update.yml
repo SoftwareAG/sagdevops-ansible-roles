@@ -1,10 +1,16 @@
 ---
 
 - debug:
-    msg: Begin tasks common/getall.yml
+    msg: Begin tasks common/update.yml
 
 - name: Object type
   debug: var=rvar_devportal_rest_objtype
+
+- name: Object ID to update
+  debug: var=rvar_devportal_rest_objectid
+
+- name: Object to update
+  debug: var=rvar_devportal_rest_object
 
 - name: fail if mandatory params not specified
   fail:
@@ -12,11 +18,13 @@
   when: item is not defined
   with_items:
     - "{{ rvar_devportal_rest_objtype }}"
+    - "{{ rvar_devportal_rest_objectid }}"
+    - "{{ rvar_devportal_rest_object }}"
 
-- name: Get list of all objects
+- name: Update existing object
   uri:
-    url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype }}"
-    method: GET
+    url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype }}/{{ rvar_devportal_rest_objectid }}"
+    method: PUT
     user: "{{ rvar_devportal_rest_auth_username }}"
     password: "{{ rvar_devportal_rest_auth_password }}"
     return_content: yes
@@ -24,10 +32,11 @@
     validate_certs: false
     status_code: [200]
     body_format: json
+    body: "{{ rvar_devportal_rest_object | to_json }}"
     timeout: 30
-  register: rest_response_getall
+  register: rest_response_update
 
 - name: Print response
   debug:
-    var: rest_response_getall
+    var: rest_response_update
     verbosity: 1
