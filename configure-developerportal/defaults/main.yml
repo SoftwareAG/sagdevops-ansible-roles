@@ -1,9 +1,12 @@
 ---
 
 # REST settings
-rvar_devportal_rest_base_uri: "http://localhost:18101/portal"
-rvar_devportal_rest_auth_username:
-rvar_devportal_rest_auth_password:
+rvar_devportal_rest_scheme: "http"
+rvar_devportal_rest_host: "localhost"
+rvar_devportal_rest_port: "18101"
+rvar_devportal_rest_base_uri: "{{ rvar_devportal_rest_scheme }}://{{ rvar_devportal_rest_host }}:{{ rvar_devportal_rest_port }}/portal"
+rvar_devportal_rest_auth_username: someuser
+rvar_devportal_rest_auth_password: something
 
 # User management
 rvar_devportal_rest_users_base: "{{ rvar_devportal_rest_base_uri }}/rest/v1/users"
