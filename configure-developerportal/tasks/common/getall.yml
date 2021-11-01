@@ -1,8 +1,8 @@
 ---
 
-  - name: Get list of all users
+  - name: Get list of all objects
     uri:
-      url: "{{ rvar_devportal_rest_users_base }}"
+      url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype }}"
       method: GET
       user: "{{ rvar_devportal_rest_auth_username }}"
       password: "{{ rvar_devportal_rest_auth_password }}"
