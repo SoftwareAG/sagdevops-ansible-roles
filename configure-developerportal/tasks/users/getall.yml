@@ -16,5 +16,5 @@
 
   - name: Print response
     debug:
-      var: rest_response_getall.json
+      var: rest_response_getall
       verbosity: 1
