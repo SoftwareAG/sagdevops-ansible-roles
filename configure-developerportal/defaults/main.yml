@@ -1,0 +1,18 @@
+---
+
+# REST settings
+rvar_devportal_rest_base_uri: "http://localhost:18101/portal"
+rvar_devportal_rest_auth_username:
+rvar_devportal_rest_auth_password:
+
+# User management
+rvar_devportal_rest_users_base: "{{ rvar_devportal_rest_base_uri }}/rest/v1/users"
+
+## update passwords
+rvar_devportal_rest_users_selfupdatepassword:
+  oldPassword:
+  newPassword:
+rvar_devportal_rest_users_updatepassword:
+  lookup_userid:
+    name: ""
+  newPassword:
