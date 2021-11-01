@@ -1,7 +1,7 @@
 ---
 
 - name: Users to save (add or update)
-  debug: var=rvar_devportal_rest_save_users verbosity=1
+  debug: var=rvar_devportal_rest_users verbosity=1
 
 - name: Include tasks
   include_tasks: "../common/save-multiple.yml"
