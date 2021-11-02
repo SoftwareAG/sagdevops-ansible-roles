@@ -31,6 +31,10 @@ rvar_devportal_rest_groups:
     data:
       name: group1
       description: group 1
+    permissions:
+      consumers: "true"
+      providers: "true"
+      administrators: "false"
     users:
       lookup_ids:
         - name: user1
@@ -39,6 +43,10 @@ rvar_devportal_rest_groups:
     data:
       name: group2
       description: group 2
+    permissions:
+      consumers: "false"
+      providers: "false"
+      administrators: "true"
     users:
       lookup_ids:
         - name: user1

@@ -1,0 +1,76 @@
+---
+
+  - debug: 
+      msg: Begin tasks in groups/assign-permissions.yml
+
+  - debug: var=rvar_devportal_rest_groups_single verbosity=1
+
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_devportal_rest_groups_single }}"
+      - "{{ rvar_devportal_rest_groups_single.permissions }}"
+
+######## fetch the groupid
+
+  - name: Fet the object id based on the lookup_id object
+    include_tasks: "../common/getall-single-id.yml"
+    vars:
+      rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_groups }}"
+      rvar_object_filter_single: "{{ rvar_devportal_rest_groups_single.lookup_id }}"
+      rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"
+  
+  - name: Set group variable for clarity
+    set_fact:
+      _devportal_groupid: "{{ rest_response_object_id }}"
+
+  - name: fail if _devportal_groupid is empty or not defined
+    fail: 
+      msg: "object id may not be empty or null at this point"
+    when: _devportal_groupid is not defined or _devportal_groupid == ""
+
+######## assign permissions to group
+
+  - name: Set default permission variable if permissions object is undefined
+    set_fact:
+      _devportal_group_permissions:
+        assigned:
+          ROLE_CONSUMER: false
+          ROLE_ADMINISTRATOR: false
+          ROLE_PROVIDER: false
+    when: rvar_devportal_rest_groups_single.permissions is not defined
+  
+  - name: Set permission variable from permissions object
+    set_fact:
+      _devportal_group_permissions:
+        assigned:
+          ROLE_CONSUMER: "{{ rvar_devportal_rest_groups_single.permissions.consumers | default() | bool }}"
+          ROLE_ADMINISTRATOR: "{{ rvar_devportal_rest_groups_single.permissions.administrators | default() | bool }}"
+          ROLE_PROVIDER: "{{ rvar_devportal_rest_groups_single.permissions.providers | default() | bool }}"
+    when: rvar_devportal_rest_groups_single.permissions is defined
+
+  - debug:
+      msg: "Assigning permissions for group id: {{ rest_response_object_id }}"
+
+  - name: Assign permissions to group
+    uri:
+      url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_groups }}/{{ _devportal_groupid }}/permissions"
+      method: PUT
+      force_basic_auth: yes
+      user: "{{ rvar_devportal_rest_auth_username }}"
+      password: "{{ rvar_devportal_rest_auth_password }}"
+      body_format: json
+      body: "{{ _devportal_group_permissions | to_json }}"
+      validate_certs: false
+      return_content: yes
+      status_code: [200]
+      timeout: 30
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+    register: rest_response_assign_permissions
+
+  - name: Print returned response
+    debug:
+      var: rest_response_assign_permissions
+      verbosity: 1
