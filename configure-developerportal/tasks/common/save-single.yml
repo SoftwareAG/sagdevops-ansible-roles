@@ -15,7 +15,8 @@
 
 - name: First, get the object id based on the lookup_id object
   include_tasks: "getall-single-id.yml"
-  rvar_object_filter_single: "{{ rvar_devportal_rest_save_single.lookup_id }}"
+  vars:
+    rvar_object_filter_single: "{{ rvar_devportal_rest_save_single.lookup_id }}"
 
 - debug: var=rest_response_object_id verbosity=1
 
