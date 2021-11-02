@@ -9,7 +9,6 @@
       - "Health URL = {{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_health }}/readiness }}"
       - "Retries = {{ rvar_devportal_rest_health_readycheck_retries | default('60', true) }}"
       - "Interval (sec) = {{ rvar_devportal_rest_health_readycheck_interval_seconds | default('5', true) }}"
-      - "Success Code = {{ rvar_devportal_rest_health_readycheck_ | default('5', true) }}"
   
 - name: Wait for devportal to be ready for requests
   uri:
