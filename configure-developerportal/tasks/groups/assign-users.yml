@@ -44,7 +44,7 @@
     set_fact:
       _devportal_userids: "{{ rest_response_object_ids }}"
 
-######## Assign users to group
+######## finally, assign user IDs to group
 
   - debug:
       msg: "Assigning users for group id: {{ rest_response_object_id }}"
