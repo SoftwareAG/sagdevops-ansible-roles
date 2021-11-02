@@ -14,6 +14,7 @@ rvar_devportal_rest_base: "{{ rvar_devportal_rest_base_uri }}/rest/{{ rvar_devpo
 rvar_devportal_rest_objtype_users: "users"
 rvar_devportal_rest_objtype_groups: "groups"
 rvar_devportal_rest_objtype_teams: "teams"
+rvar_devportal_rest_objtype_health: "health"
 
 ## update passwords
 rvar_devportal_rest_users_selfupdatepassword:
