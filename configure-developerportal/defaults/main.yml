@@ -13,6 +13,7 @@ rvar_devportal_rest_base: "{{ rvar_devportal_rest_base_uri }}/rest/{{ rvar_devpo
 # User management
 rvar_devportal_rest_objtype_users: "users"
 rvar_devportal_rest_objtype_groups: "groups"
+rvar_devportal_rest_objtype_teams: "teams"
 
 ## update passwords
 rvar_devportal_rest_users_selfupdatepassword:
