@@ -4,10 +4,10 @@
     msg: Begin tasks common/getsingle.yml
 
 - name: Object to update
-  debug: var=rvar_devportal_rest_objtype
+  debug: var=rvar_devportal_rest_objtype verbosity=2
 
 - name: Object ID to update
-  debug: var=rvar_devportal_rest_objectid
+  debug: var=rvar_devportal_rest_objectid verbosity=2
 
 - name: fail if mandatory params not specified
   fail:
@@ -34,4 +34,4 @@
 - name: Print response
   debug:
     var: rest_response_get
-    verbosity: 1
+    verbosity: 2

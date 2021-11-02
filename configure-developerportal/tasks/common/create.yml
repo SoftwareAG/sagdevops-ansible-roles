@@ -4,10 +4,10 @@
     msg: Begin tasks common/create.yml
 
 - name: Object type
-  debug: var=rvar_devportal_rest_objtype
+  debug: var=rvar_devportal_rest_objtype verbosity=2
 
 - name: Object to create
-  debug: var=rvar_devportal_rest_object
+  debug: var=rvar_devportal_rest_object verbosity=2
 
 - name: fail if mandatory params not specified
   fail:
@@ -30,9 +30,10 @@
     body_format: json
     body: "{{ rvar_devportal_rest_object | to_json }}"
     timeout: 30
+  no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
   register: rest_response_create
 
 - name: Print response
   debug:
     var: rest_response_create
-    verbosity: 1
+    verbosity: 2

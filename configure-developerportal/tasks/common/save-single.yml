@@ -3,7 +3,7 @@
 - debug:
     msg: Begin tasks common/save-single.yml
 
-- debug: var=rvar_devportal_rest_save_single verbosity=1
+- debug: var=rvar_devportal_rest_save_single verbosity=2
 
 - name: fail if mandatory params not specified
   fail:
@@ -18,7 +18,7 @@
   vars:
     rvar_object_filter_single: "{{ rvar_devportal_rest_save_single.lookup_id }}"
 
-- debug: var=rest_response_object_id verbosity=1
+- debug: var=rest_response_object_id verbosity=2
 
 - name: Update the existing object if it existed
   block:

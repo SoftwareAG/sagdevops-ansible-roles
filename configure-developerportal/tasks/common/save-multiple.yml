@@ -4,7 +4,7 @@
     msg: Begin tasks common/save-multiple.yml
 
 - name: List of objects to add/update
-  debug: var=rvar_devportal_rest_save_multiple verbosity=1
+  debug: var=rvar_devportal_rest_save_multiple verbosity=2
 
 - name: Include tasks
   include_tasks: "save-single.yml"

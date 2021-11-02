@@ -9,7 +9,7 @@
     msg: Begin tasks common/getall-single-id.yml
 
 - name: Object filters
-  debug: var=rvar_object_filter_single
+  debug: var=rvar_object_filter_single verbosity=2
 
 - name: fail if mandatory params not specified
   fail:
@@ -34,4 +34,4 @@
   when: rest_response_object_ids | length > 0
 
 - name: id found from the rest response
-  debug: var=rest_response_object_id verbosity=1
+  debug: var=rest_response_object_id verbosity=2

@@ -9,7 +9,7 @@
     msg: Begin tasks common/getall-ids.yml
 
 - name: Object filters
-  debug: var=rvar_object_filters
+  debug: var=rvar_object_filters verbosity=2
 
 - name: fail if mandatory params not specified
   fail:
@@ -34,7 +34,7 @@
     rest_response_filters: "{{ rvar_object_filters }}"
 
 - name: All IDs found from the rest response
-  debug: var=rest_response_object_ids verbosity=1
+  debug: var=rest_response_object_ids verbosity=2
 
 - name: fail if response array has more than the amount of provided filter list
   fail: 
