@@ -30,5 +30,10 @@
   retries: "{{ rvar_devportal_rest_health_readycheck_retries }}" # retry X times
   delay: "{{ rvar_devportal_rest_health_readycheck_interval_seconds }}" # pause for X sec b/w each call
 
+- name: Print response
+  debug:
+    var: _readycheck_result
+    verbosity: 2
+
 - debug:
     msg: Ready check done
