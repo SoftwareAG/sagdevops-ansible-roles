@@ -1,0 +1,7 @@
+---
+
+- name: Include tasks
+  include_tasks: "../common/get-single-id.yml"
+  vars:
+    rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_users }}"
+    rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"

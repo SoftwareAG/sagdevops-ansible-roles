@@ -1,0 +1,13 @@
+---
+
+- debug:
+    msg: Begin tasks common/save-multiple.yml
+
+- name: List of objects to add/update
+  debug: var=rvar_devportal_rest_save_multiple verbosity=2
+
+- name: Include tasks
+  include_tasks: "save-single.yml"
+  with_items: "{{ rvar_devportal_rest_save_multiple }}"
+  loop_control:
+    loop_var: rvar_devportal_rest_save_single

@@ -1,0 +1,23 @@
+---
+
+- name: Groups to save (add or update)
+  debug: var=rvar_devportal_rest_groups verbosity=1
+
+- name: Save core group object
+  include_tasks: ../common/save-multiple.yml
+  vars:
+    rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_groups }}"
+    rvar_devportal_rest_save_multiple: "{{ rvar_devportal_rest_groups }}"
+    rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"
+
+- name: Assign permissions to groups
+  include_tasks: assign-permissions.yml
+  with_items: "{{ rvar_devportal_rest_groups }}"
+  loop_control:
+    loop_var: rvar_devportal_rest_groups_single
+
+- name: Assign users to groups
+  include_tasks: assign-users.yml
+  with_items: "{{ rvar_devportal_rest_groups }}"
+  loop_control:
+    loop_var: rvar_devportal_rest_groups_single

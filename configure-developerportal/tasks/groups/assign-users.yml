@@ -1,0 +1,71 @@
+---
+
+  - debug: 
+      msg: Begin tasks in groups/assign-users.yml
+
+  - debug: var=rvar_devportal_rest_groups_single verbosity=1
+
+  - name: fail if mandatory params not specified
+    fail: 
+      msg: "A mandatory param was not defined, cannot do anything."
+    when: item is not defined
+    with_items:
+      - "{{ rvar_devportal_rest_groups_single }}"
+      - "{{ rvar_devportal_rest_groups_single.users }}"
+
+######## fetch the groupid
+
+  - name: Fet the object id based on the lookup_id object
+    include_tasks: "../common/getall-single-id.yml"
+    vars:
+      rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_groups }}"
+      rvar_object_filter_single: "{{ rvar_devportal_rest_groups_single.lookup_id }}"
+      rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"
+  
+  - name: Set group variable for clarity
+    set_fact:
+      _devportal_groupid: "{{ rest_response_object_id }}"
+
+  - name: fail if _devportal_groupid is empty or not defined
+    fail: 
+      msg: "object id may not be empty or null at this point"
+    when: _devportal_groupid is not defined or _devportal_groupid == ""
+
+######## fetch the user ids
+
+  - name: Fet the user ids based on the lookup_ids object
+    include_tasks: "../common/getall-ids.yml"
+    vars:
+      rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_users }}"
+      rvar_object_filters: "{{ rvar_devportal_rest_groups_single.users.lookup_ids }}"
+      rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"
+
+  - name: Set users variable for clarity
+    set_fact:
+      _devportal_userids: "{{ rest_response_object_ids }}"
+
+######## finally, assign user IDs to group
+
+  - debug:
+      msg: "Assigning users for group id: {{ rest_response_object_id }}"
+
+  - name: Assign users to group
+    uri:
+      url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_groups }}/{{ _devportal_groupid }}/users"
+      method: PUT
+      force_basic_auth: yes
+      user: "{{ rvar_devportal_rest_auth_username }}"
+      password: "{{ rvar_devportal_rest_auth_password }}"
+      body_format: json
+      body: "{{ _devportal_userids | to_json }}"
+      validate_certs: false
+      return_content: yes
+      status_code: [200]
+      timeout: 30
+    no_log: "{{ not ( disable_no_log | default(false,true) ) }}"
+    register: rest_response_assign_users
+
+  - name: Print returned response
+    debug:
+      var: rest_response_assign_users
+      verbosity: 1

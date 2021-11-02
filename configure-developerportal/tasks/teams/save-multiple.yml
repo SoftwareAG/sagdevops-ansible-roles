@@ -1,0 +1,11 @@
+---
+
+- name: Teams to save (add or update)
+  debug: var=rvar_devportal_rest_teams verbosity=1
+
+- name: Include tasks
+  include_tasks: "../common/save-multiple.yml"
+  vars:
+    rvar_devportal_rest_objtype: "{{ rvar_devportal_rest_objtype_teams }}"
+    rvar_devportal_rest_save_multiple: "{{ rvar_devportal_rest_teams }}"
+    rvar_devportal_rest_response_parsing_tpl: "rest_getall_objectids_by_name.json.j2"

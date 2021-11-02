@@ -1,0 +1,37 @@
+---
+
+# This get a unique object IDs based on provided human-readable filter object
+# rvar_object_filter:
+#   name: "some_name1"
+# Return a rest_response_object_id var of type string (empty string if ID was not found)
+
+- debug:
+    msg: Begin tasks common/getall-single-id.yml
+
+- name: Object filters
+  debug: var=rvar_object_filter_single verbosity=2
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ rvar_object_filter_single }}"
+
+- name: Include tasks
+  include_tasks: "getall-ids.yml"
+  vars:
+    rvar_object_filters:
+      - "{{ rvar_object_filter_single }}"
+
+- name: Init the response var
+  set_fact:
+    rest_response_object_id: ""
+
+- name: Parse response and find the id based on the name
+  set_fact:
+    rest_response_object_id: "{{ rest_response_object_ids | first }}"
+  when: rest_response_object_ids | length > 0
+
+- name: id found from the rest response
+  debug: var=rest_response_object_id verbosity=2

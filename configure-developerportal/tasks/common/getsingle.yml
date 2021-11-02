@@ -1,0 +1,37 @@
+---
+
+- debug:
+    msg: Begin tasks common/getsingle.yml
+
+- name: Object to update
+  debug: var=rvar_devportal_rest_objtype verbosity=2
+
+- name: Object ID to update
+  debug: var=rvar_devportal_rest_objectid verbosity=2
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ rvar_devportal_rest_objtype }}"
+    - "{{ rvar_devportal_rest_objectid }}"
+
+- name: Get single objects
+  uri:
+    url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype }}/{{ rvar_devportal_rest_objectid }}"
+    method: GET
+    user: "{{ rvar_devportal_rest_auth_username }}"
+    password: "{{ rvar_devportal_rest_auth_password }}"
+    return_content: yes
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: [200]
+    body_format: json
+    timeout: 30
+  register: rest_response_get
+
+- name: Print response
+  debug:
+    var: rest_response_get
+    verbosity: 2

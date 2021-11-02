@@ -1,0 +1,42 @@
+---
+
+# This get the list of object IDs based on provided human-readable filter list
+# rvar_object_filters:
+#   - name: "some_name1"
+#   - name: "some_name2"
+
+- debug:
+    msg: Begin tasks common/getall-ids.yml
+
+- name: Object filters
+  debug: var=rvar_object_filters verbosity=2
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ rvar_object_filters }}"
+
+- name: Include tasks
+  include_tasks: "getall.yml"
+
+- name: set empty response if it was not already defined
+  set_fact:
+    rest_response_getall:
+      json: []
+  when: rest_response_getall.json is not defined
+
+- name: Parse response and find the id list based on the rest_response_filters
+  set_fact:
+    rest_response_object_ids: "{{ lookup('template', rvar_devportal_rest_response_parsing_tpl) }}"
+  vars:
+    rest_response_filters: "{{ rvar_object_filters }}"
+
+- name: All IDs found from the rest response
+  debug: var=rest_response_object_ids verbosity=2
+
+- name: fail if response array has more than the amount of provided filter list
+  fail: 
+    msg: "The rest_response_object_ids array contains more results that the provided filter array... Some records came back multiple time (likely objects with same name/versions). Investigate!"
+  when: rest_response_object_ids | length > rvar_object_filters | length

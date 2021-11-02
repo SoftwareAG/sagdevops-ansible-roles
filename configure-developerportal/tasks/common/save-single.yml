@@ -1,0 +1,52 @@
+---
+
+- debug:
+    msg: Begin tasks common/save-single.yml
+
+- debug: var=rvar_devportal_rest_save_single verbosity=2
+
+- name: fail if mandatory params not specified
+  fail:
+    msg: "A mandatory param was not defined, cannot do anything."
+  when: item is not defined
+  with_items:
+    - "{{ rvar_devportal_rest_save_single }}"
+    - "{{ rvar_devportal_rest_save_single.lookup_id }}"
+    - "{{ rvar_devportal_rest_save_single.data }}"
+
+- name: First, get the object id based on the lookup_id object
+  include_tasks: "getall-single-id.yml"
+  vars:
+    rvar_object_filter_single: "{{ rvar_devportal_rest_save_single.lookup_id }}"
+
+- debug: var=rest_response_object_id verbosity=2
+
+- name: Update the existing object if it existed
+  block:
+  
+    - name: Include tasks
+      include_tasks: "getsingle.yml"
+      vars:
+        rvar_devportal_rest_objectid: "{{ rest_response_object_id }}"
+
+    - name: Merge the existing object content with the updated content
+      set_fact:
+        rvar_devportal_rest_save_single_toupdate: "{{ rest_response_get.json | combine(rvar_devportal_rest_save_single.data,recursive=True) }}"
+
+    - name: Include tasks
+      include_tasks: "update.yml"
+      vars:
+        rvar_devportal_rest_objectid: "{{ rvar_devportal_rest_save_single_toupdate.id }}"
+        rvar_devportal_rest_object: "{{ rvar_devportal_rest_save_single_toupdate }}"
+
+  when: rest_response_object_id is defined and rest_response_object_id != ""
+
+- name: Create the object if it does not exist
+  block:
+
+    - name: Include tasks
+      include_tasks: "create.yml"
+      vars:
+        rvar_devportal_rest_object: "{{ rvar_devportal_rest_save_single.data }}"
+
+  when: rest_response_object_id is not defined or rest_response_object_id == ""
