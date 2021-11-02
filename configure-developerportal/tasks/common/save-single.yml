@@ -12,6 +12,7 @@
   with_items:
     - "{{ rvar_devportal_rest_save_single }}"
     - "{{ rvar_devportal_rest_save_single.lookup_id }}"
+    - "{{ rvar_devportal_rest_save_single.data }}"
 
 - name: First, get the object id based on the lookup_id object
   include_tasks: "getall-single-id.yml"
@@ -30,7 +31,7 @@
 
     - name: Merge the existing object content with the updated content
       set_fact:
-        rvar_devportal_rest_save_single_toupdate: "{{ rest_response_get.json | combine(rvar_devportal_rest_save_single,recursive=True) }}"
+        rvar_devportal_rest_save_single_toupdate: "{{ rest_response_get.json | combine(rvar_devportal_rest_save_single.data,recursive=True) }}"
 
     - name: Include tasks
       include_tasks: "update.yml"
@@ -46,6 +47,6 @@
     - name: Include tasks
       include_tasks: "create.yml"
       vars:
-        rvar_devportal_rest_object: "{{ rvar_devportal_rest_save_single }}"
+        rvar_devportal_rest_object: "{{ rvar_devportal_rest_save_single.data }}"
 
   when: rest_response_object_id is not defined or rest_response_object_id == ""
