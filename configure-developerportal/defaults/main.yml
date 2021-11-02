@@ -29,15 +29,17 @@ rvar_devportal_rest_groups:
   - lookup_id:
       name: group1
     data:
-      name: samplegroup1
-      description: sample group 1
+      name: group1
+      description: group 1
     users:
-      - user1
+      lookup_ids:
+        - name: user1
   - lookup_id:
       name: group2
     data:
-      name: samplegroup2
-      description: sample group 2
+      name: group2
+      description: group 2
     users:
-      - user1
-      - user2
+      lookup_ids:
+        - name: user1
+        - name: user2
