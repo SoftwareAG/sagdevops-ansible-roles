@@ -6,7 +6,7 @@
 - name: List of objects to add/update
   debug: var=rvar_devportal_rest_save_multiple verbosity=1
 
-- name: Include group tasks
+- name: Include tasks
   include_tasks: "save-single.yml"
   with_items: "{{ rvar_devportal_rest_save_multiple }}"
   loop_control:
