@@ -13,6 +13,11 @@
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-v' ] + [ '-X' ] + [ 'POST' ] + [ '-H' ] + [ 'Content-Type:multipart/form-data' ]"
 
+  - name: append ignore invalid ssl certs param
+    set_fact:
+      command_to_exec: "{{ command_to_exec }} + [ '-k' ]"
+    when: curl_wrapper_no_check_certs | default() | bool
+
   - name: append all header params
     set_fact:
       command_to_exec: "{{ command_to_exec }} + [ '-H' ] + [ '{{ item.key }}:{{ item.value }}' ]"

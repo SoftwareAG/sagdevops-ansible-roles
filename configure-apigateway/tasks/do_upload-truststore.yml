@@ -8,7 +8,7 @@
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
       force_basic_auth: yes
-      validate_certs: false
+      validate_certs: "{{ not ( apigateway_rest_no_check_certs | default() | bool ) }}"
       status_code: [200]
       body_format: json
       timeout: 30
@@ -48,7 +48,7 @@
           password: "{{ apigateway_rest_login_password }}"
           return_content: yes
           force_basic_auth: yes
-          validate_certs: false
+          validate_certs: "{{ not ( apigateway_rest_no_check_certs | default() | bool ) }}"
           status_code: [200]
           body: "{{ webmethods_apigateway_truststore | default({},true) }}"
           body_format: form-multipart
@@ -69,6 +69,7 @@
           command: upload-multipart-formdata
           curl_wrapper_basicauth_user: "{{ apigateway_rest_login_username }}"
           curl_wrapper_basicauth_password: "{{ apigateway_rest_login_password }}"
+          curl_wrapper_no_check_certs: "{{ apigateway_rest_no_check_certs }}"
           curl_wrapper_multipart_formdata_fields: "{{ webmethods_apigateway_truststore }}"
           curl_wrapper_headers_fields:
             "Accept": "application/json"

@@ -33,6 +33,7 @@ apigateway_rest_base_uri: "{{ apigateway_rest_protocol }}://{{ apigateway_rest_h
 apigateway_rest_protocol: "http"
 apigateway_rest_host: "localhost"
 apigateway_rest_port: 5555
+apigateway_rest_no_check_certs: false
 
 # general
 apigateway_rest_base_path: "{{ apigateway_rest_base_uri }}/rest/apigateway"

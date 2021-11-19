@@ -20,7 +20,7 @@
       password: "{{ apigateway_rest_login_password }}"
       return_content: yes
       force_basic_auth: yes
-      validate_certs: false
+      validate_certs: "{{ not ( apigateway_rest_no_check_certs | default() | bool ) }}"
       status_code: [200, 201]
       body_format: json
       timeout: 30
