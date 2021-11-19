@@ -1,0 +1,39 @@
+---
+
+- debug:
+    msg: Begin tasks in monitoring/waitfor-ready.yml
+
+- name: set variables if not defined
+  set_fact:
+    rvar_devportal_rest_health_readycheck_retries: "60"
+  when: rvar_devportal_rest_health_readycheck_retries is not defined
+
+- name: set variables if not defined
+  set_fact:
+    rvar_devportal_rest_health_readycheck_interval_seconds: "5"
+  when: rvar_devportal_rest_health_readycheck_interval_seconds is not defined
+
+- name: Print the params for the common-webmethods-portscheck tasks
+  debug:
+    msg:
+      - "Health URL = {{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_health }}/readiness }}"
+      - "Retries = {{ rvar_devportal_rest_health_readycheck_retries }}"
+      - "Interval (sec) = {{ rvar_devportal_rest_health_readycheck_interval_seconds }}"
+  
+- name: Wait for devportal to be ready for requests
+  uri:
+    url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_health }}/readiness"
+    method: GET
+    return_content: yes
+  register: _readycheck_result
+  until: _readycheck_result.status == 200 and _readycheck_result.content == '{\"status\":\"green\"}'
+  retries: "{{ rvar_devportal_rest_health_readycheck_retries }}" # retry X times
+  delay: "{{ rvar_devportal_rest_health_readycheck_interval_seconds }}" # pause for X sec b/w each call
+
+- name: Print response
+  debug:
+    var: _readycheck_result
+    verbosity: 2
+
+- debug:
+    msg: Ready check done
