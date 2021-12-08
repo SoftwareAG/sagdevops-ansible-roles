@@ -29,7 +29,7 @@
     password: "{{ rvar_devportal_rest_auth_password }}"
     return_content: yes
     force_basic_auth: yes
-    validate_certs: false
+    validate_certs: "{{ not ( rvar_devportal_rest_no_check_certs | default() | bool ) }}"
     status_code: [200]
     body_format: json
     body: "{{ rvar_devportal_rest_object | to_json }}"

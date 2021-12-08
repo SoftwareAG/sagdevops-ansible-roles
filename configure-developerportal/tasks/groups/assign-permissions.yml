@@ -63,7 +63,7 @@
       password: "{{ rvar_devportal_rest_auth_password }}"
       body_format: json
       body: "{{ _devportal_group_permissions | to_json }}"
-      validate_certs: false
+      validate_certs: "{{ not ( rvar_devportal_rest_no_check_certs | default() | bool ) }}"
       return_content: yes
       status_code: [200]
       timeout: 30

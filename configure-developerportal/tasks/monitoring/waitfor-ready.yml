@@ -24,7 +24,10 @@
   uri:
     url: "{{ rvar_devportal_rest_base }}/{{ rvar_devportal_rest_objtype_health }}/readiness"
     method: GET
+    validate_certs: "{{ not ( rvar_devportal_rest_no_check_certs | default() | bool ) }}"
+    body_format: json
     return_content: yes
+    timeout: 10
   register: _readycheck_result
   until: _readycheck_result.status == 200 and _readycheck_result.content == '{\"status\":\"green\"}'
   retries: "{{ rvar_devportal_rest_health_readycheck_retries }}" # retry X times
