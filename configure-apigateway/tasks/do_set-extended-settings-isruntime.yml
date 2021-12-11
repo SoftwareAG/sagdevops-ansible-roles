@@ -1,9 +1,0 @@
----
-
-  - debug: var=webmethods_apigateway_extended_settings_isruntime_watt_keys verbosity=1
-
-  - import_role:
-      name: configure-integrationserver
-    vars:
-      configs_action: set-extended-settings
-      wmis_cfgparams_extended_settings_dict: "{{ webmethods_apigateway_extended_settings_isruntime_watt_keys }}"

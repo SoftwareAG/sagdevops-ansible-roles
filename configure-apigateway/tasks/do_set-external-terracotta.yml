@@ -1,6 +1,0 @@
----
-
-  - import_role:
-      name: configure-integrationserver
-    vars:
-      configs_action: set-external-terracotta
