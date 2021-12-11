@@ -1,5 +1,0 @@
----
-
-elasticsearch_host_aliases: []
-elasticsearch_hosts: []
-elasticsearch_basepath: "{{ webmethods_install_dir }}/InternalDataStore"

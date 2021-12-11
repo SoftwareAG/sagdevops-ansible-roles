@@ -1,6 +1,0 @@
----
-
-- name: Clear the elastic search cluster data folder
-  file:
-    state: absent
-    path: "{{ ids_path_data }}/nodes"

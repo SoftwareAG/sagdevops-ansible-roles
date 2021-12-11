@@ -1,4 +1,0 @@
----
-
-elasticsearch_servicename: "sag1cel{{ product_version_full }}"
-elasticsearch_basepath: "{{ webmethods_install_dir }}/InternalDataStore"

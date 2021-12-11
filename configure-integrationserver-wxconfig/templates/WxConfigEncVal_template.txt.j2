@@ -1,5 +1,0 @@
-# WxConfig: Export of encrypted values
-
-{% for wxconfig_encrypted_param,wxconfig_encrypted_value in wxconfig_params_encrypted_items.iteritems() %}
-encryptedValue = WxConfig:{{ wxconfig_params_target_package_name }}:{{ wxconfig_encrypted_param }};{{ wxconfig_encrypted_value }}
-{% endfor %}
