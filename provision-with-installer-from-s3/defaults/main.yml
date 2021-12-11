@@ -1,8 +1,0 @@
----
-
-## install settings
-rvar_install_async_retries: 240
-rvar_install_async_delay: 10
-rvar_install_async_timeout: 2400
-rvar_install_async_poll: 0
-rvar_install_downloads_throttle:

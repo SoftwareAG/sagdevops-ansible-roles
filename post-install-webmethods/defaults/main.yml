@@ -1,3 +1,0 @@
----
-
-postinstall_scriptfile: "{{ webmethods_install_dir }}/bin/afterInstallAsRoot.sh"

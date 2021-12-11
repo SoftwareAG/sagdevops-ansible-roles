@@ -1,9 +1,0 @@
----
-
-- debug: var=webmethods_install_patches_descriptor_list verbosity=3
-
-- name: apply a single fix
-  include_tasks: "command_run_apply_fixes_single.yml"
-  with_items: "{{ webmethods_install_patches_descriptor_list }}"
-  loop_control:
-    loop_var: webmethods_install_patches_descriptor
