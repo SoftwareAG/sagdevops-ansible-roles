@@ -1,9 +1,0 @@
----
-
-elasticsearch_inventory_pattern:
-elasticsearch_inventory_hosts_property: ansible_host
-elasticsearch_proto: http
-elasticsearch_port: 9240
-apigateway_elasticsearch_config_file: "{{ webmethods_install_dir }}/IntegrationServer/instances/{{ product_instance_name }}/packages/WmAPIGateway/config/resources/elasticsearch/config.properties"
-apigateway_kibana_config_file: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/dashboard/config/kibana.yml"
-apigateway_uiconfiguration_config_file: "{{ webmethods_install_dir }}/profiles/IS_{{ product_instance_name }}/apigateway/config/uiconfiguration.properties"
