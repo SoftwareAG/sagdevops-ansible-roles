@@ -1,1 +1,1 @@
-moved to https://github.com/SoftwareAG/sagdevops-ansible-common-utils
+moved to https://github.com/SoftwareAG/sagdevops-ansible-common
