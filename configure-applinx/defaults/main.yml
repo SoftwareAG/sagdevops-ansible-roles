@@ -1,3 +1,0 @@
----
-
-configure_applinx_params_home_dir: "{{ webmethods_install_dir }}/applinx"

@@ -1,6 +1,0 @@
-.DS_Store
-.swp
-build/
-nohup.out
-*.code-workspace
-.vscode/

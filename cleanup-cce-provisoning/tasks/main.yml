@@ -1,9 +1,0 @@
----
-
-- name: clear the sensitive files
-  file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - "/home/{{ cce_owner }}/.setenv_cce_secrets.sh"
-    - "/home/{{ cce_owner }}/sag_licenses.zip"
